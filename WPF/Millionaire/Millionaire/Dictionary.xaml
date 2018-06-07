@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Thickness x:Key="ListItemsMargin">5,0</Thickness>
+    <Color x:Key="TextColor">#FFFFB900</Color>
+    <Color x:Key="ListItemsForeground">Black</Color>
+    <Color x:Key="RedColor">Red</Color>
+    <Cursor x:Key="Cursor">Hand</Cursor>
+    <Style x:Key="SmallImage" TargetType="Image">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Cursor" Value="Arrow" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="True">
+                <Setter Property="Cursor" Value="Hand" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <SolidColorBrush x:Key="BrushBackground" Color="Black"/>    
+</ResourceDictionary>

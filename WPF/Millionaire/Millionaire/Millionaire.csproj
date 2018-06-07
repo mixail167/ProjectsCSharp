@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Millionaire</RootNamespace>
+    <AssemblyName>Millionaire</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Classes\Crypt.cs" />
+    <Compile Include="Classes\WAVPlayer.cs" />
+    <Compile Include="Windows\CustomMessageBox.xaml.cs">
+      <DependentUpon>CustomMessageBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\EndOfGameWindow.xaml.cs">
+      <DependentUpon>EndOfGameWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\HelpFriends.xaml.cs">
+      <DependentUpon>HelpFriends.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MessageBoxCustom.xaml.cs">
+      <DependentUpon>MessageBoxCustom.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\DownloadFile.xaml.cs">
+      <DependentUpon>DownloadFile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Data.cs" />
+    <Compile Include="Windows\NoFileMessage.xaml.cs">
+      <DependentUpon>NoFileMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Record.cs" />
+    <Compile Include="Windows\RecordsWindow.xaml.cs">
+      <DependentUpon>RecordsWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Windows\CustomMessageBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\EndOfGameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\HelpFriends.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MessageBoxCustom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\DownloadFile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Millionaire.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Windows\Millionaire.xaml.cs">
+      <DependentUpon>Millionaire.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Windows\NoFileMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\RecordsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\maxresdefault.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\image50x50.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\image50x50Cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\imageFriend.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\imageFriendCancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\imagePeaple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\imagePeapleCancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\image50x50Focus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\imageFriendFocus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\imagePeapleFocus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\imageMoney.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\imageMoneyFocus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\кто-хочет-стать-миллионером-выигрыш.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\кто-хочет-стать-миллионером-начало-игры.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\кто-хочет-стать-миллионером-неправильный-ответ.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\кто-хочет-стать-миллионером-ответ-принят.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\кто-хочет-стать-миллионером-помощь-зала.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\кто-хочет-стать-миллионером-правильный-ответ.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\soundOn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\soundOff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\bred.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Djoli.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Je_Lo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\gudok.wav" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,126 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Name="HelpFriendsWindow" x:Class="Millionaire.HelpFriends"
+        Title="Звонок другу" Height="350" Width="500" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="/Millionaire;component/Resources/maxresdefault.jpg" Closing="HelpFriendsWindow_Closing">
+    <Grid>
+        <Grid Background="{DynamicResource BrushBackground}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border Background="Black" Margin="5" Grid.RowSpan="2">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource RedColor}"/>
+                </Border.BorderBrush>
+                <StackPanel Margin="5">
+                    <Border x:Name="BorderBred" BorderThickness="1" Height="100" Width="100" Margin="5">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource RedColor}"/>
+                        </Border.BorderBrush>
+                        <Image x:Name="ImageBred" Source="/Millionaire;component/Resources/bred.jpg" Margin="5" Cursor="{DynamicResource Cursor}" MouseDown="ImageBred_MouseDown" MouseEnter="ImageBred_MouseEnter" MouseLeave="ImageBred_MouseLeave"/>
+                    </Border>
+                    <TextBlock x:Name="TextBlockBred" TextAlignment="Center" TextWrapping="Wrap" Text="Бред Питт" FontFamily="Times New Roman" FontSize="20" FontWeight="Bold" Margin="5" Cursor="{DynamicResource Cursor}" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="TextBlockBred_MouseDown" MouseEnter="TextBlockBred_MouseEnter" MouseLeave="TextBlockBred_MouseLeave">
+                        <TextBlock.Foreground>
+                            <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Background="Black" Margin="5" Grid.RowSpan="2">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource RedColor}"/>
+                </Border.BorderBrush>
+                <StackPanel Margin="5">
+                    <Border x:Name="BorderDjoli" BorderThickness="1" Height="100" Width="100" Margin="5" RenderTransformOrigin="0.5,0.5">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource RedColor}"/>
+                        </Border.BorderBrush>
+                        <Image x:Name="ImageDjoli" Source="/Millionaire;component/Resources/Djoli.jpg" Margin="5" Cursor="{DynamicResource Cursor}" MouseDown="ImageDjoli_MouseDown" MouseEnter="ImageDjoli_MouseEnter" MouseLeave="ImageDjoli_MouseLeave"/>
+                    </Border>
+                    <TextBlock x:Name="TextBlockDjoli" TextAlignment="Center" TextWrapping="Wrap" Text="Анджелина Джоли" FontFamily="Times New Roman" FontSize="20" FontWeight="Bold" Margin="5" Cursor="{DynamicResource Cursor}" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="TextBlockDjoli_MouseDown" MouseEnter="TextBlockDjoli_MouseEnter" MouseLeave="TextBlockDjoli_MouseLeave">
+                        <TextBlock.Foreground>
+                            <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Background="Black" Margin="5" Grid.RowSpan="2">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource RedColor}"/>
+                </Border.BorderBrush>
+                <StackPanel Margin="5">
+                    <Border x:Name="BorderJeLo" BorderThickness="1" Height="100" Width="100" Margin="5">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource RedColor}"/>
+                        </Border.BorderBrush>
+                        <Image x:Name="ImageJeLo" Source="/Millionaire;component/Resources/Je_Lo.jpg" Margin="5" Cursor="{DynamicResource Cursor}" MouseDown="ImageJeLo_MouseDown" MouseEnter="ImageJeLo_MouseEnter" MouseLeave="ImageJeLo_MouseLeave"/>
+                    </Border>
+                    <TextBlock x:Name="TextBlockJeLo" TextAlignment="Center" TextWrapping="Wrap" Text="Дженнифер Лопес" FontFamily="Times New Roman" FontSize="20" FontWeight="Bold" Margin="5" Cursor="{DynamicResource Cursor}" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="TextBlockJeLo_MouseDown" MouseEnter="TextBlockJeLo_MouseEnter" MouseLeave="TextBlockJeLo_MouseLeave">
+                        <TextBlock.Foreground>
+                            <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="DescriptionBred" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" Text="Американский актёр и продюсер. Лауреат премии «Золотой глобус», обладатель премии «Оскар», победителя в категории «Лучший фильм»." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontFamily="Times New Roman">
+                <TextBlock.Foreground>
+                    <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                </TextBlock.Foreground>
+            </TextBlock>
+            <TextBlock x:Name="DescriptionDjoli" Grid.Row="1" Grid.Column="1" TextAlignment="Center" TextWrapping="Wrap" Text="Американская актриса, кинорежиссёр и сценарист, фотомодель, посол доброй воли ООН. Обладательница премии «Оскар», трёх премий «Золотой глобус» и двух «Премий Гильдии киноактёров США»." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontFamily="Times New Roman">
+                <TextBlock.Foreground>
+                    <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                </TextBlock.Foreground>
+            </TextBlock>
+            <TextBlock x:Name="DescriptionJeLo" Grid.Row="1" Grid.Column="2" TextAlignment="Center" TextWrapping="Wrap" Text="Американская актриса, певица, танцовщица, модельер, продюсер и бизнес-вумен." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontFamily="Times New Roman">
+                <TextBlock.Foreground>
+                    <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                </TextBlock.Foreground>
+            </TextBlock>
+        </Grid>
+        <Grid x:Name="GridCall" Background="{DynamicResource BrushBackground}" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Border Background="Black" Margin="5" Grid.RowSpan="2">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource RedColor}"/>
+                </Border.BorderBrush>
+                <StackPanel Margin="5">
+                    <Border BorderThickness="1" Height="100" Width="100" Margin="5">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource RedColor}"/>
+                        </Border.BorderBrush>
+                        <Image x:Name="ImageFriend" Margin="5"/>
+                    </Border>
+                    <TextBlock x:Name="TextBlockFriend" TextAlignment="Center" TextWrapping="Wrap" FontFamily="Times New Roman" FontSize="20" FontWeight="Bold" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock.Foreground>
+                            <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="TextBlockDescription" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontFamily="Times New Roman">
+                <TextBlock.Foreground>
+                    <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                </TextBlock.Foreground>
+            </TextBlock>
+            <TextBlock x:Name="TextBlockCall" Grid.Column="1" Grid.RowSpan="2" TextWrapping="Wrap" TextAlignment="Center" Text="Звоним другу" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontFamily="Times New Roman" FontSize="24">
+                <TextBlock.Foreground>
+                    <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                </TextBlock.Foreground>
+            </TextBlock>
+        </Grid>
+    </Grid>
+</Window>

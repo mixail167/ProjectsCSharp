@@ -1,0 +1,27 @@
+﻿<Window x:Class="Millionaire.CustomMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Внимание" Height="130" Width="320" FontFamily="Times New Roman" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="/Millionaire;component/Resources/maxresdefault.jpg">
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Label Margin="10,5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="294">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+            </Label.Foreground>
+            <Label.Content>
+                <TextBlock x:Name="Message" TextWrapping="Wrap" Width="284" Height="41" FontFamily="Times New Roman" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">Обновление данных выполнено успешно. Необходимо перезапустить приложение.</TextBlock>
+            </Label.Content>
+        </Label>
+        <Button Grid.Row="1" x:Name="ButtonRestart" Content="Перезапустить" Background="{x:Null}" FontFamily="Times New Roman" FontSize="14" Click="ButtonRestart_Click" Cursor="{DynamicResource Cursor}" Margin="80,5">
+            <Button.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+            </Button.Foreground>
+            <Button.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource RedColor}"/>
+            </Button.BorderBrush>
+        </Button>
+    </Grid>
+</Window>

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transfer", "Transfer\Transfer.csproj", "{DCC45E5A-130B-4CB9-8C4A-BB11787E3C18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Millionaire", "Millionaire\Millionaire.csproj", "{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCC45E5A-130B-4CB9-8C4A-BB11787E3C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC45E5A-130B-4CB9-8C4A-BB11787E3C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC45E5A-130B-4CB9-8C4A-BB11787E3C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC45E5A-130B-4CB9-8C4A-BB11787E3C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
