@@ -29,12 +29,12 @@ namespace Millionaire
             {
                 using (FileStream fileStream = File.OpenRead(fileName))
                 {
-                    byte[] buffer = new byte[fileStream.Length]; 
+                    byte[] buffer = new byte[fileStream.Length];
                     if (fileStream.Read(buffer, 0, buffer.Length) > 0)
                     {
                         return Crypt.DecryptStringFromBytesAES(buffer, Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
                     }
-                    else throw new Exception(); 
+                    else throw new Exception();
                 }
             }
             catch (Exception)
@@ -112,15 +112,18 @@ namespace Millionaire
                 {
                     try
                     {
-                        FileAttributes fileAttributes = File.GetAttributes("records.bin");
-                        if (fileAttributes.HasFlag(FileAttributes.ReadOnly))
-                            File.SetAttributes("records.bin", fileAttributes & ~FileAttributes.ReadOnly);
+                        if (File.Exists("records.bin"))
+                        {
+                            FileAttributes fileAttributes = File.GetAttributes("records.bin");
+                            if (fileAttributes.HasFlag(FileAttributes.ReadOnly))
+                                File.SetAttributes("records.bin", fileAttributes & ~FileAttributes.ReadOnly);
+                        }
                         byte[] bytes = Crypt.EncryptStringToBytesAES(string.Join<Record>("%", records.ToArray()), Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
                         using (FileStream fileStream = File.Create("records.bin"))
                         {
-                            fileStream.Write(bytes, 0, bytes.Length); 
+                            fileStream.Write(bytes, 0, bytes.Length);
                         }
-                        File.SetAttributes("records.bin", fileAttributes | FileAttributes.ReadOnly);
+                        File.SetAttributes("records.bin", File.GetAttributes("records.bin") | FileAttributes.ReadOnly);
                     }
                     catch (Exception exception)
                     {

@@ -1,9 +1,9 @@
 ﻿using Millionaire.Classes;
+using Millionaire.Windows;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Media;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -260,6 +260,17 @@ namespace Millionaire
 
         private void imagePeaple_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            HelpPeaple helpPeaple = new HelpPeaple(
+                new Data(new string[]
+                {
+                    LabelA.Content.ToString(),
+                    LabelB.Content.ToString(),
+                    LabelC.Content.ToString(),
+                    LabelD.Content.ToString()
+                },
+                    currentQuestion.TrueAnswer)
+                    );
+            helpPeaple.ShowDialog();
             imagePeaple.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/imagePeapleCancel.png"));
             imagePeaple.IsEnabled = false;
         }
@@ -269,10 +280,11 @@ namespace Millionaire
             HelpFriends helpFriends = new HelpFriends(
                 new Data(new string[]
                 {
-                    (string)LabelA.Content, 
-                    (string)LabelB.Content, 
-                    (string)LabelC.Content, 
-                    (string)LabelD.Content},
+                    LabelA.Content.ToString(), 
+                    LabelB.Content.ToString(), 
+                    LabelC.Content.ToString(), 
+                    LabelD.Content.ToString()
+                },
                     currentQuestion.TrueAnswer)
                     );
             helpFriends.ShowDialog();
