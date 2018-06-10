@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,7 +16,7 @@ namespace Millionaire
         public RecordsWindow(List<Record> records)
         {
             InitializeComponent();
-            this.records = records;
+            this.records = records.OrderByDescending(item => item.Score).ToList();
         }
 
         private void RecordsWindow1_ContentRendered(object sender, EventArgs e)
