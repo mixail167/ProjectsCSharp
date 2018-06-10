@@ -18,6 +18,7 @@ namespace Millionaire.Windows
         public HelpPeaple(Data currentQuestion)
         {
             InitializeComponent();
+            WAVPlayer.PlaySound(Properties.Resources.кто_хочет_стать_миллионером_помощь_зала);
             this.currentQuestion = currentQuestion;
             voices = new int[4];
             ColumnSeries.LabelPoint = point => point.Y + "%";
