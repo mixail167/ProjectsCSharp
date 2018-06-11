@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Sapper.Properties
+namespace MineSweeper.Properties
 {
 
 
