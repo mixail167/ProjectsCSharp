@@ -16,7 +16,7 @@ namespace Algorithms
             InitializeComponent();
         }
         /// <summary>
-        /// Алгоритм Кнута-Морриса-Пратта
+        /// Алгоритм Бойера-Мура
         /// </summary>
         /// <param name="text"> Исходный текст</param>
         /// <param name="substring">Образ</param>
