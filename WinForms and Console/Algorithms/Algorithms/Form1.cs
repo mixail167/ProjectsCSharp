@@ -15,6 +15,58 @@ namespace Algorithms
         {
             InitializeComponent();
         }
+        /// <summary>
+        /// Алгоритм Кнута-Морриса-Пратта
+        /// </summary>
+        /// <param name="text"> Исходный текст</param>
+        /// <param name="substring">Образ</param>
+        /// <param name="index">Индекс первого вхождения образа в исходном тексте</param>
+        /// <returns>Значение, показывающее, содержится ли образ в тексте</returns>
+        private bool AlgBM(string text, string substring, out int index)
+        {
+            int n = text.Length;
+            int m = substring.Length;
+            int ind;
+            int[] table = new int[256];
+            for (int i = 0; i < 256; i++)
+            {
+                table[i] = m;
+            }
+            for (int i = m - 1; i >= 0; i--)
+            {
+                if (table[(short)(substring[i])] == m)
+                {
+                    table[(short)(substring[i])] = m - i - 1;
+                }
+            }
+            ind = m - 1;
+            while (ind < n)
+            {
+                if (substring[m - 1] != text[ind])
+                {
+                    ind += table[(short)(text[ind])];
+                }
+                else
+                {
+                    for (int i = m - 2; i >= 0; i--)
+                    {
+                        if (substring[i] != text[ind - m + i + 1])
+                        {
+                            ind += table[(short)(text[ind - m + i + 1])] - 1;
+                            break;
+                        }
+                        else if (i == 0)
+                        {
+                            index = ind - m + 1;
+                            return true;
+                        }
+                    }
+                }
+            }
+            index = 0;
+            return false;
+        }
+
 
         /// <summary>
         /// Алгоритм Кнута-Морриса-Пратта
@@ -83,7 +135,7 @@ namespace Algorithms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int k = 0;
+            int k = -1;
             if (textBox1.Text == string.Empty)
             {
                 label3.Text = "Ошибка: Исходный текст не задан.";
@@ -96,7 +148,8 @@ namespace Algorithms
             {
                 label3.Text = "Ошибка: Длина образа больше длины исходного текста.";
             }
-            else if (AlgKMP(textBox1.Text, textBox2.Text, out k))
+            else if ((radioButton1.Checked && AlgKMP(textBox1.Text, textBox2.Text, out k)) ||
+                     (radioButton2.Checked && AlgBM(textBox1.Text, textBox2.Text, out k)))
             {
                 label3.Text = "Вывод: Образ найден. Индекс первого вхождения: " + k.ToString() + ".";
             }
