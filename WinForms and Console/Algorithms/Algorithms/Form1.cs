@@ -15,6 +15,7 @@ namespace Algorithms
         {
             InitializeComponent();
         }
+
         /// <summary>
         /// Алгоритм Бойера-Мура
         /// </summary>
@@ -27,8 +28,8 @@ namespace Algorithms
             int n = text.Length;
             int m = substring.Length;
             int ind;
-            int[] table = new int[256];
-            for (int i = 0; i < 256; i++)
+            int[] table = new int[9999];
+            for (int i = 0; i < table.Length; i++)
             {
                 table[i] = m;
             }
@@ -66,8 +67,7 @@ namespace Algorithms
             index = 0;
             return false;
         }
-
-
+        
         /// <summary>
         /// Алгоритм Кнута-Морриса-Пратта
         /// </summary>
@@ -136,7 +136,7 @@ namespace Algorithms
         private void button1_Click(object sender, EventArgs e)
         {
             int k = -1;
-            if (textBox1.Text == string.Empty)
+            if (richTextBox1.Text == string.Empty)
             {
                 label3.Text = "Ошибка: Исходный текст не задан.";
             }
@@ -144,12 +144,12 @@ namespace Algorithms
             {
                 label3.Text = "Ошибка: Образ не задан.";
             }
-            else if (textBox1.Text.Length < textBox2.Text.Length)
+            else if (richTextBox1.Text.Length < textBox2.Text.Length)
             {
                 label3.Text = "Ошибка: Длина образа больше длины исходного текста.";
             }
-            else if ((radioButton1.Checked && AlgKMP(textBox1.Text, textBox2.Text, out k)) ||
-                     (radioButton2.Checked && AlgBM(textBox1.Text, textBox2.Text, out k)))
+            else if ((radioButton1.Checked && AlgKMP(richTextBox1.Text, textBox2.Text, out k)) ||
+                     (radioButton2.Checked && AlgBM(richTextBox1.Text, textBox2.Text, out k)))
             {
                 label3.Text = "Вывод: Образ найден. Индекс первого вхождения: " + k.ToString() + ".";
             }
