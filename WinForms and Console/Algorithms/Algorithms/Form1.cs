@@ -206,14 +206,7 @@ namespace Algorithms
             int[] massiv = new int[dataGridView1.ColumnCount];
             for (int i = 0; i < massiv.Length; i++)
             {
-                try
-                {
-                    massiv[i] = Convert.ToInt32(dataGridView1[i, 0].Value);
-                }
-                catch (Exception)
-                {
-                    massiv[i] = Int32.MinValue;
-                }
+                massiv[i] = Convert.ToInt32(dataGridView1[i, 0].Value);
             }
             if (radioButton3.Checked)
             {
@@ -233,14 +226,7 @@ namespace Algorithms
             }
             for (int i = 0; i < massiv.Length; i++)
             {
-                try
-                {
-                    dataGridView1[i, 1].Value = massiv[i];
-                }
-                catch (Exception)
-                {
-
-                }
+                dataGridView1[i, 1].Value = massiv[i];
             }
         }
 
@@ -333,7 +319,7 @@ namespace Algorithms
                 return massiv;
             return Merge(MergeSort(massiv.Take(massiv.Length / 2).ToArray(), revers), MergeSort(massiv.Skip(massiv.Length / 2).ToArray(), revers), revers);
         }
-        
+
         private int[] Merge(int[] massiv1, int[] massiv2, bool revers)
         {
             int a = 0, b = 0;
