@@ -11,9 +11,14 @@ namespace Algorithms
 {
     public partial class Form1 : Form
     {
+        private string oldValue;
+
         public Form1()
         {
             InitializeComponent();
+            dataGridView1.ColumnCount = 2;
+            dataGridView1.RowCount = 2;
+            dataGridView1.Rows[1].ReadOnly = true;
         }
 
         /// <summary>
@@ -67,7 +72,7 @@ namespace Algorithms
             index = 0;
             return false;
         }
-        
+
         /// <summary>
         /// Алгоритм Кнута-Морриса-Пратта
         /// </summary>
@@ -157,6 +162,214 @@ namespace Algorithms
             {
                 label3.Text = "Вывод: Образ не найден.";
             }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            dataGridView1.ColumnCount = Convert.ToInt32(numericUpDown1.Value);
+        }
+
+        private void numericUpDown1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar < 50 && e.KeyChar > 57) && e.KeyChar != 8)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void dataGridView1_CellBeginEdit(object sender, System.Windows.Forms.DataGridViewCellCancelEventArgs e)
+        {
+            try
+            {
+                oldValue = dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString();
+            }
+            catch (Exception)
+            {
+                oldValue = string.Empty;
+            }
+        }
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                int temp = Convert.ToInt32(dataGridView1[e.ColumnIndex, e.RowIndex].Value);
+            }
+            catch (Exception)
+            {
+                dataGridView1[e.ColumnIndex, e.RowIndex].Value = oldValue;
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int[] massiv = new int[dataGridView1.ColumnCount];
+            for (int i = 0; i < massiv.Length; i++)
+            {
+                try
+                {
+                    massiv[i] = Convert.ToInt32(dataGridView1[i, 0].Value);
+                }
+                catch (Exception)
+                {
+                    massiv[i] = Int32.MinValue;
+                }
+            }
+            if (radioButton3.Checked)
+            {
+                massiv = SelectionSort(massiv, checkBox1.Checked);
+            }
+            else if (radioButton4.Checked)
+            {
+                massiv = InsertionSort(massiv, checkBox1.Checked);
+            }
+            else if (radioButton5.Checked)
+            {
+                massiv = BubbleSort(massiv, checkBox1.Checked);
+            }
+            else
+            {
+                massiv = MergeSort(massiv, checkBox1.Checked);
+            }
+            for (int i = 0; i < massiv.Length; i++)
+            {
+                try
+                {
+                    dataGridView1[i, 1].Value = massiv[i];
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// Сортировка вставками
+        /// </summary>
+        /// <param name="massiv">Исходный массив элементов</param>
+        /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
+        /// <returns>Отсортированный массив элементов</returns>
+        private int[] InsertionSort(int[] massiv, bool revers)
+        {
+            for (int i = 1; i < massiv.Length; i++)
+            {
+                int x = massiv[i];
+                int j = i;
+                while (j > 0 && ((revers && massiv[j - 1] < x) || (!revers && massiv[j - 1] > x)))
+                {
+                    massiv[j] = massiv[j - 1];
+                    j--;
+                }
+                massiv[j] = x;
+            }
+            return massiv;
+        }
+
+        /// <summary>
+        /// Сортировка пузырьком
+        /// </summary>
+        /// <param name="massiv">Исходный массив элементов</param>
+        /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
+        /// <returns>Отсортированный массив элементов</returns>
+        private int[] BubbleSort(int[] massiv, bool revers)
+        {
+            for (int i = 0; i < massiv.Length; i++)
+            {
+                bool flag = false;
+                for (int j = 0; j < massiv.Length - i - 1; j++)
+                {
+                    if ((revers && massiv[j] < massiv[j + 1]) ||
+                        (!revers && massiv[j] > massiv[j + 1]))
+                    {
+                        massiv = Swap(massiv, j, j + 1);
+                        flag = true;
+                    }
+                }
+                if (!flag)
+                {
+                    break;
+                }
+            }
+            return massiv;
+        }
+
+        /// <summary>
+        /// Сортировка выбором
+        /// </summary>
+        /// <param name="massiv">Исходный массив элементов</param>
+        /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
+        /// <returns>Отсортированный массив элементов</returns>
+        private int[] SelectionSort(int[] massiv, bool revers)
+        {
+            for (int i = 0; i < massiv.Length - 1; i++)
+            {
+                int index = i;
+                for (int j = i + 1; j < massiv.Length; j++)
+                {
+                    if ((revers && massiv[j] > massiv[index]) ||
+                        (!revers && massiv[j] < massiv[index]))
+                    {
+                        index = j;
+                    }
+                }
+                if (index != i)
+                {
+                    massiv = Swap(massiv, i, index);
+                }
+            }
+            return massiv;
+        }
+
+        /// <summary>
+        /// Сортировка слиянием
+        /// </summary>
+        /// <param name="massiv">Исходный массив элементов</param>
+        /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
+        /// <returns>Отсортированный массив элементов</returns>
+        private int[] MergeSort(int[] massiv, bool revers)
+        {
+            if (massiv.Length == 1)
+                return massiv;
+            return Merge(MergeSort(massiv.Take(massiv.Length / 2).ToArray(), revers), MergeSort(massiv.Skip(massiv.Length / 2).ToArray(), revers), revers);
+        }
+        
+        private int[] Merge(int[] massiv1, int[] massiv2, bool revers)
+        {
+            int a = 0, b = 0;
+            int[] massiv = new int[massiv1.Length + massiv2.Length];
+            for (int i = 0; i < massiv1.Length + massiv2.Length; i++)
+            {
+                if (b < massiv2.Length && a < massiv1.Length)
+                {
+                    if ((!revers && massiv1[a] > massiv2[b]) ||
+                        (revers && massiv1[a] < massiv2[b]))
+                    {
+                        massiv[i] = massiv2[b++];
+                    }
+                    else massiv[i] = massiv1[a++];
+                }
+                else
+                {
+                    if (b < massiv2.Length)
+                    {
+                        massiv[i] = massiv2[b++];
+                    }
+                    else
+                    {
+                        massiv[i] = massiv1[a++];
+                    }
+                }
+            }
+            return massiv;
+        }
+
+        private int[] Swap(int[] massiv, int i, int j)
+        {
+            int temp = massiv[i];
+            massiv[i] = massiv[j];
+            massiv[j] = temp;
+            return massiv;
         }
     }
 }
