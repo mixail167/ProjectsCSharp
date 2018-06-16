@@ -439,15 +439,15 @@ namespace Algorithms
                     dataGridView2[e.RowIndex, e.ColumnIndex].Value = temp;
                     if (temp != 0)
                     {
-                        foreach (Edge item in graph.Edges)
+                        try
                         {
-                            if ((item.Source.Equals(e.ColumnIndex.ToString()) && item.Target.Equals(e.RowIndex.ToString()))
-                                || (item.Source.Equals(e.RowIndex.ToString()) && item.Target.Equals(e.ColumnIndex.ToString())))
-                            {
-                                item.LabelText = temp.ToString();
-                                isFound = true;
-                                break;
-                            }
+                            graph.Edges.First(item => (item.Source.Equals(e.ColumnIndex.ToString()) && item.Target.Equals(e.RowIndex.ToString()))
+                                                     || (item.Source.Equals(e.RowIndex.ToString()) && item.Target.Equals(e.ColumnIndex.ToString()))).LabelText = temp.ToString();
+                            isFound = true;
+                        }
+                        catch
+                        {
+
                         }
                     }
                     if (!isFound)
@@ -455,7 +455,6 @@ namespace Algorithms
                         if (temp != 0)
                         {
                             graph.AddEdge(e.RowIndex.ToString(), temp.ToString(), e.ColumnIndex.ToString()).Attr.ArrowheadAtTarget = ArrowStyle.None;
-
                         }
                         else
                         {
