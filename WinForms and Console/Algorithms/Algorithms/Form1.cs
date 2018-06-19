@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Algorithms
 {
@@ -15,6 +17,7 @@ namespace Algorithms
         private DataGridCell cell;
         private bool semaphore;
         private bool semaphore2;
+        private int[] path;
 
         #endregion
 
@@ -34,6 +37,84 @@ namespace Algorithms
             cell = new DataGridCell(0, 0);
             semaphore = false;
             semaphore2 = false;
+        }
+        /// <summary>
+        /// Алгоритм Дейкстры
+        /// </summary>
+        /// <param name="start">Начальный узел</param>
+        /// <param name="graph">Массив расстояний между узлами</param>
+        /// <returns>Массив минимальных расстояний</returns>
+        int[] AlgorithmDijkstra(int start, int[,] graph)
+        {
+            bool[] visited = new bool[graph.GetLength(1)];
+            int[] distance = new int[graph.GetLength(1)];
+            for (int i = 0; i < distance.Length; i++)
+            {
+                distance[i] = int.MaxValue;
+                visited[i] = false;
+            }
+            distance[start] = 0;
+            int minindex, min, temp;
+            // Шаг алгоритма
+            do
+            {
+                minindex = graph.GetLength(0);
+                min = int.MaxValue;
+                for (int i = 0; i < distance.Length; i++)
+                { // Если вершину ещё не обошли и вес меньше min
+                    if (visited[i] == false && distance[i] < min)
+                    { // Переприсваиваем значения
+                        min = distance[i];
+                        minindex = i;
+                    }
+                }
+                // Добавляем найденный минимальный вес
+                // к текущему весу вершины
+                // и сравниваем с текущим минимальным весом вершины
+                if (minindex != graph.GetLength(0))
+                {
+                    for (int i = 0; i < distance.Length; i++)
+                    {
+                        if (graph[minindex, i] > 0)
+                        {
+                            temp = min + graph[minindex, i];
+                            if (temp < distance[i])
+                            {
+                                distance[i] = temp;
+                            }
+                        }
+                    }
+                    visited[minindex] = true;
+                }
+            } while (minindex < graph.GetLength(0));
+            return distance;
+        }
+
+        private int[] GetPath(int[] distance, int[,] graph, int right)
+        {
+            int[] path = new int[distance.Length];
+            path[0] = right + 1;
+            int k = 1; // индекс предыдущей вершины
+            int weight = distance[right]; // вес конечной вершины
+            while (right > 0) // пока не дошли до начальной вершины
+            {
+                for (int i = 0; i < path.Length; i++)
+                {
+                    // просматриваем все вершины
+                    if (graph[right, i] != 0)   // если связь есть
+                    {
+                        int temp = weight - graph[right, i]; // определяем вес пути из предыдущей вершины
+                        if (temp == distance[i]) // если вес совпал с рассчитанным
+                        {                 // значит из этой вершины и был переход
+                            weight = temp; // сохраняем новый вес
+                            right = i;       // сохраняем предыдущую вершину
+                            path[k] = i + 1; // и записываем ее в массив
+                            k++;
+                        }
+                    }
+                }
+            }
+            return path;
         }
 
         /// <summary>
@@ -302,7 +383,45 @@ namespace Algorithms
         {
             for (int i = left; i < right + 1; i++)
             {
-                graph.RemoveNode(graph.FindNode(i.ToString()));
+                try
+                {
+                    graph.RemoveNode(graph.FindNode(i.ToString()));
+                }
+                catch
+                {
+
+                }
+            }
+        }
+
+        private void ShowGraph(Graph graph)
+        {
+            GraphForm graphForm = new GraphForm(graph);
+            graphForm.ShowDialog();
+        }
+
+        private void ButtonVisible(bool value)
+        {
+            button5.Visible = value;
+        }
+
+        private void SetEdgeColor(int[] path, Color color)
+        {
+            for (int i = path.Length - 1; i > 0; i--)
+            {
+                if (path[i] != 0)
+                {
+                    try
+                    {
+                        graph.FindNode(path[i].ToString()).Attr.Color = color;
+                        graph.FindNode(path[i - 1].ToString()).Attr.Color = color;
+                        graph.Edges.First(item => (item.Source.Equals(path[i].ToString()) && item.Target.Equals(path[i - 1].ToString()))).Attr.Color = color;
+                    }
+                    catch
+                    {
+                        graph.Edges.First(item => (item.Source.Equals(path[i - 1].ToString()) && item.Target.Equals(path[i].ToString()))).Attr.Color = color;
+                    }
+                }
             }
         }
 
@@ -401,6 +520,8 @@ namespace Algorithms
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
+            numericUpDown3.Maximum = numericUpDown2.Value;
+            numericUpDown4.Maximum = numericUpDown2.Value;
             dataGridView2.ColumnCount = Convert.ToInt32(numericUpDown2.Value) + 1;
             dataGridView2.RowCount = dataGridView2.ColumnCount;
             if (dataGridView2.ColumnCount - 1 > oldValueCount)
@@ -434,6 +555,8 @@ namespace Algorithms
                 if (e.RowIndex != e.ColumnIndex && !semaphore2)
                 {
                     int temp = Convert.ToInt32(dataGridView2[e.ColumnIndex, e.RowIndex].Value);
+                    if (temp < 0)
+                        throw new Exception();
                     semaphore2 = !semaphore2;
                     bool isFound = false;
                     dataGridView2[e.RowIndex, e.ColumnIndex].Value = temp;
@@ -550,8 +673,63 @@ namespace Algorithms
 
         private void button3_Click(object sender, EventArgs e)
         {
-            GraphForm graphForm = new GraphForm(graph);
-            graphForm.ShowDialog();
+            ShowGraph(graph);
+        }
+
+        private void numericUpDown3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar < 49 && e.KeyChar > 57) && e.KeyChar != 8)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            int left = Convert.ToInt32(numericUpDown3.Value);
+            int right = Convert.ToInt32(numericUpDown4.Value);
+            if (right != left)
+            {
+                int[,] massiv = new int[dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1];
+                for (int i = 0; i < massiv.GetLength(0); i++)
+                {
+                    for (int j = 0; j < massiv.GetLength(1); j++)
+                    {
+                        try
+                        {
+                            massiv[i, j] = Convert.ToInt32(dataGridView2[j + 1, i + 1].Value);
+                        }
+                        catch
+                        {
+                            massiv[i, j] = 0;
+                        }
+                    }
+                }
+                int[] distance = AlgorithmDijkstra(left - 1, massiv);
+                if (distance[right - 1] != int.MaxValue)
+                {
+                    label8.Text = string.Format("Минимальное расстояние из узла {0} в узел {1} равно {2}.", left, right, distance[right - 1]);
+                    path = GetPath(distance, massiv, right - 1);
+                    ButtonVisible(true);
+                }
+                else
+                {
+                    label8.Text = string.Format("Минимальное расстояние из узла {0} в узел {1} равно {2}.", left, right, double.PositiveInfinity);
+                    ButtonVisible(false);
+                }
+            }
+            else
+            {
+                label8.Text = "Ошибка: Начальный и конечный узлы равны.";
+                ButtonVisible(false);
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            SetEdgeColor(path, Color.Red);
+            ShowGraph(graph);
+            SetEdgeColor(path, Color.Black);
         }
     }
 }
