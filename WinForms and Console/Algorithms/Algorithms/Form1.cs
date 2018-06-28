@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Generic;
 
 namespace Algorithms
 {
@@ -38,6 +39,58 @@ namespace Algorithms
             semaphore = false;
             semaphore2 = false;
         }
+
+        /// <summary>
+        /// Алгоритм Флойда
+        /// </summary>
+        /// <param name="graph">Массив расстояний между узлами</param>
+        /// <param name="left">Начальный узел</param>
+        /// <param name="right">Конечный узел</param>
+        /// <param name="distance">Минимальное расстояние от начального до конечного узла</param>
+        /// <returns></returns>
+        private int[,] AlgorithmFloyd(int[,] graph, int left, int right, out int distance)
+        {
+            int n = graph.GetLength(0);
+            int[,] path = new int[n, n];
+            for (int k = 0; k < n; k++)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        int temp = graph[i, k] + graph[k, j];
+                        if (graph[i, k] != int.MaxValue && graph[k, j] != int.MaxValue && temp < graph[i, j])
+                        {
+                            graph[i, j] = temp;
+                            path[i, j] = k + 1;
+
+                        }
+                    }
+                }
+            }
+            distance = graph[left, right];
+            return path;
+        }
+
+        private int[] GetPathFloyd(int[,] pathFloyd, int left, int right)
+        {
+            List<int> list = new List<int>() { left };
+            list = GetPathFloyd(pathFloyd, left - 1, right - 1, list);
+            list.Add(right);
+            list.Reverse();
+            return list.ToArray();
+        }
+
+        private List<int> GetPathFloyd(int[,] pathFloyd, int left, int right, List<int> list)
+        {
+            int k = pathFloyd[left, right];
+            if (k == 0)
+                return list;
+            list = GetPathFloyd(pathFloyd, left, k - 1, list);
+            list.Add(k);
+            return GetPathFloyd(pathFloyd, k - 1, right, list);
+        }
+
         /// <summary>
         /// Алгоритм Дейкстры
         /// </summary>
@@ -90,7 +143,7 @@ namespace Algorithms
             return distance;
         }
 
-        private int[] GetPath(int[] distance, int[,] graph, int right)
+        private int[] GetPathDijkstra(int[] distance, int[,] graph, int right)
         {
             int[] path = new int[distance.Length];
             path[0] = right + 1;
@@ -400,6 +453,11 @@ namespace Algorithms
             graphForm.ShowDialog();
         }
 
+        private void UpdateLabel(int left, int right, double distance)
+        {
+            label8.Text = string.Format("Минимальное расстояние из узла {0} в узел {1} равно {2}.", left, right, distance);
+        }
+
         private void ButtonVisible(bool value)
         {
             button5.Visible = value;
@@ -560,6 +618,11 @@ namespace Algorithms
                     semaphore2 = !semaphore2;
                     bool isFound = false;
                     dataGridView2[e.RowIndex, e.ColumnIndex].Value = temp;
+                    if (dataGridView2[e.ColumnIndex, e.RowIndex].Value == null)
+                    {
+                        semaphore2 = !semaphore2;
+                        dataGridView2[e.ColumnIndex, e.RowIndex].Value = temp;
+                    }
                     if (temp != 0)
                     {
                         try
@@ -592,11 +655,13 @@ namespace Algorithms
                             }
                         }
                     }
+                    ButtonVisible(false);
+                    label8.Text = string.Empty;
                 }
-
             }
             catch
             {
+                semaphore2 = !semaphore2;
                 dataGridView2[e.ColumnIndex, e.RowIndex].Value = oldValue;
             }
         }
@@ -698,25 +763,50 @@ namespace Algorithms
                         try
                         {
                             massiv[i, j] = Convert.ToInt32(dataGridView2[j + 1, i + 1].Value);
+                            if (radioButton8.Checked && massiv[i, j] == 0)
+                                massiv[i, j] = int.MaxValue;
                         }
                         catch
                         {
-                            massiv[i, j] = 0;
+                            if (radioButton8.Checked)
+                                massiv[i, j] = int.MaxValue;
+                            else
+                                massiv[i, j] = 0;
                         }
                     }
                 }
-                int[] distance = AlgorithmDijkstra(left - 1, massiv);
-                if (distance[right - 1] != int.MaxValue)
+                if (radioButton7.Checked)
                 {
-                    label8.Text = string.Format("Минимальное расстояние из узла {0} в узел {1} равно {2}.", left, right, distance[right - 1]);
-                    path = GetPath(distance, massiv, right - 1);
-                    ButtonVisible(true);
+                    int[] distance = AlgorithmDijkstra(left - 1, massiv);
+                    if (distance[right - 1] != int.MaxValue)
+                    {
+                        UpdateLabel(left, right, distance[right - 1]);
+                        path = GetPathDijkstra(distance, massiv, right - 1);
+                        ButtonVisible(true);
+                    }
+                    else
+                    {
+                        UpdateLabel(left, right, double.PositiveInfinity);
+                        ButtonVisible(false);
+                    }
                 }
                 else
                 {
-                    label8.Text = string.Format("Минимальное расстояние из узла {0} в узел {1} равно {2}.", left, right, double.PositiveInfinity);
-                    ButtonVisible(false);
+                    int distance;
+                    int[,] pathFloyd = AlgorithmFloyd(massiv, left - 1, right - 1, out distance);
+                    if (distance != int.MaxValue)
+                    {
+                        UpdateLabel(left, right, distance);
+                        path = GetPathFloyd(pathFloyd, left, right);
+                        ButtonVisible(true);
+                    }
+                    else
+                    {
+                        UpdateLabel(left, right, double.PositiveInfinity);
+                        ButtonVisible(false);
+                    }
                 }
+
             }
             else
             {
