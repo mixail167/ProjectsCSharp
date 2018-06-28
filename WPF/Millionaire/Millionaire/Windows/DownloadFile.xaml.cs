@@ -23,10 +23,10 @@ namespace Millionaire
         }
 
         private delegate void NoArgDelegate();
-        public static void Refresh(DependencyObject obj)
+        public void Refresh(DependencyObject obj)
         {
             obj.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Loaded,
-                (NoArgDelegate)delegate { });
+                (NoArgDelegate)delegate { });            
         }
 
 
