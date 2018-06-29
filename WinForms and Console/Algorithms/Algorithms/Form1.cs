@@ -59,7 +59,7 @@ namespace Algorithms
                     for (int j = 0; j < n; j++)
                     {
                         int temp = graph[i, k] + graph[k, j];
-                        if (graph[i, k] != int.MaxValue && graph[k, j] != int.MaxValue && temp < graph[i, j])
+                        if (graph[i, k] != 0 && graph[k, j] != 0 && temp < graph[i, j])
                         {
                             graph[i, j] = temp;
                             path[i, j] = k + 1;
@@ -71,6 +71,28 @@ namespace Algorithms
             distance = graph[left, right];
             return path;
         }
+
+        private int[,] AlgorithmFloyd(int[,] graph)
+        {
+            int n = graph.GetLength(0);
+            for (int k = 0; k < n; k++)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        int temp = graph[i, k] + graph[k, j];
+                        if (graph[i, k] != 0 && graph[k, j] != 0 && temp < graph[i, j])
+                        {
+                            graph[i, j] = temp;
+
+                        }
+                    }
+                }
+            }
+            return graph;
+        }
+
 
         private int[] GetPathFloyd(int[,] pathFloyd, int left, int right)
         {
@@ -458,6 +480,19 @@ namespace Algorithms
             label8.Text = string.Format("Минимальное расстояние из узла {0} в узел {1} равно {2}.", left, right, distance);
         }
 
+        private void UpdateLabel(double index)
+        {
+            if (index != 0)
+            {
+                label8.Text = string.Format("Центр графа - вершина под номером {0}.", index);
+            }
+            else label8.Text = "Невозможно определить центр графа.";
+        }
+        private void UpdateLabel(string text)
+        {
+            label8.Text = text;
+        }
+
         private void ButtonVisible(bool value)
         {
             button5.Visible = value;
@@ -481,6 +516,55 @@ namespace Algorithms
                     }
                 }
             }
+        }
+
+        private int[,] GetMassiv(int rowCount, int columnCount)
+        {
+            int[,] massiv = new int[rowCount, columnCount];
+            for (int i = 0; i < massiv.GetLength(0); i++)
+            {
+                for (int j = 0; j < massiv.GetLength(1); j++)
+                {
+                    try
+                    {
+                        massiv[i, j] = Convert.ToInt32(dataGridView2[j + 1, i + 1].Value);
+
+                    }
+                    catch
+                    {
+                        massiv[i, j] = 0;
+                    }
+                }
+            }
+            return massiv;
+        }
+
+        private int MaxInColumn(int index, int[,] massiv)
+        {
+            int max = massiv[0, index];
+            for (int i = 1; i < massiv.GetLength(0); i++)
+            {
+                if (max < massiv[i, index] && massiv[i, index] != 0)
+                {
+                    max = massiv[i, index];
+                }
+            }
+            return max;
+        }
+
+        private int IndexMinInMassiv(int[] massiv)
+        {
+            int min = massiv[0];
+            int index = 0;
+            for (int i = 1; i < massiv.Length; i++)
+            {
+                if (min > massiv[i] && massiv[i] != 0)
+                {
+                    min = massiv[i];
+                    index = i + 1;
+                }
+            }
+            return index;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -656,7 +740,7 @@ namespace Algorithms
                         }
                     }
                     ButtonVisible(false);
-                    label8.Text = string.Empty;
+                    UpdateLabel(string.Empty);
                 }
             }
             catch
@@ -755,26 +839,7 @@ namespace Algorithms
             int right = Convert.ToInt32(numericUpDown4.Value);
             if (right != left)
             {
-                int[,] massiv = new int[dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1];
-                for (int i = 0; i < massiv.GetLength(0); i++)
-                {
-                    for (int j = 0; j < massiv.GetLength(1); j++)
-                    {
-                        try
-                        {
-                            massiv[i, j] = Convert.ToInt32(dataGridView2[j + 1, i + 1].Value);
-                            if (radioButton8.Checked && massiv[i, j] == 0)
-                                massiv[i, j] = int.MaxValue;
-                        }
-                        catch
-                        {
-                            if (radioButton8.Checked)
-                                massiv[i, j] = int.MaxValue;
-                            else
-                                massiv[i, j] = 0;
-                        }
-                    }
-                }
+                int[,] massiv = GetMassiv(dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1);
                 if (radioButton7.Checked)
                 {
                     int[] distance = AlgorithmDijkstra(left - 1, massiv);
@@ -794,7 +859,7 @@ namespace Algorithms
                 {
                     int distance;
                     int[,] pathFloyd = AlgorithmFloyd(massiv, left - 1, right - 1, out distance);
-                    if (distance != int.MaxValue)
+                    if (distance != 0)
                     {
                         UpdateLabel(left, right, distance);
                         path = GetPathFloyd(pathFloyd, left, right);
@@ -810,7 +875,7 @@ namespace Algorithms
             }
             else
             {
-                label8.Text = "Ошибка: Начальный и конечный узлы равны.";
+                UpdateLabel("Ошибка: Начальный и конечный узлы равны.");
                 ButtonVisible(false);
             }
         }
@@ -821,5 +886,16 @@ namespace Algorithms
             ShowGraph(graph);
             SetEdgeColor(path, Color.Black);
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            int[,] graph = AlgorithmFloyd(GetMassiv(dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1));
+            int[] maxDistances = new int[graph.GetLength(1)];
+            for (int i = 0; i < maxDistances.Length; i++)
+            {
+                maxDistances[i] = MaxInColumn(i, graph);
+            }
+            UpdateLabel(IndexMinInMassiv(maxDistances));
+        }        
     }
 }
