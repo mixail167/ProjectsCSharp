@@ -26,9 +26,8 @@ namespace Millionaire
         public void Refresh(DependencyObject obj)
         {
             obj.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Loaded,
-                (NoArgDelegate)delegate { });            
+                (NoArgDelegate)delegate { });
         }
-
 
         [DllImport("wininet.dll")]
         private extern static bool InternetGetConnectedState(out int Description, int ReservedValue);

@@ -204,9 +204,10 @@ namespace Millionaire
         {
             try
             {
-                if (File.Exists(Environment.CurrentDirectory + @"\ReadMe.txt"))
+                string path = Environment.CurrentDirectory + @"\ReadMe.txt";
+                if (File.Exists(path))
                 {
-                    System.Diagnostics.Process.Start(Environment.CurrentDirectory + @"\ReadMe.txt");
+                    System.Diagnostics.Process.Start(path);
                 }
                 else throw new FileNotFoundException("Файл ReadMe.txt не найден.");
             }
