@@ -107,7 +107,14 @@ namespace CalendarGenerator
                 {
                     indexColumn++;
                     indexRow = 1;
-                    dataGridView[indexColumn, 0].Value = new GregorianCalendar().GetWeekOfYear(new DateTime(year, monthNumber, i + 1), CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                    try
+                    {
+                        dataGridView[indexColumn, 0].Value = new GregorianCalendar().GetWeekOfYear(new DateTime(year, monthNumber, i + 1), CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 else indexRow++;
 
