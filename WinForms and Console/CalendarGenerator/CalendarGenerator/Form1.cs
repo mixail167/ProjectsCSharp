@@ -14,6 +14,10 @@ namespace CalendarGenerator
     {
         private int year;
         private string[] daysOfWeek = new string[] { "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС" };
+
+        private DataGridView oldDataGridView;
+        private DataGridViewCellEventArgs dataGridViewCellEventArgs;
+
         private DataGridViewCellStyle firstRowStyle = new DataGridViewCellStyle
         {
             BackColor = System.Drawing.Color.Gold,
@@ -63,7 +67,6 @@ namespace CalendarGenerator
             InitDataGridView();
             numericUpDown1.Value = Convert.ToDecimal(DateTime.Now.Year);
             this.year = Convert.ToInt32(numericUpDown1.Value);
-
         }
 
         private void GenerateCalendar(DataGridView dataGridView, int monthNumber, int year)
@@ -117,7 +120,6 @@ namespace CalendarGenerator
                     }
                 }
                 else indexRow++;
-
             }
         }
 
@@ -145,65 +147,60 @@ namespace CalendarGenerator
             try
             {
                 int year = Convert.ToInt32(numericUpDown1.Value);
-                if (year < DateTime.MinValue.Year || year > DateTime.MaxValue.Year)
-                    throw new Exception();
+                this.year = year;
+                if (year == DateTime.Now.Year)
+                {
+                    button1.Visible = false;
+                }
                 else
                 {
-                    this.year = year;
-                    if (year == DateTime.Now.Year)
+                    button1.Visible = true;
+                }
+                InitDataGridView();
+                for (int i = 1; i <= 12; i++)
+                {
+                    DataGridView dataGridView;
+                    switch (i)
                     {
-                        button1.Visible = false;
-                    }
-                    else
-                    {
-                        button1.Visible = true;
-                    }
-                    InitDataGridView();
-                    for (int i = 1; i <= 12; i++)
-                    {
-                        DataGridView dataGridView;
-                        switch (i)
-                        {
-                            case 1:
-                                dataGridView = dataGridView1;
-                                break;
-                            case 2:
-                                dataGridView = dataGridView2;
-                                break;
-                            case 3:
-                                dataGridView = dataGridView3;
-                                break;
-                            case 4:
-                                dataGridView = dataGridView4;
-                                break;
-                            case 5:
-                                dataGridView = dataGridView5;
-                                break;
-                            case 6:
-                                dataGridView = dataGridView6;
-                                break;
-                            case 7:
-                                dataGridView = dataGridView7;
-                                break;
-                            case 8:
-                                dataGridView = dataGridView8;
-                                break;
-                            case 9:
-                                dataGridView = dataGridView9;
-                                break;
-                            case 10:
-                                dataGridView = dataGridView10;
-                                break;
-                            case 11:
-                                dataGridView = dataGridView11;
-                                break;
-                            default:
-                                dataGridView = dataGridView12;
-                                break;
+                        case 1:
+                            dataGridView = dataGridView1;
+                            break;
+                        case 2:
+                            dataGridView = dataGridView2;
+                            break;
+                        case 3:
+                            dataGridView = dataGridView3;
+                            break;
+                        case 4:
+                            dataGridView = dataGridView4;
+                            break;
+                        case 5:
+                            dataGridView = dataGridView5;
+                            break;
+                        case 6:
+                            dataGridView = dataGridView6;
+                            break;
+                        case 7:
+                            dataGridView = dataGridView7;
+                            break;
+                        case 8:
+                            dataGridView = dataGridView8;
+                            break;
+                        case 9:
+                            dataGridView = dataGridView9;
+                            break;
+                        case 10:
+                            dataGridView = dataGridView10;
+                            break;
+                        case 11:
+                            dataGridView = dataGridView11;
+                            break;
+                        default:
+                            dataGridView = dataGridView12;
+                            break;
 
-                        }
-                        GenerateCalendar(dataGridView, i, Convert.ToInt32(numericUpDown1.Value));
                     }
+                    GenerateCalendar(dataGridView, i, Convert.ToInt32(numericUpDown1.Value));
                 }
             }
             catch (Exception)
@@ -220,15 +217,6 @@ namespace CalendarGenerator
             }
         }
 
-        private void dataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            DataGridView dataGridView = sender as DataGridView;
-            if (e.RowIndex == 0 || e.ColumnIndex == 0)
-            {
-                dataGridView[e.ColumnIndex, e.RowIndex].Selected = false;
-            }
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             numericUpDown1.Value = Convert.ToDecimal(DateTime.Now.Year);
@@ -238,6 +226,24 @@ namespace CalendarGenerator
         {
             HandledMouseEventArgs handledArgs = e as HandledMouseEventArgs;
             handledArgs.Handled = true;
+        }
+
+        private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dataGridView = sender as DataGridView;
+            if (e.RowIndex != 0 && e.ColumnIndex != 0)
+            {
+                if (this.oldDataGridView != null && dataGridView != this.oldDataGridView)
+                {
+                    oldDataGridView[dataGridViewCellEventArgs.ColumnIndex, dataGridViewCellEventArgs.RowIndex].Selected = false;
+                }
+                this.oldDataGridView = dataGridView;
+                this.dataGridViewCellEventArgs = e;
+            }
+            else if (dataGridViewCellEventArgs != null)
+            {
+                oldDataGridView[dataGridViewCellEventArgs.ColumnIndex, dataGridViewCellEventArgs.RowIndex].Selected = true;
+            }
         }
     }
 }
