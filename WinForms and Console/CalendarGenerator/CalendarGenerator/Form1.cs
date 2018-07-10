@@ -248,24 +248,37 @@ namespace CalendarGenerator
             }
         }
 
+        private Paragraph CreateParagraph(Section section, Spire.Doc.Documents.HorizontalAlignment  alignment = Spire.Doc.Documents.HorizontalAlignment.Left)
+        {
+            Paragraph paragraph = section.AddParagraph();
+            paragraph.Format.HorizontalAlignment = alignment;
+            return paragraph;
+        }
+
         private bool WriteToWordDocument(string text, string path)
         {
             try
             {
                 Document doc = new Document();
                 Section section = doc.AddSection();
-                Paragraph paragraph = section.AddParagraph();
-                paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Left;
+
+                Paragraph paragraph = CreateParagraph(section, Spire.Doc.Documents.HorizontalAlignment.Center);
+                TextRange textRange = paragraph.AppendText(string.Format("Календарь на {0} г.\n\n", this.dateTime.Year));
+                textRange.CharacterFormat.Font = new Font("Times New Roman", 16.0f, FontStyle.Regular);
+                textRange.CharacterFormat.TextColor = Color.Blue;
+
+                paragraph = CreateParagraph(section);
                 string[] lines = text.Split(new char[] { '\n' }, StringSplitOptions.None);
                 foreach (string item in lines)
                 {
-                    TextRange textRange = paragraph.AppendText(item + "\n");
+                    textRange = paragraph.AppendText(item + "\n");
                     textRange.CharacterFormat.Font = new Font("Courier New", 12.0f, FontStyle.Regular);
                     if (item.Trim().StartsWith(@"Дн\Нед"))
                         textRange.CharacterFormat.TextBackgroundColor = Color.Yellow;
                     else if (item.Trim().StartsWith("СБ") || item.Trim().StartsWith("ВС"))
                         textRange.CharacterFormat.TextColor = Color.Red;
                 }
+
                 foreach (string item in daysOfWeek)
                 {
                     TextSelection[] textSelections = doc.FindAllString(string.Format("{0}:", item), false, false);
@@ -283,9 +296,6 @@ namespace CalendarGenerator
                 return false;
             }
         }
-
-
-
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -309,10 +319,10 @@ namespace CalendarGenerator
         {
             saveFileDialog1.FileName = FileName;
             if (radioButton1.Checked)
-                saveFileDialog1.Filter = "Portable Document Format(.pdf)|*.pdf";
+                saveFileDialog1.Filter = "Portable Document Format (*.pdf)|*.pdf";
             else if (radioButton2.Checked)
-                saveFileDialog1.Filter = "Документ Word(.docx)|*.docx";
-            else saveFileDialog1.Filter = "Текстовый документ(.txt)|*.txt";
+                saveFileDialog1.Filter = "Документ Word (*.docx)|*.docx";
+            else saveFileDialog1.Filter = "Текстовый документ (*.txt)|*.txt";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 return saveFileDialog1.FileName;
