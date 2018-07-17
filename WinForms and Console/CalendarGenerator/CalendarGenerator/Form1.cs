@@ -1,6 +1,9 @@
 ﻿using Spire.Doc;
 using Spire.Doc.Documents;
 using Spire.Doc.Fields;
+using PDF = Spire.Pdf;
+using PDFGraphics = Spire.Pdf.Graphics;
+using PDFFind = Spire.Pdf.General.Find;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace CalendarGenerator
 {
@@ -25,27 +29,37 @@ namespace CalendarGenerator
 
         private DataGridViewCellStyle firstRowStyle = new DataGridViewCellStyle
         {
-            BackColor = System.Drawing.Color.Gold,
-            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204))),
-            SelectionBackColor = System.Drawing.Color.Gold,
-            SelectionForeColor = System.Drawing.Color.Black,
+            BackColor = Color.Gold,
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204))),
+            SelectionBackColor = Color.Gold,
+            SelectionForeColor = Color.Black,
             Alignment = DataGridViewContentAlignment.MiddleCenter
         };
         private DataGridViewCellStyle cellDefaultStyle = new DataGridViewCellStyle
         {
-            BackColor = System.Drawing.Color.Silver,
-            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204))),
-            SelectionBackColor = System.Drawing.Color.Silver,
-            SelectionForeColor = System.Drawing.Color.Black,
+            BackColor = Color.Silver,
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204))),
+            SelectionBackColor = Color.Silver,
+            SelectionForeColor = Color.Black,
             Alignment = DataGridViewContentAlignment.MiddleCenter
         };
 
         private DataGridViewCellStyle cellStyle = new DataGridViewCellStyle
         {
-            BackColor = System.Drawing.Color.White,
-            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204))),
-            SelectionBackColor = System.Drawing.Color.OrangeRed,
-            SelectionForeColor = System.Drawing.Color.Black,
+            BackColor = Color.White,
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204))),
+            SelectionBackColor = Color.OrangeRed,
+            SelectionForeColor = Color.Black,
+            Alignment = DataGridViewContentAlignment.MiddleCenter
+        };
+
+        private DataGridViewCellStyle cellWeekEndStyle = new DataGridViewCellStyle
+        {
+            ForeColor = Color.Red,
+            BackColor = Color.White,
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204))),
+            SelectionBackColor = Color.OrangeRed,
+            SelectionForeColor = Color.Black,
             Alignment = DataGridViewContentAlignment.MiddleCenter
         };
 
@@ -85,7 +99,14 @@ namespace CalendarGenerator
             for (int i = 1; i <= daysInMonth; i++)
             {
                 dataGridView[indexColumn, indexRow].Value = i.ToString();
-                dataGridView[indexColumn, indexRow].Style = cellStyle;
+                if (indexRow >= 6)
+                {
+                    dataGridView[indexColumn, indexRow].Style = cellWeekEndStyle;
+                }
+                else
+                {
+                    dataGridView[indexColumn, indexRow].Style = cellStyle;
+                }
                 if (indexRow == dataGridView1.RowCount - 1)
                 {
                     indexColumn++;
@@ -248,11 +269,81 @@ namespace CalendarGenerator
             }
         }
 
-        private Paragraph CreateParagraph(Section section, Spire.Doc.Documents.HorizontalAlignment  alignment = Spire.Doc.Documents.HorizontalAlignment.Left)
+        private Paragraph CreateParagraph(Section section, Spire.Doc.Documents.HorizontalAlignment alignment = Spire.Doc.Documents.HorizontalAlignment.Left)
         {
             Paragraph paragraph = section.AddParagraph();
             paragraph.Format.HorizontalAlignment = alignment;
             return paragraph;
+        }
+
+        private bool WriteToPDFDocument(string text, string path)
+        {
+            try
+            {
+                PDF.PdfDocument doc = new PDF.PdfDocument();
+                doc.XmpMetaData.SetAuthor(Environment.UserName);
+                doc.XmpMetaData.SetCreateDate(DateTime.Now);
+                doc.XmpMetaData.SetCreator(Environment.UserName);
+                doc.XmpMetaData.SetKeywords(string.Format("Календарь, {0}", this.dateTime.Year));
+                doc.XmpMetaData.SetProducer(Environment.UserName);
+                doc.XmpMetaData.SetSubject("Календари");
+                doc.XmpMetaData.SetTitle(string.Format("Календарь на {0} г.", this.dateTime.Year));
+                PDFGraphics.PdfMargins margin = new PDFGraphics.PdfMargins();
+                PDFGraphics.PdfUnitConvertor unitConvertor = new PDFGraphics.PdfUnitConvertor();
+                margin.Top = unitConvertor.ConvertUnits(0.71f, PDFGraphics.PdfGraphicsUnit.Centimeter, PDFGraphics.PdfGraphicsUnit.Point);
+                margin.Bottom = margin.Top;
+                margin.Left = unitConvertor.ConvertUnits(1.76f, PDFGraphics.PdfGraphicsUnit.Centimeter, PDFGraphics.PdfGraphicsUnit.Point);
+                margin.Right = margin.Left;
+                PDF.PdfPageBase page = doc.Pages.Add(PDF.PdfPageSize.A4, margin);
+                PDFGraphics.PdfTrueTypeFont timesNewRoman = new PDFGraphics.PdfTrueTypeFont(@"C:\Windows\Fonts\times.ttf", 16.0f);
+                PDFGraphics.PdfTrueTypeFont courierNew = new PDFGraphics.PdfTrueTypeFont(@"C:\Windows\Fonts\cour.ttf", 12.0f);
+                PDFGraphics.PdfStringFormat alignCenter = new PDFGraphics.PdfStringFormat(PDFGraphics.PdfTextAlignment.Center);
+                page.Canvas.DrawString(string.Format("Календарь на {0} г.", this.dateTime.Year), timesNewRoman, new PDFGraphics.PdfSolidBrush(Color.Blue), page.Canvas.ClientSize.Width / 2, 0, alignCenter);
+                float y = 43;
+                string[] lines = text.Split(new char[] { '\n' }, StringSplitOptions.None);
+                foreach (string item in lines)
+                {
+                    bool isFound = false;
+                    if (item.Trim().StartsWith(@"Дн\Нед"))
+                    {
+                        page.Canvas.DrawRectangle(new PDFGraphics.PdfSolidBrush(Color.Yellow), new RectangleF(0, y, courierNew.MeasureString(item, courierNew.Size).Width * item.Length, 13));
+                    }
+                    else
+                    {
+                        for (int i = 0; i < daysOfWeek.Length; i++)
+                        {
+                            if (item.Trim().StartsWith(daysOfWeek[i]))
+                            {
+                                string temp = item.Substring(4, 3);
+                                SizeF size = courierNew.MeasureString(temp, courierNew.Size);
+                                page.Canvas.DrawRectangle(new PDFGraphics.PdfSolidBrush(Color.Yellow), new RectangleF(size.Width * 4, y, size.Width * temp.Length, 13));
+                                if (i >= 5)
+                                {
+                                    page.Canvas.DrawString(item, courierNew, new PDFGraphics.PdfSolidBrush(Color.Red), 0, y);
+                                }
+                                else
+                                {
+                                    page.Canvas.DrawString(item, courierNew, new PDFGraphics.PdfSolidBrush(Color.Black), 0, y);
+                                }
+                                isFound = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isFound)
+                    {
+                        page.Canvas.DrawString(item, courierNew, new PDFGraphics.PdfSolidBrush(Color.Black), 0, y);
+                    }
+                    y += 13;
+                }
+                doc.SaveToFile(path, PDF.FileFormat.PDF);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
         }
 
         private bool WriteToWordDocument(string text, string path)
@@ -260,6 +351,11 @@ namespace CalendarGenerator
             try
             {
                 Document doc = new Document();
+                doc.BuiltinDocumentProperties.Title = string.Format("Календарь на {0} г.", this.dateTime.Year);
+                doc.BuiltinDocumentProperties.Author = Environment.UserName;
+                doc.BuiltinDocumentProperties.Category = "Календари";
+                doc.BuiltinDocumentProperties.Keywords = string.Format("Календарь, {0}", this.dateTime.Year);
+                doc.BuiltinDocumentProperties.Comments = string.Format("Календарь на {0} г.", this.dateTime.Year);
                 Section section = doc.AddSection();
 
                 Paragraph paragraph = CreateParagraph(section, Spire.Doc.Documents.HorizontalAlignment.Center);
@@ -284,10 +380,11 @@ namespace CalendarGenerator
                     TextSelection[] textSelections = doc.FindAllString(string.Format("{0}:", item), false, false);
                     foreach (TextSelection textSelection in textSelections)
                     {
-                        textSelection.GetAsOneRange().CharacterFormat.HighlightColor = Color.FromArgb(0, 255, 255);
+                        textSelection.GetAsOneRange().CharacterFormat.HighlightColor = Color.Yellow;
                     }
                 }
-                doc.SaveToFile(path, FileFormat.Docx);
+
+                doc.SaveToFile(path, Spire.Doc.FileFormat.Docx);
                 return true;
             }
             catch (Exception exception)
@@ -304,7 +401,7 @@ namespace CalendarGenerator
             {
                 string text = GetCalendar();
                 if (radioButton1.Checked)
-                    writeInFile = WriteToWordDocument;
+                    writeInFile = WriteToPDFDocument;
                 else if (radioButton2.Checked)
                     writeInFile = WriteToWordDocument;
                 else writeInFile = WriteToTextFile;
