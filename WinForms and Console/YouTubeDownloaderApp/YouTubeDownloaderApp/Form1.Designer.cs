@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -86,7 +87,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(531, 20);
             this.textBox1.TabIndex = 4;
-            this.textBox1.Leave += new System.EventHandler(this.textBox1_Leave);
             // 
             // progressBar1
             // 
@@ -107,7 +107,6 @@
             // saveFileDialog1
             // 
             this.saveFileDialog1.Filter = "MP4 (*mp4)|*.mp4";
-            this.saveFileDialog1.InitialDirectory = "C:\\";
             // 
             // checkBox1
             // 
@@ -135,6 +134,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "YouTubeDownloader";
             this.Load += new System.EventHandler(this.Form1_Load);
