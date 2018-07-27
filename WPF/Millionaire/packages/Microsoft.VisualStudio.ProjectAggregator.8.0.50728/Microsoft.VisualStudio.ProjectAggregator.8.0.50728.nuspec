@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.VisualStudio.ProjectAggregator</id>
+    <version>8.0.50728</version>
+    <title>Microsoft.VisualStudio.ProjectAggregator</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>https://aka.ms/pexunj</licenseUrl>
+    <projectUrl>https://aka.ms/vsextensibility</projectUrl>
+    <iconUrl>https://aka.ms/vsextensibilityicon</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Microsoft.VisualStudio.ProjectAggregator</description>
+    <summary>Microsoft.VisualStudio.ProjectAggregator</summary>
+    <releaseNotes>https://go.microsoft.com/fwlink/?LinkID=746387</releaseNotes>
+    <copyright>Copyright (c) Microsoft Corporation. All rights reserved.</copyright>
+    <tags>Microsoft VisualStudio ProjectAggregator VSSDK</tags>
+  </metadata>
+</package>
