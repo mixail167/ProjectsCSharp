@@ -39,6 +39,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.radioButton10 = new System.Windows.Forms.RadioButton();
+            this.radioButton9 = new System.Windows.Forms.RadioButton();
             this.radioButton6 = new System.Windows.Forms.RadioButton();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -49,6 +51,7 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button6 = new System.Windows.Forms.Button();
             this.radioButton8 = new System.Windows.Forms.RadioButton();
             this.radioButton7 = new System.Windows.Forms.RadioButton();
             this.button5 = new System.Windows.Forms.Button();
@@ -62,7 +65,8 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.button6 = new System.Windows.Forms.Button();
+            this.radioButton11 = new System.Windows.Forms.RadioButton();
+            this.radioButton12 = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -180,6 +184,10 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.radioButton12);
+            this.tabPage2.Controls.Add(this.radioButton11);
+            this.tabPage2.Controls.Add(this.radioButton10);
+            this.tabPage2.Controls.Add(this.radioButton9);
             this.tabPage2.Controls.Add(this.radioButton6);
             this.tabPage2.Controls.Add(this.checkBox1);
             this.tabPage2.Controls.Add(this.button2);
@@ -195,6 +203,26 @@
             this.tabPage2.Size = new System.Drawing.Size(616, 416);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Сортировка";
+            // 
+            // radioButton10
+            // 
+            this.radioButton10.AutoSize = true;
+            this.radioButton10.Location = new System.Drawing.Point(326, 141);
+            this.radioButton10.Name = "radioButton10";
+            this.radioButton10.Size = new System.Drawing.Size(131, 17);
+            this.radioButton10.TabIndex = 10;
+            this.radioButton10.Text = "Быстрая сортировка";
+            this.radioButton10.UseVisualStyleBackColor = true;
+            // 
+            // radioButton9
+            // 
+            this.radioButton9.AutoSize = true;
+            this.radioButton9.Location = new System.Drawing.Point(151, 141);
+            this.radioButton9.Name = "radioButton9";
+            this.radioButton9.Size = new System.Drawing.Size(169, 17);
+            this.radioButton9.TabIndex = 9;
+            this.radioButton9.Text = "Пирамидальная сортировка";
+            this.radioButton9.UseVisualStyleBackColor = true;
             // 
             // radioButton6
             // 
@@ -326,6 +354,16 @@
             this.tabPage3.Size = new System.Drawing.Size(616, 416);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Граф";
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(414, 294);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(88, 23);
+            this.button6.TabIndex = 15;
+            this.button6.Text = "Центр графа";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // radioButton8
             // 
@@ -499,15 +537,25 @@
             this.label5.TabIndex = 2;
             this.label5.Text = "Число узлов:";
             // 
-            // button6
+            // radioButton11
             // 
-            this.button6.Location = new System.Drawing.Point(414, 294);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(88, 23);
-            this.button6.TabIndex = 15;
-            this.button6.Text = "Центр графа";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.radioButton11.AutoSize = true;
+            this.radioButton11.Location = new System.Drawing.Point(11, 164);
+            this.radioButton11.Name = "radioButton11";
+            this.radioButton11.Size = new System.Drawing.Size(142, 17);
+            this.radioButton11.TabIndex = 11;
+            this.radioButton11.Text = "Сортировка подсчетом";
+            this.radioButton11.UseVisualStyleBackColor = true;
+            // 
+            // radioButton12
+            // 
+            this.radioButton12.AutoSize = true;
+            this.radioButton12.Location = new System.Drawing.Point(159, 164);
+            this.radioButton12.Name = "radioButton12";
+            this.radioButton12.Size = new System.Drawing.Size(154, 17);
+            this.radioButton12.TabIndex = 12;
+            this.radioButton12.Text = "\"Шейкерная\" сортировка";
+            this.radioButton12.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -573,6 +621,10 @@
         private System.Windows.Forms.RadioButton radioButton7;
         private System.Windows.Forms.RadioButton radioButton8;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.RadioButton radioButton9;
+        private System.Windows.Forms.RadioButton radioButton10;
+        private System.Windows.Forms.RadioButton radioButton11;
+        private System.Windows.Forms.RadioButton radioButton12;
     }
 }
 

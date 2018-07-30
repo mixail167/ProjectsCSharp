@@ -19,7 +19,7 @@ namespace Algorithms
         private bool semaphore;
         private bool semaphore2;
         private int[] path;
-
+        private delegate T[] Sort<T>(T[] massiv, bool revers) where T : IComparable<T>;
         #endregion
 
         public Form1()
@@ -315,13 +315,13 @@ namespace Algorithms
         /// <param name="massiv">Исходный массив элементов</param>
         /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
         /// <returns>Отсортированный массив элементов</returns>
-        private int[] InsertionSort(int[] massiv, bool revers)
+        private T[] InsertionSort<T>(T[] massiv, bool revers) where T : IComparable<T>
         {
             for (int i = 1; i < massiv.Length; i++)
             {
-                int x = massiv[i];
+                T x = massiv[i];
                 int j = i;
-                while (j > 0 && ((revers && massiv[j - 1] < x) || (!revers && massiv[j - 1] > x)))
+                while (j > 0 && ((revers && massiv[j - 1].CompareTo(x) < 0) || (!revers && massiv[j - 1].CompareTo(x) > 0)))
                 {
                     massiv[j] = massiv[j - 1];
                     j--;
@@ -337,15 +337,15 @@ namespace Algorithms
         /// <param name="massiv">Исходный массив элементов</param>
         /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
         /// <returns>Отсортированный массив элементов</returns>
-        private int[] BubbleSort(int[] massiv, bool revers)
+        private T[] BubbleSort<T>(T[] massiv, bool revers) where T : IComparable<T>
         {
             for (int i = 0; i < massiv.Length; i++)
             {
                 bool flag = false;
                 for (int j = 0; j < massiv.Length - i - 1; j++)
                 {
-                    if ((revers && massiv[j] < massiv[j + 1]) ||
-                        (!revers && massiv[j] > massiv[j + 1]))
+                    if ((revers && massiv[j].CompareTo(massiv[j + 1]) < 0) ||
+                        (!revers && massiv[j].CompareTo(massiv[j + 1]) > 0))
                     {
                         massiv = Swap(massiv, j, j + 1);
                         flag = true;
@@ -365,15 +365,15 @@ namespace Algorithms
         /// <param name="massiv">Исходный массив элементов</param>
         /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
         /// <returns>Отсортированный массив элементов</returns>
-        private int[] SelectionSort(int[] massiv, bool revers)
+        private T[] SelectionSort<T>(T[] massiv, bool revers) where T : IComparable<T>
         {
             for (int i = 0; i < massiv.Length - 1; i++)
             {
                 int index = i;
                 for (int j = i + 1; j < massiv.Length; j++)
                 {
-                    if ((revers && massiv[j] > massiv[index]) ||
-                        (!revers && massiv[j] < massiv[index]))
+                    if ((revers && massiv[j].CompareTo(massiv[index]) > 0) ||
+                        (!revers && massiv[j].CompareTo(massiv[index]) < 0))
                     {
                         index = j;
                     }
@@ -386,29 +386,80 @@ namespace Algorithms
             return massiv;
         }
 
+        int Sift<T>(T[] massiv, int i, int N, bool revers) where T : IComparable<T>
+        {
+            int imax;
+            if (2 * i + 2 < N)
+            {
+                if ((!revers && massiv[2 * i + 1].CompareTo(massiv[2 * i + 2]) < 0) ||
+                    revers && massiv[2 * i + 1].CompareTo(massiv[2 * i + 2]) > 0)
+                    imax = 2 * i + 2;
+                else
+                    imax = 2 * i + 1;
+            }
+            else
+                imax = 2 * i + 1;
+            if (imax >= N)
+                return i;
+            if ((!revers && massiv[i].CompareTo(massiv[imax]) < 0) || (revers && massiv[i].CompareTo(massiv[imax]) > 0))
+            {
+                massiv = Swap(massiv, i, imax);
+                if (imax < N / 2)
+                    i = imax;
+            }
+            return i;
+        }
+
+        /// <summary>
+        /// Пирамидальная сортировка
+        /// </summary>
+        /// <param name="massiv">Исходный массив элементов</param>
+        /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
+        /// <returns>Отсортированный массив элементов</returns>
+        public T[] HeapSort<T>(T[] massiv, bool revers) where T : IComparable<T>
+        {
+            for (int i = massiv.Length / 2 - 1; i >= 0; --i)
+            {
+                int prev_i = i;
+                i = Sift(massiv, i, massiv.Length, revers);
+                if (prev_i != i) ++i;
+            }
+            for (int k = massiv.Length - 1; k > 0; --k)
+            {
+                massiv = Swap(massiv, 0, k);
+                int i = 0, prev_i = -1;
+                while (i != prev_i)
+                {
+                    prev_i = i;
+                    i = Sift(massiv, i, k, revers);
+                }
+            }
+            return massiv;
+        }
+
         /// <summary>
         /// Сортировка слиянием
         /// </summary>
         /// <param name="massiv">Исходный массив элементов</param>
         /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
         /// <returns>Отсортированный массив элементов</returns>
-        private int[] MergeSort(int[] massiv, bool revers)
+        private T[] MergeSort<T>(T[] massiv, bool revers) where T : IComparable<T>
         {
             if (massiv.Length == 1)
                 return massiv;
             return Merge(MergeSort(massiv.Take(massiv.Length / 2).ToArray(), revers), MergeSort(massiv.Skip(massiv.Length / 2).ToArray(), revers), revers);
         }
 
-        private int[] Merge(int[] massiv1, int[] massiv2, bool revers)
+        private T[] Merge<T>(T[] massiv1, T[] massiv2, bool revers) where T : IComparable<T>
         {
             int a = 0, b = 0;
-            int[] massiv = new int[massiv1.Length + massiv2.Length];
+            T[] massiv = new T[massiv1.Length + massiv2.Length];
             for (int i = 0; i < massiv1.Length + massiv2.Length; i++)
             {
                 if (b < massiv2.Length && a < massiv1.Length)
                 {
-                    if ((!revers && massiv1[a] > massiv2[b]) ||
-                        (revers && massiv1[a] < massiv2[b]))
+                    if ((!revers && massiv1[a].CompareTo(massiv2[b]) > 0) ||
+                        (revers && massiv1[a].CompareTo(massiv2[b]) < 0))
                     {
                         massiv[i] = massiv2[b++];
                     }
@@ -429,9 +480,113 @@ namespace Algorithms
             return massiv;
         }
 
-        private int[] Swap(int[] massiv, int i, int j)
+        private int Partition<T>(T[] massiv, int start, int end, bool revers) where T : IComparable<T>
         {
-            int temp = massiv[i];
+            int marker = start;
+            for (int i = start; i <= end; i++)
+            {
+                if ((!revers && massiv[i].CompareTo(massiv[end]) <= 0) ||
+                    (revers && massiv[i].CompareTo(massiv[end]) >= 0))
+                {
+                    massiv = Swap(massiv, marker, i);
+                    marker += 1;
+                }
+            }
+            return marker - 1;
+        }
+
+        /// <summary>
+        /// Быстрая сортировка
+        /// </summary>
+        /// <param name="massiv">Исходный массив элементов</param>
+        /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
+        /// <returns>Отсортированный массив элементов</returns>
+        private T[] QuickSort<T>(T[] massiv, bool revers) where T : IComparable<T>
+        {
+            int pivot = Partition(massiv, 0, massiv.Length - 1, revers);
+            massiv = QuickSort(massiv, 0, pivot - 1, revers);
+            massiv = QuickSort(massiv, pivot + 1, massiv.Length - 1, revers);
+            return massiv;
+        }
+
+        private T[] QuickSort<T>(T[] massiv, int start, int end, bool revers) where T : IComparable<T>
+        {
+            if (start >= end)
+            {
+                return massiv;
+            }
+            int pivot = Partition(massiv, start, end, revers);
+            massiv = QuickSort(massiv, start, pivot - 1, revers);
+            massiv = QuickSort(massiv, pivot + 1, end, revers);
+            return massiv;
+        }
+
+        /// <summary>
+        /// Сортировка подсчетом
+        /// </summary>
+        /// <param name="massiv">Исходный массив элементов</param>
+        /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
+        /// <returns>Отсортированный массив элементов</returns>
+        private T[] CountingSort<T>(T[] massiv, bool revers) where T : IComparable<T>
+        {
+            T[] massiv_out = new T[massiv.Length];
+            int[] counts = new int[massiv.Length];
+            for (int i = 1; i < massiv.Length; i++)
+            {
+                for (int j = 0; j < i; j++)
+                {
+                    if ((!revers && massiv[i].CompareTo(massiv[j]) < 0) ||
+                        (revers && massiv[i].CompareTo(massiv[j]) > 0))
+                    {
+                        counts[j]++;
+                    }
+                    else counts[i]++;
+                }
+            }
+            for (int i = 0; i < massiv.Length; i++)
+            {
+                massiv_out[counts[i]] = massiv[i];
+            }
+            return massiv_out;
+        }
+
+        /// <summary>
+        /// "Шейкерная" сортировка
+        /// </summary>
+        /// <param name="massiv">Исходный массив элементов</param>
+        /// <param name="revers">Значение true, если требуется отсортировать массив по убыванию, иначе - false</param>
+        /// <returns>Отсортированный массив элементов</returns>
+        private T[] ShakerSort<T>(T[] massiv, bool revers) where T : IComparable<T>
+        {
+            int left = 0,
+                right = massiv.Length - 1,
+                count = 0;
+
+            while (left <= right)
+            {
+                for (int i = left; i < right; i++)
+                {
+                    count++;
+                    if ((!revers && massiv[i].CompareTo(massiv[i + 1]) > 0) ||
+                        (revers && massiv[i].CompareTo(massiv[i + 1]) < 0))
+                        massiv = Swap(massiv, i, i + 1);
+                }
+                right--;
+                for (int i = right; i > left; i--)
+                {
+                    count++;
+                    if ((!revers && massiv[i - 1].CompareTo(massiv[i]) > 0) ||
+                        (revers && massiv[i - 1].CompareTo(massiv[i]) < 0))
+                        massiv = Swap(massiv, i - 1, i);
+                }
+                left++;
+            }
+            return massiv;
+        }
+
+        private T[] Swap<T>(T[] massiv, int i, int j)
+        {
+            T temp = massiv[i];
             massiv[i] = massiv[j];
             massiv[j] = temp;
             return massiv;
@@ -634,26 +789,44 @@ namespace Algorithms
         private void button2_Click(object sender, EventArgs e)
         {
             int[] massiv = new int[dataGridView1.ColumnCount];
+            Sort<int> sort;
             for (int i = 0; i < massiv.Length; i++)
             {
                 massiv[i] = Convert.ToInt32(dataGridView1[i, 0].Value);
             }
             if (radioButton3.Checked)
             {
-                massiv = SelectionSort(massiv, checkBox1.Checked);
+                sort = SelectionSort;
             }
             else if (radioButton4.Checked)
             {
-                massiv = InsertionSort(massiv, checkBox1.Checked);
+                sort = InsertionSort;
             }
             else if (radioButton5.Checked)
             {
-                massiv = BubbleSort(massiv, checkBox1.Checked);
+                sort = BubbleSort;
+            }
+            else if (radioButton9.Checked)
+            {
+                sort = HeapSort;
+            }
+            else if (radioButton10.Checked)
+            {
+                sort = QuickSort;
+            }
+            else if (radioButton11.Checked)
+            {
+                sort = CountingSort;
+            }
+            else if (radioButton12.Checked)
+            {
+                sort = ShakerSort;
             }
             else
             {
-                massiv = MergeSort(massiv, checkBox1.Checked);
+                sort = MergeSort;
             }
+            massiv = sort.Invoke(massiv, checkBox1.Checked);
             for (int i = 0; i < massiv.Length; i++)
             {
                 dataGridView1[i, 1].Value = massiv[i];
@@ -896,6 +1069,6 @@ namespace Algorithms
                 maxDistances[i] = MaxInColumn(i, graph);
             }
             UpdateLabel(IndexMinInMassiv(maxDistances));
-        }        
+        }
     }
 }
