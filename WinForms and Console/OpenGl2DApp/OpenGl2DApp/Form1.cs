@@ -92,17 +92,13 @@ namespace OpenGl2DApp
             openGL.Enable(OpenGL.GL_DEPTH_TEST);
             openGL.DepthMask(1);
             openGL.DepthFunc(OpenGL.GL_LEQUAL);
-            openGL.MatrixMode(OpenGL.GL_PROJECTION);
-            openGL.LoadIdentity();
-            openGL.Ortho2D(-openGLControl1.Width / 2, openGLControl1.Width / 2, -openGLControl1.Height / 2, openGLControl1.Height / 2);
-            openGL.Viewport(0, 0, openGLControl1.Width, openGLControl1.Height);
         }
 
         private void glControl1_SizeChanged(object sender, EventArgs e)
         {
             openGL.MatrixMode(OpenGL.GL_PROJECTION);
             openGL.LoadIdentity();
-            openGL.Ortho(-openGLControl1.Width / 2, openGLControl1.Width / 2, -openGLControl1.Height / 2, openGLControl1.Height / 2, -100, 100);
+            openGL.Ortho2D(-openGLControl1.Width / 2, openGLControl1.Width / 2, -openGLControl1.Height / 2, openGLControl1.Height / 2);
             openGL.Viewport(0, 0, openGLControl1.Width, openGLControl1.Height);
         }
 
@@ -129,9 +125,8 @@ namespace OpenGl2DApp
             for (int i = 0; i < points.Length; i++)
             {
                 double[,] vector = GetVector2D(points[i]);
-                double[,] result = Multiplication(vector, matrix);
-                points[i].X = (float)result[0, 0];
-                points[i].Y = (float)result[0, 1];
+                vector = Multiplication(vector, matrix);
+                points[i] = GetPointF(vector);
             }
             return points;
         }
@@ -143,9 +138,8 @@ namespace OpenGl2DApp
             for (int i = 0; i < points.Length; i++)
             {
                 double[,] vector = GetVector2D(points[i]);
-                double[,] result = Multiplication(vector, matrix);
-                points[i].X = (float)result[0, 0];
-                points[i].Y = (float)result[0, 1];
+                vector = Multiplication(vector, matrix);
+                points[i] = GetPointF(vector);
             }
             return points;
         }
@@ -154,15 +148,19 @@ namespace OpenGl2DApp
         {
             double[,] matrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { dx, dy, 1 } };
             double[,] vector = GetVector2D(point);
-            double[,] result = Multiplication(vector, matrix);
-            point.X = (float)result[0, 0];
-            point.Y = (float)result[0, 1];
+            vector = Multiplication(vector, matrix);
+            point = GetPointF(vector);
             return point;
         }
 
         private double[,] GetVector2D(PointF point)
         {
             return new double[1, 3] { { point.X, point.Y, 1 } };
+        }
+
+        private PointF GetPointF(double[,] vector)
+        {
+            return new PointF((float)vector[0, 0], (float)vector[0, 1]);
         }
 
         private double[,] Multiplication(double[,] vector, double[,] matrix)
@@ -205,6 +203,11 @@ namespace OpenGl2DApp
             else if (e.KeyCode == Keys.Right)
             {
                 center = Translate2D(center, 5, 0);
+                PaintScene();
+            }
+            else if (e.KeyCode == Keys.Space)
+            {
+                points = Rotate2D(points, 60);
                 PaintScene();
             }
         }
