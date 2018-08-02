@@ -1,4 +1,4 @@
-﻿namespace OpenGL2DApp
+﻿namespace OpenGL3DApp
 {
     partial class Form1
     {

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("OpenGL2DApp")]
+[assembly: AssemblyTitle("OpenGL3DApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("OpenGL2DApp")]
+[assembly: AssemblyProduct("OpenGL3DApp")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("77563f0c-f3f6-4aa0-aa85-3026579222cd")]
+[assembly: Guid("943751ad-0fe5-4206-8d8f-d0de57a17cf1")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //

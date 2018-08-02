@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OpenGL2DApp.Properties
+namespace OpenGL3DApp.Properties
 {
 
 
