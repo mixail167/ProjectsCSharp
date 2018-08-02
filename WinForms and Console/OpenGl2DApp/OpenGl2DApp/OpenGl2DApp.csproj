@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AE14EB2C-BC00-457C-8EAD-EDBA621505CF}</ProjectGuid>
+    <ProjectGuid>{46D5D72E-4FB1-41DA-9005-3ACD9F8715C9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenGL3DApp</RootNamespace>
-    <AssemblyName>OpenGL3DApp</AssemblyName>
+    <RootNamespace>OpenGl2DApp</RootNamespace>
+    <AssemblyName>OpenGl2DApp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="alglibnet2">
-      <HintPath>..\..\..\Библиотеки\alglib-3.12.0.csharp.gpl\csharp\net-core\alglibnet2.dll</HintPath>
+      <HintPath>..\..\..\..\Библиотеки\alglib-3.12.0.csharp.gpl\csharp\net-core\alglibnet2.dll</HintPath>
     </Reference>
     <Reference Include="SharpGL, Version=2.4.0.0, Culture=neutral, PublicKeyToken=27fc851303210b27, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpGL.2.4.0.0\lib\net40\SharpGL.dll</HintPath>
@@ -65,7 +65,6 @@
     <Compile Include="Form1.designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Point3D.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

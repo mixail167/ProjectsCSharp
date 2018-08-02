@@ -13,10 +13,9 @@ namespace OpenGL3DApp
     public partial class Form1 : Form
     {
         private bool loaded;
-        private Color currentColor;
         private int width;
-        private PointF[] points;
-        private PointF center;
+        private Point3D[] points;
+        private Point3D center;
         private OpenGL openGL;
         private float fontSize;
 
@@ -30,30 +29,17 @@ namespace OpenGL3DApp
 
         private void Init()
         {
-            points = new PointF[4]{
-                new PointF(-width/2,-width/2),
-                new PointF(-width/2,width/2),
-                new PointF(width/2,width/2),
-                new PointF(width/2,-width/2)
+            points = new Point3D[8]{
+                new Point3D(-width/2,-width/2, -width/2),
+                new Point3D(-width/2,width/2,-width/2),
+                new Point3D(width/2,width/2,-width/2),
+                new Point3D(width/2,-width/2,-width/2),                
+                new Point3D(width/2,-width/2,width/2),
+                new Point3D(-width/2,-width/2, width/2),
+                new Point3D(-width/2,width/2,width/2),
+                new Point3D(width/2,width/2,width/2)
             };
-            center = new PointF(0, 0);
-            currentColor = Color.Red;
-            panel1.BackColor = currentColor;
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            panel1.BackColor = currentColor;
-        }
-
-        private void panel1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
-            {
-                currentColor = colorDialog1.Color;
-                panel1.BackColor = currentColor;
-                PaintScene();
-            }
+            center = new Point3D(0, 0, 0);
         }
 
         void PaintScene()
@@ -61,18 +47,62 @@ namespace OpenGL3DApp
             openGL.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             openGL.Begin(OpenGL.GL_LINES);
             openGL.Color(1f, 1f, 1f);
-            openGL.Vertex(0, -openGLControl1.Width / 2);
-            openGL.Vertex(0, openGLControl1.Width / 2);
-            openGL.Vertex(-openGLControl1.Width / 2, 0);
-            openGL.Vertex(openGLControl1.Width / 2, 0);
+            openGL.Vertex(0, -100000, 0);
+            openGL.Vertex(0, 100000, 0);
+            openGL.Vertex(-100000, 0, 0);
+            openGL.Vertex(100000, 0, 0);
+            openGL.Vertex(0, 0, -100000);
+            openGL.Vertex(0, 0, 100000);
             openGL.End();
-            openGL.Begin(OpenGL.GL_POLYGON);
-            openGL.Color(currentColor.R, currentColor.G, currentColor.B);
-            openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y);
-            openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y);
-            openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y);
-            openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y);
+
+            openGL.Begin(OpenGL.GL_QUADS);
+            openGL.Color(1f, 0f, 0f);
+            openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
+            openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
+            openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
+            openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
             openGL.End();
+
+            openGL.Begin(OpenGL.GL_QUADS);
+            openGL.Color(0f, 1f, 0f);
+            openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
+            openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
+            openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
+            openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
+            openGL.End();
+
+            openGL.Begin(OpenGL.GL_QUADS);
+            openGL.Color(0f, 0f, 1f);
+            openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
+            openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
+            openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
+            openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
+            openGL.End();
+
+            openGL.Begin(OpenGL.GL_QUADS);
+            openGL.Color(0.5f, 0.5f, 0.5f);
+            openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
+            openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
+            openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
+            openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
+            openGL.End();
+
+            openGL.Begin(OpenGL.GL_QUADS);
+            openGL.Color(1f, 1f, 0f);
+            openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
+            openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
+            openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
+            openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
+            openGL.End();
+
+            openGL.Begin(OpenGL.GL_QUADS);
+            openGL.Color(1f, 0f, 1f);
+            openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
+            openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
+            openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
+            openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
+            openGL.End();
+
             openGL.DrawText(5, (int)(openGLControl1.Height - fontSize), 1, 1, 1, string.Empty, fontSize, "Info");
             for (int i = 0; i < points.Length; i++)
             {
@@ -80,9 +110,9 @@ namespace OpenGL3DApp
             }
         }
 
-        private string GetInfo(PointF point, int index, PointF center)
+        private string GetInfo(Point3D point, int index, Point3D center)
         {
-            return string.Format("P{0}: x = {1:f2}, y = {2:f2}\n", index, point.X + center.X, point.Y + center.Y);
+            return string.Format("P{0}: x = {1:f2}, y = {2:f2}, z = {3:f2}\n", index, point.X + center.X, point.Y + center.Y, point.Z + center.Z);
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -90,79 +120,86 @@ namespace OpenGL3DApp
             loaded = true;
             openGL = openGLControl1.OpenGL;
             openGL.Enable(OpenGL.GL_DEPTH_TEST);
-            openGL.DepthMask(1);
+            openGL.DepthMask((byte)OpenGL.GL_TRUE);
             openGL.DepthFunc(OpenGL.GL_LEQUAL);
-            openGL.MatrixMode(OpenGL.GL_PROJECTION);
-            openGL.LoadIdentity();
-            openGL.Ortho2D(-openGLControl1.Width / 2, openGLControl1.Width / 2, -openGLControl1.Height / 2, openGLControl1.Height / 2);
-            openGL.Viewport(0, 0, openGLControl1.Width, openGLControl1.Height);
         }
 
         private void glControl1_SizeChanged(object sender, EventArgs e)
         {
             openGL.MatrixMode(OpenGL.GL_PROJECTION);
             openGL.LoadIdentity();
-            openGL.Ortho(-openGLControl1.Width / 2, openGLControl1.Width / 2, -openGLControl1.Height / 2, openGLControl1.Height / 2, -100, 100);
-            openGL.Viewport(0, 0, openGLControl1.Width, openGLControl1.Height);
+            openGL.Perspective(60.0f, (double)openGLControl1.Width / (double)openGLControl1.Height, 0.01, double.MaxValue);
+            openGL.LookAt(300, 300, 300,
+                        0, 0, 0,
+                        0, 1, 0);
+            openGL.MatrixMode(OpenGL.GL_MODELVIEW);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (radioButton1.Checked)
             {
-                center = Translate2D(center, (double)numericUpDown1.Value, (double)numericUpDown2.Value);
+                center = Translate3D(center, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
             }
             else if (radioButton2.Checked)
             {
-                points = Rotate2D(points, (double)numericUpDown4.Value);
+                points = Rotate3D(points, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
             }
             else
             {
-                points = Scale2D(points, (double)numericUpDown5.Value, (double)numericUpDown6.Value);
+                points = Scale3D(points, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
             }
             PaintScene();
         }
 
-        private PointF[] Scale2D(PointF[] points, double sx, double sy)
+        private Point3D[] Scale3D(Point3D[] points, double sx, double sy, double sz)
         {
-            double[,] matrix = new double[3, 3] { { sx, 0, 0 }, { 0, sy, 0 }, { 0, 0, 1 } };
+            double[,] matrix = new double[4, 4] { { sx, 0, 0, 0 }, { 0, sy, 0, 0 }, { 0, 0, sz, 0 }, { 0, 0, 0, 1 } };
             for (int i = 0; i < points.Length; i++)
             {
-                double[,] vector = GetVector2D(points[i]);
-                double[,] result = Multiplication(vector, matrix);
-                points[i].X = (float)result[0, 0];
-                points[i].Y = (float)result[0, 1];
+                double[,] vector = GetVector3D(points[i]);
+                vector = Multiplication(vector, matrix);
+                points[i] = GetPoint3D(vector);
             }
             return points;
         }
 
-        private PointF[] Rotate2D(PointF[] points, double alpha)
+        private Point3D[] Rotate3D(Point3D[] points, double alphaX, double alphaY, double alphaZ)
         {
-            alpha *= Math.PI / 180;
-            double[,] matrix = new double[3, 3] { { Math.Cos(alpha), Math.Sin(alpha), 0 }, { -Math.Sin(alpha), Math.Cos(alpha), 0 }, { 0, 0, 1 } };
+            alphaX *= Math.PI / 180;
+            alphaY *= Math.PI / 180;
+            alphaZ *= Math.PI / 180;
+            double[,] matrixZ = new double[4, 4] { { Math.Cos(alphaZ), Math.Sin(alphaZ), 0, 0 }, { -Math.Sin(alphaZ), Math.Cos(alphaZ), 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
+            double[,] matrixX = new double[4, 4] { { 1, 0, 0, 0 }, { 0, Math.Cos(alphaX), Math.Sin(alphaX), 0 }, { 0, -Math.Sin(alphaX), Math.Cos(alphaX), 0 }, { 0, 0, 0, 1 } };
+            double[,] matrixY = new double[4, 4] { { Math.Cos(alphaY), 0, -Math.Sin(alphaY), 0 }, { 0, 1, 0, 0 }, { Math.Sin(alphaY), 0, Math.Cos(alphaY), 0 }, { 0, 0, 0, 1 } };
             for (int i = 0; i < points.Length; i++)
             {
-                double[,] vector = GetVector2D(points[i]);
-                double[,] result = Multiplication(vector, matrix);
-                points[i].X = (float)result[0, 0];
-                points[i].Y = (float)result[0, 1];
+                double[,] vector = GetVector3D(points[i]);
+                vector = Multiplication(vector, matrixZ);
+                vector = Multiplication(vector, matrixX);
+                vector = Multiplication(vector, matrixY);
+                points[i] = GetPoint3D(vector);
             }
             return points;
         }
 
-        private PointF Translate2D(PointF point, double dx, double dy)
+        private Point3D Translate3D(Point3D point, double dx, double dy, double dz)
         {
-            double[,] matrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { dx, dy, 1 } };
-            double[,] vector = GetVector2D(point);
-            double[,] result = Multiplication(vector, matrix);
-            point.X = (float)result[0, 0];
-            point.Y = (float)result[0, 1];
+            double[,] matrix = new double[4, 4] { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { dx, dy, dz, 1 } };
+            double[,] vector = GetVector3D(point);
+            vector = Multiplication(vector, matrix);
+            point = GetPoint3D(vector);
             return point;
         }
 
-        private double[,] GetVector2D(PointF point)
+        private double[,] GetVector3D(Point3D point)
         {
-            return new double[1, 3] { { point.X, point.Y, 1 } };
+            return new double[1, 4] { { point.X, point.Y, point.Z, 1 } };
+        }
+
+        private Point3D GetPoint3D(double[,] vector)
+        {
+            return new Point3D((float)vector[0, 0], (float)vector[0, 1], (float)vector[0, 2]);
         }
 
         private double[,] Multiplication(double[,] vector, double[,] matrix)
@@ -189,22 +226,37 @@ namespace OpenGL3DApp
         {
             if (e.KeyCode == Keys.Up)
             {
-                center = Translate2D(center, 0, 5);
+                center = Translate3D(center, 0, 5, 0);
                 PaintScene();
             }
             else if (e.KeyCode == Keys.Down)
             {
-                center = Translate2D(center, 0, -5);
+                center = Translate3D(center, 0, -5, 0);
                 PaintScene();
             }
             else if (e.KeyCode == Keys.Left)
             {
-                center = Translate2D(center, -5, 0);
+                center = Translate3D(center, -5, 0, 0);
                 PaintScene();
             }
             else if (e.KeyCode == Keys.Right)
             {
-                center = Translate2D(center, 5, 0);
+                center = Translate3D(center, 5, 0, 0);
+                PaintScene();
+            }
+            else if (e.KeyCode == Keys.PageUp)
+            {
+                center = Translate3D(center, 0, 0, 5);
+                PaintScene();
+            }
+            else if (e.KeyCode == Keys.PageDown)
+            {
+                center = Translate3D(center, 0, 0, -5);
+                PaintScene();
+            }
+            else if (e.KeyCode == Keys.Space)
+            {
+                points = Rotate3D(points, 60, 60, 60);
                 PaintScene();
             }
         }
@@ -226,11 +278,11 @@ namespace OpenGL3DApp
         {
             if (e.Delta > 0)
             {
-                points = Scale2D(points, 1.5, 1.5);
+                points = Scale3D(points, 1.5, 1.5, 1.5);
             }
             else
             {
-                points = Scale2D(points, 2.0 / 3.0, 2.0 / 3.0);
+                points = Scale3D(points, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
             }
             PaintScene();
         }
