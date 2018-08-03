@@ -14,7 +14,7 @@ namespace OpenGL3DApp
         private Point3D center;
         private OpenGL openGL;
         private float fontSize;
-        private Texture[] textures;
+        private Texture[] texture;
 
         public Form1()
         {
@@ -53,7 +53,7 @@ namespace OpenGL3DApp
             openGL.Vertex(0, 0, 100000);
             openGL.End();
 
-            textures[0].Bind(openGL);
+            texture[0].Bind(openGL);
 
             openGL.Begin(OpenGL.GL_QUADS);
             openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
@@ -62,7 +62,7 @@ namespace OpenGL3DApp
             openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
             openGL.End();
 
-            textures[1].Bind(openGL);
+            texture[1].Bind(openGL);
 
             openGL.Begin(OpenGL.GL_QUADS);
             openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
@@ -71,7 +71,7 @@ namespace OpenGL3DApp
             openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
             openGL.End();
 
-            textures[2].Bind(openGL);
+            texture[2].Bind(openGL);
 
             openGL.Begin(OpenGL.GL_QUADS);
             openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
@@ -80,7 +80,7 @@ namespace OpenGL3DApp
             openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
             openGL.End();
 
-            textures[3].Bind(openGL);
+            texture[3].Bind(openGL);
 
             openGL.Begin(OpenGL.GL_QUADS);
             openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
@@ -89,7 +89,7 @@ namespace OpenGL3DApp
             openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
             openGL.End();
 
-            textures[4].Bind(openGL);
+            texture[4].Bind(openGL);
 
             openGL.Begin(OpenGL.GL_QUADS);
             openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
@@ -98,7 +98,7 @@ namespace OpenGL3DApp
             openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
             openGL.End();
 
-            textures[5].Bind(openGL);
+            texture[5].Bind(openGL);
 
             openGL.Begin(OpenGL.GL_QUADS);
             openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
@@ -124,13 +124,13 @@ namespace OpenGL3DApp
             loaded = true;
             openGL = openGLControl1.OpenGL;
             openGL.Enable(OpenGL.GL_TEXTURE_2D);
-            textures = new Texture[6] { new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), };
-            textures[0].Create(openGL, Properties.Resources.BMW);
-            textures[1].Create(openGL, Properties.Resources.WOT);
-            textures[2].Create(openGL, Properties.Resources.tiger);
-            textures[3].Create(openGL, Properties.Resources.kulak);
-            textures[4].Create(openGL, Properties.Resources.barselon);
-            textures[5].Create(openGL, Properties.Resources.VSRB);
+            texture = new Texture[6] { new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), };
+            texture[0].Create(openGL, Properties.Resources.BMW);
+            texture[1].Create(openGL, Properties.Resources.WOT);
+            texture[2].Create(openGL, Properties.Resources.tiger);
+            texture[3].Create(openGL, Properties.Resources.kulak);
+            texture[4].Create(openGL, Properties.Resources.barselon);
+            texture[5].Create(openGL, Properties.Resources.VSRB);
             openGL.Enable(OpenGL.GL_DEPTH_TEST);
             openGL.DepthMask((byte)OpenGL.GL_TRUE);
         }
