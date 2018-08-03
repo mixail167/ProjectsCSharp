@@ -36,7 +36,7 @@ namespace YouTubeDownloaderApp
                     string url = textBox1.Text.Replace("https://", "http // ");
                     try
                     {
-                        url = url.Remove(url.LastIndexOf("&"));
+                        url = url.Remove(url.IndexOf("&"));
                     }
                     catch
                     {
@@ -54,7 +54,7 @@ namespace YouTubeDownloaderApp
                         saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
                         if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                         {
-                            Properties.Settings.Default.initialDirectory = saveFileDialog1.FileName.Remove(saveFileDialog1.FileName.LastIndexOf("\\"));
+                            Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
                             Properties.Settings.Default.Save();
                             downloader = new VideoDownloader(video, saveFileDialog1.FileName);
                             downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
