@@ -1,7 +1,11 @@
 ﻿using SharpGL;
-using SharpGL.SceneGraph.Assets;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace OpenGL3DApp
@@ -14,7 +18,6 @@ namespace OpenGL3DApp
         private Point3D center;
         private OpenGL openGL;
         private float fontSize;
-        private Texture[] texture;
 
         public Form1()
         {
@@ -42,7 +45,6 @@ namespace OpenGL3DApp
         void PaintScene()
         {
             openGL.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-
             openGL.Begin(OpenGL.GL_LINES);
             openGL.Color(1f, 1f, 1f);
             openGL.Vertex(0, -100000, 0);
@@ -53,58 +55,52 @@ namespace OpenGL3DApp
             openGL.Vertex(0, 0, 100000);
             openGL.End();
 
-            texture[0].Bind(openGL);
-
             openGL.Begin(OpenGL.GL_QUADS);
-            openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
-            openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
-            openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
-            openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
+            openGL.Color(1f, 0f, 0f);
+            openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
+            openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
+            openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
+            openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
             openGL.End();
 
-            texture[1].Bind(openGL);
-
             openGL.Begin(OpenGL.GL_QUADS);
-            openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
-            openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
-            openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
-            openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
+            openGL.Color(0f, 1f, 0f);
+            openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
+            openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
+            openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
+            openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
             openGL.End();
 
-            texture[2].Bind(openGL);
-
             openGL.Begin(OpenGL.GL_QUADS);
-            openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
-            openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
-            openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
-            openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
+            openGL.Color(0f, 0f, 1f);
+            openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
+            openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
+            openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
+            openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
             openGL.End();
 
-            texture[3].Bind(openGL);
-
             openGL.Begin(OpenGL.GL_QUADS);
-            openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
-            openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
-            openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
-            openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
+            openGL.Color(0.5f, 0.5f, 0.5f);
+            openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
+            openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
+            openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
+            openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
             openGL.End();
 
-            texture[4].Bind(openGL);
-
             openGL.Begin(OpenGL.GL_QUADS);
-            openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
-            openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
-            openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
-            openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
+            openGL.Color(1f, 1f, 0f);
+            openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y, points[0].Z + center.Z);
+            openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y, points[1].Z + center.Z);
+            openGL.Vertex(points[6].X + center.X, points[6].Y + center.Y, points[6].Z + center.Z);
+            openGL.Vertex(points[5].X + center.X, points[5].Y + center.Y, points[5].Z + center.Z);
             openGL.End();
 
-            texture[5].Bind(openGL);
-
             openGL.Begin(OpenGL.GL_QUADS);
-            openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
-            openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
-            openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
-            openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
+            openGL.Color(1f, 0f, 1f);
+            openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y, points[2].Z + center.Z);
+            openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y, points[3].Z + center.Z);
+            openGL.Vertex(points[4].X + center.X, points[4].Y + center.Y, points[4].Z + center.Z);
+            openGL.Vertex(points[7].X + center.X, points[7].Y + center.Y, points[7].Z + center.Z);
             openGL.End();
 
             openGL.DrawText(5, (int)(openGLControl1.Height - fontSize), 1, 1, 1, string.Empty, fontSize, "Info");
@@ -123,25 +119,20 @@ namespace OpenGL3DApp
         {
             loaded = true;
             openGL = openGLControl1.OpenGL;
-            openGL.Enable(OpenGL.GL_TEXTURE_2D);
-            texture = new Texture[6] { new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), };
-            texture[0].Create(openGL, Properties.Resources.BMW);
-            texture[1].Create(openGL, Properties.Resources.WOT);
-            texture[2].Create(openGL, Properties.Resources.tiger);
-            texture[3].Create(openGL, Properties.Resources.kulak);
-            texture[4].Create(openGL, Properties.Resources.barselon);
-            texture[5].Create(openGL, Properties.Resources.VSRB);
             openGL.Enable(OpenGL.GL_DEPTH_TEST);
             openGL.DepthMask((byte)OpenGL.GL_TRUE);
+            openGL.DepthFunc(OpenGL.GL_LEQUAL);
         }
 
         private void glControl1_SizeChanged(object sender, EventArgs e)
         {
+            openGL.MatrixMode(OpenGL.GL_PROJECTION);
             openGL.LoadIdentity();
             openGL.Perspective(60.0f, (double)openGLControl1.Width / (double)openGLControl1.Height, 0.01, double.MaxValue);
             openGL.LookAt(300, 300, 300,
                         0, 0, 0,
                         0, 1, 0);
+            openGL.MatrixMode(OpenGL.GL_MODELVIEW);
         }
 
         private void button1_Click(object sender, EventArgs e)
