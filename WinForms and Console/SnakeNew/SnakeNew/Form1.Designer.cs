@@ -43,13 +43,13 @@
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.правилаИгрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.обАвтореToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.openGLControl1 = new SharpGL.OpenGLControl();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.openGLControl1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -165,18 +165,6 @@
             this.обАвтореToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.обАвтореToolStripMenuItem.Text = "Об авторе";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 27);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(500, 500);
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
-            this.pictureBox1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.pictureBox1_PreviewKeyDown);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -196,13 +184,29 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // openGLControl1
+            // 
+            this.openGLControl1.DrawFPS = false;
+            this.openGLControl1.FrameRate = 30;
+            this.openGLControl1.Location = new System.Drawing.Point(0, 24);
+            this.openGLControl1.Name = "openGLControl1";
+            this.openGLControl1.OpenGLVersion = SharpGL.Version.OpenGLVersion.OpenGL2_1;
+            this.openGLControl1.RenderContextType = SharpGL.RenderContextType.FBO;
+            this.openGLControl1.RenderTrigger = SharpGL.RenderTrigger.TimerBased;
+            this.openGLControl1.Size = new System.Drawing.Size(500, 500);
+            this.openGLControl1.TabIndex = 3;
+            this.openGLControl1.OpenGLInitialized += new System.EventHandler(this.openGLControl1_OpenGLInitialized);
+            this.openGLControl1.OpenGLDraw += new SharpGL.RenderEventHandler(this.openGLControl1_OpenGLDraw);
+            this.openGLControl1.Resized += new System.EventHandler(this.openGLControl1_Resized);
+            this.openGLControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.openGLControl1_PreviewKeyDown);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(501, 556);
+            this.Controls.Add(this.openGLControl1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -211,9 +215,9 @@
             this.Text = "Snake";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.openGLControl1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -234,11 +238,11 @@
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem правилаИгрыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem обАвтореToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripMenuItem рекордыToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
+        private SharpGL.OpenGLControl openGLControl1;
     }
 }
 

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SnakeNew
@@ -56,6 +53,7 @@ namespace SnakeNew
         {
             get { return interval; }
         }
+
         public override string ToString()
         {
             return string.Format("Сложность: {0}; Счет: {1}.", this.level, this.score);

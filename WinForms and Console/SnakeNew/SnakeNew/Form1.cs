@@ -1,11 +1,9 @@
-﻿using System;
+using SharpGL;
+using SharpGL.SceneGraph.Assets;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SnakeNew
@@ -25,6 +23,8 @@ namespace SnakeNew
         Random random;
         Complexity complexity;
         List<Complexity> complexities;
+        OpenGL openGL;
+        Texture[] textures;
         bool run;
 
         public Form1()
@@ -56,6 +56,125 @@ namespace SnakeNew
             pause = false;
         }
 
+        void DrawImage(OpenGL openGL, Texture texture, Coordinate coord, int scale)
+        {
+            texture.Bind(openGL);
+            openGL.Begin(OpenGL.GL_QUADS);
+            openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(coord.X, coord.Y);
+            openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(coord.X, coord.Y + scale);
+            openGL.TexCoord(1.0f, 0.0f); openGL.Vertex(coord.X + scale, coord.Y + scale);
+            openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(coord.X + scale, coord.Y);
+            openGL.End();
+        }
+
+        void PaintScene()
+        {
+            openGL.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+            openGL.Color(1f, 1f, 1f, 1f);
+            if (run)
+            {
+                DrawImage(openGL, textures[0], apple, scale);
+                foreach (Coordinate item in bombs)
+                {
+                    DrawImage(openGL, textures[1], item, scale);
+                }
+                switch (direction)
+                {
+                    case Direction.Up:
+                        DrawImage(openGL, textures[2], snake[0], scale);
+                        break;
+                    case Direction.Down:
+                        DrawImage(openGL, textures[3], snake[0], scale);
+                        break;
+                    case Direction.Left:
+                        DrawImage(openGL, textures[4], snake[0], scale);
+                        break;
+                    case Direction.Right:
+                        DrawImage(openGL, textures[5], snake[0], scale);
+                        break;
+                }
+                for (int i = 1; i < snake.Count - 1; i++)
+                {
+                    if (snake[i - 1].X == snake[i + 1].X && (snake[i - 1].Y + 2 * scale == snake[i + 1].Y || snake[i - 1].Y - 2 * scale == snake[i + 1].Y))
+                    {
+                        DrawImage(openGL, textures[6], snake[i], scale);
+                    }
+                    else if (snake[i - 1].Y == snake[i + 1].Y && (snake[i - 1].X + 2 * scale == snake[i + 1].X || snake[i - 1].X - 2 * scale == snake[i + 1].X))
+                    {
+                        DrawImage(openGL, textures[7], snake[i], scale);
+                    }
+                    else if ((snake[i - 1].X + scale == snake[i + 1].X &&
+                              snake[i - 1].Y + scale == snake[i + 1].Y &&
+                              snake[i].X == snake[i - 1].X &&
+                              snake[i].Y == snake[i + 1].Y) ||
+                             (snake[i - 1].X - scale == snake[i + 1].X &&
+                              snake[i - 1].Y - scale == snake[i + 1].Y &&
+                              snake[i].X == snake[i + 1].X &&
+                              snake[i].Y == snake[i - 1].Y))
+                    {
+                        DrawImage(openGL, textures[8], snake[i], scale);
+                    }
+                    else if ((snake[i - 1].X - scale == snake[i + 1].X &&
+                              snake[i - 1].Y + scale == snake[i + 1].Y &&
+                              snake[i].X == snake[i + 1].X &&
+                              snake[i].Y == snake[i - 1].Y) ||
+                             (snake[i - 1].X + scale == snake[i + 1].X &&
+                              snake[i - 1].Y - scale == snake[i + 1].Y &&
+                              snake[i].X == snake[i - 1].X &&
+                              snake[i].Y == snake[i + 1].Y))
+                    {
+                        DrawImage(openGL, textures[9], snake[i], scale);
+                    }
+                    else if ((snake[i - 1].X + scale == snake[i + 1].X &&
+                              snake[i - 1].Y + scale == snake[i + 1].Y &&
+                              snake[i].X == snake[i + 1].X &&
+                              snake[i].Y == snake[i - 1].Y) ||
+                             (snake[i - 1].X - scale == snake[i + 1].X &&
+                              snake[i - 1].Y - scale == snake[i + 1].Y &&
+                              snake[i].X == snake[i - 1].X &&
+                              snake[i].Y == snake[i + 1].Y))
+                    {
+                        DrawImage(openGL, textures[10], snake[i], scale);
+                    }
+                    else if ((snake[i - 1].X - scale == snake[i + 1].X &&
+                              snake[i - 1].Y + scale == snake[i + 1].Y &&
+                              snake[i].X == snake[i - 1].X &&
+                              snake[i].Y == snake[i + 1].Y) ||
+                             (snake[i - 1].X + scale == snake[i + 1].X &&
+                              snake[i - 1].Y - scale == snake[i + 1].Y &&
+                              snake[i].X == snake[i + 1].X &&
+                              snake[i].Y == snake[i - 1].Y))
+                    {
+                        DrawImage(openGL, textures[11], snake[i], scale);
+                    }
+                }
+                if (snake[snake.Count - 2].X == snake[snake.Count - 1].X &&
+                    snake[snake.Count - 2].Y - scale == snake[snake.Count - 1].Y)
+                {
+                    DrawImage(openGL, textures[12], snake[snake.Count - 1], scale);
+                }
+                else if (snake[snake.Count - 2].Y == snake[snake.Count - 1].Y &&
+                         snake[snake.Count - 2].X - scale == snake[snake.Count - 1].X)
+                {
+                    DrawImage(openGL, textures[13], snake[snake.Count - 1], scale);
+                }
+                else if (snake[snake.Count - 2].Y == snake[snake.Count - 1].Y &&
+                         snake[snake.Count - 2].X + scale == snake[snake.Count - 1].X)
+                {
+                    DrawImage(openGL, textures[14], snake[snake.Count - 1], scale);
+                }
+                else
+                {
+                    DrawImage(openGL, textures[15], snake[snake.Count - 1], scale);
+                }
+                toolStripStatusLabel1.Text = string.Format("Счет: {0}. Для прекращения игры нажмите клавишу 'ESC'.", score);
+                if (pause)
+                {
+                    openGL.DrawText(10, 10, 1f, 0, 0, string.Empty, 16, "PAUSE");
+                }
+            }
+        }
+
         void EndOfGame()
         {
             string text = string.Format("Ваш счет на уровне сложности '{0}': {1}.\nРекорд: {2}.", complexity.Level, score, complexity.Score);
@@ -77,7 +196,6 @@ namespace SnakeNew
             }
             EnableComponents(true);
             MessageBox.Show(text, "КОНЕЦ ИГРЫ!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            pictureBox1.Invalidate();
         }
 
         bool CheckMatch(List<Coordinate> list1)
@@ -126,11 +244,11 @@ namespace SnakeNew
         {
             while (true)
             {
-                apple = new Coordinate(random.Next(pictureBox1.Width / scale) * scale, random.Next(pictureBox1.Height / scale) * scale);
+                apple = new Coordinate(random.Next(openGLControl1.Width / scale) * scale, random.Next(openGLControl1.Height / scale) * scale);
                 bombs = new List<Coordinate>();
                 for (int i = 0; i < complexity.BombCount; i++)
                 {
-                    bombs.Add(new Coordinate(random.Next(pictureBox1.Width / scale) * scale, random.Next(pictureBox1.Height / scale) * scale));
+                    bombs.Add(new Coordinate(random.Next(openGLControl1.Width / scale) * scale, random.Next(openGLControl1.Height / scale) * scale));
                 }
                 if (CheckMatch(bombs))
                     continue;
@@ -152,14 +270,15 @@ namespace SnakeNew
 
         private void новаяИграToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            direction = Direction.Up;
+            direction = Direction.Down;
             snake = new List<Coordinate>();
             snake.Add(new Coordinate(400, 400));
             snake.Add(new Coordinate(400, 400 + scale));
             snake.Add(new Coordinate(400, 400 + scale * 2));
+            snake.Add(new Coordinate(400, 400 + scale * 3));
             AddAppleAndBomb();
             EnableComponents(false);
-            pictureBox1.Focus();
+            openGLControl1.Focus();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -168,15 +287,15 @@ namespace SnakeNew
             switch (direction)
             {
                 case Direction.Up:
-                    newSegment.Y -= scale;
-                    if (newSegment.Y < 0)
+                    newSegment.Y += scale;
+                    if (newSegment.Y > openGLControl1.Height - scale)
                     {
                         EndOfGame();
                     }
                     break;
                 case Direction.Down:
-                    newSegment.Y += scale;
-                    if (newSegment.Y > pictureBox1.Height - scale)
+                    newSegment.Y -= scale;
+                    if (newSegment.Y < 0)
                     {
                         EndOfGame();
                     }
@@ -190,7 +309,7 @@ namespace SnakeNew
                     break;
                 case Direction.Right:
                     newSegment.X += scale;
-                    if (newSegment.X > pictureBox1.Width - scale)
+                    if (newSegment.X > openGLControl1.Width - scale)
                     {
                         EndOfGame();
                     }
@@ -204,12 +323,11 @@ namespace SnakeNew
                     AddAppleAndBomb();
                     score++;
                 }
-                else if (CheckMatch(bombs, newSegment) || CheckMatch(snake) || (pictureBox1.Width * pictureBox1.Height) / (scale * scale) - 4 - complexity.BombCount - snake.Count < 10)
+                else if (CheckMatch(bombs, newSegment) || CheckMatch(snake) || (openGLControl1.Width * openGLControl1.Height) / (scale * scale) - 4 - complexity.BombCount - snake.Count < 10)
                 {
                     EndOfGame();
                 }
                 else snake.RemoveAt(snake.Count - 1);
-                pictureBox1.Invalidate();
             }
         }
 
@@ -268,7 +386,7 @@ namespace SnakeNew
             timer1.Interval = complexity.Interval;
         }
 
-        private void pictureBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void openGLControl1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             switch (e.KeyData)
             {
@@ -299,126 +417,14 @@ namespace SnakeNew
                 case Keys.P:
                     timer1.Enabled = pause;
                     pause = !pause;
-                    pictureBox1.Invalidate();
                     break;
                 case Keys.Escape:
+                    EndOfGame();
                     EnableComponents(true);
-                    pictureBox1.Invalidate();
                     break;
             }
-        }
-
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
-        {
-            if (run)
-            {
-                e.Graphics.DrawImage(Properties.Resources.Apple, new Rectangle(apple.X, apple.Y, scale, scale));
-                foreach (Coordinate item in bombs)
-                {
-                    e.Graphics.DrawImage(Properties.Resources.bomb, new Rectangle(item.X, item.Y, scale, scale));
-                }
-                Image image = Properties.Resources.StartSegment;
-                switch (direction)
-                {
-                    case Direction.Up:
-                        break;
-                    case Direction.Down:
-                        image.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                        break;
-                    case Direction.Left:
-                        image.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                        break;
-                    case Direction.Right:
-                        image.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                        break;
-                }
-                e.Graphics.DrawImage(image, new Rectangle(snake[0].X, snake[0].Y, scale, scale));
-                image = Properties.Resources.EndSegment;
-                if (snake[snake.Count - 2].X == snake[snake.Count - 1].X &&
-                    snake[snake.Count - 2].Y - scale == snake[snake.Count - 1].Y)
-                {
-                    image.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                }
-                else if (snake[snake.Count - 2].Y == snake[snake.Count - 1].Y &&
-                         snake[snake.Count - 2].X - scale == snake[snake.Count - 1].X)
-                {
-                    image.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                }
-                else if (snake[snake.Count - 2].Y == snake[snake.Count - 1].Y &&
-                         snake[snake.Count - 2].X + scale == snake[snake.Count - 1].X)
-                {
-                    image.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                }
-                e.Graphics.DrawImage(image, new Rectangle(snake[snake.Count - 1].X, snake[snake.Count - 1].Y, scale, scale));
-                for (int i = 1; i < snake.Count - 1; i++)
-                {
-                    if (snake[i - 1].X == snake[i + 1].X && (snake[i - 1].Y + 2 * scale == snake[i + 1].Y || snake[i - 1].Y - 2 * scale == snake[i + 1].Y))
-                    {
-                        image = Properties.Resources.DefaultSegment;
-                    }
-                    else if (snake[i - 1].Y == snake[i + 1].Y && (snake[i - 1].X + 2 * scale == snake[i + 1].X || snake[i - 1].X - 2 * scale == snake[i + 1].X))
-                    {
-                        image = Properties.Resources.DefaultSegment;
-                        image.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                    }
-                    else if ((snake[i-1].X + scale == snake[i+1].X &&
-                              snake[i-1].Y + scale == snake[i+1].Y &&
-                              snake[i].X == snake[i-1].X &&
-                              snake[i].Y == snake[i+1].Y) ||
-                             (snake[i - 1].X - scale == snake[i + 1].X &&
-                              snake[i - 1].Y - scale == snake[i + 1].Y &&
-                              snake[i].X == snake[i + 1].X &&
-                              snake[i].Y == snake[i - 1].Y))
-                    {
-                        image = Properties.Resources.RotateSegment;
-                    }
-                    else if ((snake[i - 1].X - scale == snake[i + 1].X &&
-                              snake[i - 1].Y + scale == snake[i + 1].Y &&
-                              snake[i].X == snake[i + 1].X &&
-                              snake[i].Y == snake[i - 1].Y) ||
-                             (snake[i - 1].X + scale == snake[i + 1].X &&
-                              snake[i - 1].Y - scale == snake[i + 1].Y &&
-                              snake[i].X == snake[i - 1].X &&
-                              snake[i].Y == snake[i + 1].Y))
-                    {
-                        image = Properties.Resources.RotateSegment;
-                        image.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                    }
-                    else if ((snake[i - 1].X + scale == snake[i + 1].X &&
-                              snake[i - 1].Y + scale == snake[i + 1].Y &&
-                              snake[i].X == snake[i + 1].X &&
-                              snake[i].Y == snake[i - 1].Y) ||
-                             (snake[i - 1].X - scale == snake[i + 1].X &&
-                              snake[i - 1].Y - scale == snake[i + 1].Y &&
-                              snake[i].X == snake[i - 1].X &&
-                              snake[i].Y == snake[i + 1].Y))
-                    {
-                        image = Properties.Resources.RotateSegment;
-                        image.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                    }
-                    else if ((snake[i - 1].X - scale == snake[i + 1].X &&
-                              snake[i - 1].Y + scale == snake[i + 1].Y &&
-                              snake[i].X == snake[i - 1].X &&
-                              snake[i].Y == snake[i + 1].Y) ||
-                             (snake[i - 1].X + scale == snake[i + 1].X &&
-                              snake[i - 1].Y - scale == snake[i + 1].Y &&
-                              snake[i].X == snake[i + 1].X &&
-                              snake[i].Y == snake[i - 1].Y))
-                    {
-                        image = Properties.Resources.RotateSegment;
-                        image.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                    }
-                    e.Graphics.DrawImage(image, new Rectangle(snake[i].X, snake[i].Y, scale, scale));
-                }
-                toolStripStatusLabel1.Text = string.Format("Счет: {0}. Для прекращения игры нажмите клавишу 'ESC'.", score);
-                if (pause)
-                {
-                    e.Graphics.DrawString("ПАУЗА", new Font("Arial", 16, FontStyle.Bold), Brushes.Red, 10, 10);
-                }
-            }
-            else e.Graphics.Clear(Color.White);
-        }
-
+=======
+>>>>>>> develop
         private void рекордыToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string text = string.Empty;
@@ -427,6 +433,74 @@ namespace SnakeNew
                 text += item.ToString() + "\n";
             }
             MessageBox.Show(text, "Рекорды.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void openGLControl1_OpenGLDraw(object sender, RenderEventArgs args)
+        {
+            PaintScene();
+        }
+
+        private void openGLControl1_OpenGLInitialized(object sender, EventArgs e)
+        {
+            openGL = openGLControl1.OpenGL;
+            openGL.Enable(OpenGL.GL_TEXTURE_2D);
+            openGL.Enable(OpenGL.GL_DEPTH_TEST);
+            openGL.DepthMask(1);
+            openGL.DepthFunc(OpenGL.GL_LEQUAL);
+            openGL.ClearColor(1f, 1f, 1f, 1f);
+            textures = new Texture[16] { new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture() };
+            textures[0].Create(openGL, Properties.Resources.Apple);
+            textures[1].Create(openGL, Properties.Resources.bomb);
+
+            Image image = Properties.Resources.StartSegment;
+            textures[2].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.StartSegment;
+            image.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            textures[3].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.StartSegment;
+            image.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            textures[4].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.StartSegment;
+            image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            textures[5].Create(openGL, (Bitmap)image);
+
+            image = Properties.Resources.DefaultSegment;
+            textures[6].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.DefaultSegment;
+            image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            textures[7].Create(openGL, (Bitmap)image);
+
+            image = Properties.Resources.RotateSegment;
+            image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            textures[8].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.RotateSegment;
+            textures[9].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.RotateSegment;
+            image.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            textures[10].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.RotateSegment;
+            image.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            textures[11].Create(openGL, (Bitmap)image);
+
+            image = Properties.Resources.EndSegment;
+            image.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            textures[12].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.EndSegment;
+            image.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            textures[13].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.EndSegment;
+            image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            textures[14].Create(openGL, (Bitmap)image);
+            image = Properties.Resources.EndSegment;
+            textures[15].Create(openGL, (Bitmap)image);
+        }
+
+        private void openGLControl1_Resized(object sender, EventArgs e)
+        {
+            openGL.MatrixMode(OpenGL.GL_PROJECTION);
+            openGL.LoadIdentity();
+            openGL.Ortho2D(0, openGLControl1.Width, 0, openGLControl1.Height);
+            openGL.Viewport(0, 0, openGLControl1.Width, openGLControl1.Height);
         }
     }
 }
