@@ -15,6 +15,7 @@ namespace YouTubeDownloaderApp
 
         private void ResetForm()
         {
+            thread = null;
             button1.Text = "&Download";
             textBox1.Text = string.Empty;
             progressBar1.Value = 0;
@@ -81,10 +82,16 @@ namespace YouTubeDownloaderApp
 
                 }
                 downloader.DownloadProgressChanged -= downloader_DownloadProgressChanged;
-                downloader.DownloadFinished -= downloader_DownloadFinished;
-                thread = null;
-                ResetForm();                
-                File.Delete(saveFileDialog1.FileName);
+                downloader.DownloadFinished -= downloader_DownloadFinished;                
+                ResetForm();
+                try
+                {
+                    File.Delete(saveFileDialog1.FileName);
+                }
+                catch (Exception)
+                {
+
+                }
             }
         }
 
@@ -111,7 +118,6 @@ namespace YouTubeDownloaderApp
                         label3.Text = string.Format("{0:0.##}%", e.ProgressPercentage);
                         progressBar1.Update();
                     }
-
                 }
                 ));
         }
