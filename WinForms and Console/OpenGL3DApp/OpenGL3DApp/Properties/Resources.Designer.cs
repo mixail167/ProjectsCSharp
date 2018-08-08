@@ -83,6 +83,16 @@ namespace OpenGL3DApp.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap earth3 {
+            get {
+                object obj = ResourceManager.GetObject("earth3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap kulak {
             get {
                 object obj = ResourceManager.GetObject("kulak", resourceCulture);

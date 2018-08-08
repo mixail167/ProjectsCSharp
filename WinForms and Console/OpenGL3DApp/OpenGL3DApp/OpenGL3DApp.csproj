@@ -66,6 +66,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Point3D.cs" />
+    <Compile Include="Point3DUV.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -109,6 +110,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\WOT.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1-w678111.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\earth3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
