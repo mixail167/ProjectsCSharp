@@ -12,20 +12,22 @@ namespace OpenGL3DApp
         private bool loaded;
         private double _widthCube;
         private double widthHeart;
+        private double widthCylinder;
         private Point3D[] pointsCube;
         private Point3D centerCube;
         private Point3D centerSphere;
         private OpenGL openGL;
         private float fontSize;
         private Texture[] textures;
-        private double radius;
+        private double radiusSphere;
+        private double radiusCylinder;
         private Point3DUV[] pointsSphere;
         private Point3D[] pointsHeart;
+        private Point3D[] pointsCylinder;
         private Point3D centerHeart;
+        private Point3D centerCylinder;
         private Point3D cameraPosition;
         private Point3D cameraView;
-        private Point3D centerScene;
-        private int speed = 20;
 
         public Form1()
         {
@@ -33,7 +35,9 @@ namespace OpenGL3DApp
             _widthCube = 50;
             widthHeart = 50;
             fontSize = 12;
-            radius = 25;
+            radiusSphere = 25;
+            radiusCylinder = 25;
+            widthCylinder = 50;
             Init();
         }
 
@@ -49,26 +53,36 @@ namespace OpenGL3DApp
                 new Point3D(-_widthCube/2,_widthCube/2,_widthCube/2),
                 new Point3D(_widthCube/2,_widthCube/2,_widthCube/2)
             };
-            pointsSphere = CreateSphere(radius, 64, 64);
-            pointsSphere = Rotate3D(pointsSphere, 90, 0, 0);
+            pointsSphere = Rotate3D(CreateSphere(radiusSphere, 64, 64), 90, 0, 0);
+            pointsCylinder = Rotate3D(CreateCylinder(radiusCylinder, widthCylinder, 10), 90, 0, 0);
             pointsHeart = CreateHeart(widthHeart);
             centerCube = new Point3D(150, 0, 0);
             centerSphere = new Point3D(-150, 0, 0);
-            centerHeart = new Point3D(0, 0, 0);
-            cameraPosition = new Point3D(0, 0, 300);
-            cameraView = new Point3D(0, 0, -300);
-            centerScene = new Point3D(0, 0, 0);
-            SetCamera(cameraPosition, cameraView, centerScene);
+            centerHeart = new Point3D(0, 150, 0);
+            centerCylinder = new Point3D(0, -150, 0);
+            cameraPosition = new Point3D(0, 0, 500);
+            cameraView = new Point3D(0, 0, -500);
+            SetCamera(cameraPosition, cameraView);
+        }
+
+        private Point3D[] CreateCylinder(double radiusCylinder, double widthCylinder, int step)
+        {
+            List<Point3D> points = new List<Point3D>();
+            points.AddRange(DrawCircule(0, 0, radiusCylinder, step: step, z: -widthCylinder / 2));
+            points.Add(new Point3D(0, 0, -widthCylinder / 2));
+            points.AddRange(DrawCircule(0, 0, radiusCylinder, step: step, z: widthCylinder / 2));
+            points.Add(new Point3D(0, 0, widthCylinder / 2));
+            return points.ToArray();
         }
 
         private Point3D[] CreateHeart(double widthHeart)
         {
             List<Point3D> points = new List<Point3D>();
-            points.AddRange(DrawCircule(widthHeart / 2 - Math.Truncate(widthHeart / 4), Math.Truncate(widthHeart / 4), Math.Truncate(widthHeart / 4), angleFinish: 180, z: -10));
-            points.AddRange(DrawCircule(-Math.Truncate(widthHeart / 4) - 1, Math.Truncate(widthHeart / 4), Math.Truncate(widthHeart / 4), angleFinish: 180, z: -10));
+            points.AddRange(DrawCircule(widthHeart / 2 - widthHeart / 4, widthHeart / 4, widthHeart / 4, angleFinish: 180, z: -10));
+            points.AddRange(DrawCircule(-widthHeart / 4, widthHeart / 4, widthHeart / 4, angleFinish: 180, z: -10));
             points.Add(new Point3D(0, -25, -10));
-            points.AddRange(DrawCircule(widthHeart / 2 - Math.Truncate(widthHeart / 4), Math.Truncate(widthHeart / 4), Math.Truncate(widthHeart / 4), angleFinish: 180, z: 10));
-            points.AddRange(DrawCircule(-Math.Truncate(widthHeart / 4) - 1, Math.Truncate(widthHeart / 4), Math.Truncate(widthHeart / 4), angleFinish: 180, z: 10));
+            points.AddRange(DrawCircule(widthHeart / 2 - widthHeart / 4, widthHeart / 4, widthHeart / 4, angleFinish: 180, z: 10));
+            points.AddRange(DrawCircule(-widthHeart / 4, widthHeart / 4, widthHeart / 4, angleFinish: 180, z: 10));
             points.Add(new Point3D(0, -25, 10));
             return points.ToArray();
         }
@@ -81,7 +95,6 @@ namespace OpenGL3DApp
                 double x = radius * Math.Cos(angle * Math.PI / 180);
                 double y = radius * Math.Sin(angle * Math.PI / 180);
                 points.Add(new Point3D(x + xCentre, y + yCentre, z));
-
             }
             return points.ToArray();
         }
@@ -89,6 +102,7 @@ namespace OpenGL3DApp
         void PaintScene()
         {
             openGL.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+
             //Ординаты
             openGL.Begin(OpenGL.GL_LINES);
             openGL.Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -99,6 +113,8 @@ namespace OpenGL3DApp
             openGL.Vertex(0, 0, -100000);
             openGL.Vertex(0, 0, 100000);
             openGL.End();
+
+            openGL.Enable(OpenGL.GL_TEXTURE_2D);
 
             //Куб
             textures[0].Bind(openGL);
@@ -222,6 +238,51 @@ namespace OpenGL3DApp
             openGL.Vertex(pointsHeart[middle].X + centerHeart.X, pointsHeart[middle].Y + centerHeart.Y, pointsHeart[middle].Z + centerHeart.Z);
             openGL.End();
 
+            //Цилиндр
+            textures[7].Bind(openGL);
+            openGL.Color(1.0f, 1.0f, 1.0f, 1.0f);
+            middle = pointsCylinder.Length / 2;
+            double a = GetDistance(pointsCylinder[0], pointsCylinder[middle / 2 - 1]) / 2;
+            double b = GetDistance(pointsCylinder[middle + 1], pointsCylinder[middle + middle / 2 - 1]) / 2;
+            double k = b / 10;
+            openGL.Begin(OpenGL.GL_TRIANGLE_FAN);
+            openGL.TexCoord(0.5, 0.0); openGL.Vertex(pointsCylinder[middle - 1].X + centerCylinder.X, pointsCylinder[middle - 1].Y + centerCylinder.Y, pointsCylinder[middle - 1].Z + centerCylinder.Z);
+            for (int i = 0; i < middle - 1; i++)
+            {
+                if (i % 2 == 0)
+                    openGL.TexCoord(0.0, k);
+                else
+                    openGL.TexCoord(1.0, k);
+                openGL.Vertex(pointsCylinder[i].X + centerCylinder.X, pointsCylinder[i].Y + centerCylinder.Y, pointsCylinder[i].Z + centerCylinder.Z);
+            }
+            openGL.End();
+            openGL.Begin(OpenGL.GL_TRIANGLE_FAN);
+            openGL.TexCoord(0.5, 0.0); openGL.Vertex(pointsCylinder[pointsCylinder.Length - 1].X + centerCylinder.X, pointsCylinder[pointsCylinder.Length - 1].Y + centerCylinder.Y, pointsCylinder[pointsCylinder.Length - 1].Z + centerCylinder.Z);
+            for (int i = middle; i < pointsCylinder.Length - 1; i++)
+            {
+                if (i % 2 == 0)
+                    openGL.TexCoord(0.0, k);
+                else
+                    openGL.TexCoord(1.0, k);
+                openGL.Vertex(pointsCylinder[i].X + centerCylinder.X, pointsCylinder[i].Y + centerCylinder.Y, pointsCylinder[i].Z + centerCylinder.Z);
+            }
+            openGL.End();
+            k = GetDistance(pointsCylinder[0], pointsCylinder[middle]) / 10;
+            double length = Math.PI * (a + b) / 200 / 2;
+            for (int i = 0; i < middle - 2; i++)
+            {
+                openGL.Begin(OpenGL.GL_QUADS);
+                openGL.TexCoord(i * length, k);
+                openGL.Vertex(pointsCylinder[i].X + centerCylinder.X, pointsCylinder[i].Y + centerCylinder.Y, pointsCylinder[i].Z + centerCylinder.Z);
+                openGL.TexCoord(i * length, 0.0);
+                openGL.Vertex(pointsCylinder[i + middle].X + centerCylinder.X, pointsCylinder[i + middle].Y + centerCylinder.Y, pointsCylinder[i + middle].Z + centerCylinder.Z);
+                openGL.TexCoord((i + 1) * length, 0.0);
+                openGL.Vertex(pointsCylinder[i + middle + 1].X + centerCylinder.X, pointsCylinder[i + middle + 1].Y + centerCylinder.Y, pointsCylinder[i + middle + 1].Z + centerCylinder.Z);
+                openGL.TexCoord((i + 1) * length, k);
+                openGL.Vertex(pointsCylinder[i + 1].X + centerCylinder.X, pointsCylinder[i + 1].Y + centerCylinder.Y, pointsCylinder[i + 1].Z + centerCylinder.Z);
+                openGL.End();
+            }
+
             //Сфера
             openGL.Color(1.0f, 1.0f, 1.0f, 1.0f);
             textures[6].Bind(openGL);
@@ -232,7 +293,15 @@ namespace OpenGL3DApp
                 openGL.Vertex(item.X + centerSphere.X, item.Y + centerSphere.Y, item.Z + centerSphere.Z);
             }
             openGL.End();
+
+            openGL.Disable(OpenGL.GL_TEXTURE_2D);
+
             openGL.Flush();
+        }
+
+        private double GetDistance(Point3D point1, Point3D point2)
+        {
+            return Math.Sqrt(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2) + Math.Pow(point2.Z - point1.Z, 2));
         }
 
         private Point3DUV[] CreateSphere(double r, int nx, int ny)
@@ -285,8 +354,7 @@ namespace OpenGL3DApp
         {
             loaded = true;
             openGL = openGLControl1.OpenGL;
-            openGL.Enable(OpenGL.GL_TEXTURE_2D);
-            textures = new Texture[7] { new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture() };
+            textures = new Texture[8] { new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture(), new Texture() };
             textures[0].Create(openGL, Properties.Resources.BMW);
             textures[1].Create(openGL, Properties.Resources.WOT);
             textures[2].Create(openGL, Properties.Resources.tiger);
@@ -294,16 +362,17 @@ namespace OpenGL3DApp
             textures[4].Create(openGL, Properties.Resources.barselon);
             textures[5].Create(openGL, Properties.Resources.VSRB);
             textures[6].Create(openGL, Properties.Resources.earth3);
+            textures[7].Create(openGL, Properties.Resources.kirpich);
             openGL.Enable(OpenGL.GL_DEPTH_TEST);
             openGL.DepthMask((byte)OpenGL.GL_TRUE);
         }
 
         private void glControl1_SizeChanged(object sender, EventArgs e)
         {
-            SetCamera(cameraPosition, cameraView, centerScene);
+            SetCamera(cameraPosition, cameraView);
         }
 
-        private void SetCamera(Point3D cameraPosition, Point3D cameraView, Point3D centerScene)
+        private void SetCamera(Point3D cameraPosition, Point3D cameraView)
         {
             try
             {
@@ -312,12 +381,12 @@ namespace OpenGL3DApp
                 openGL.Perspective(60.0f, (double)openGLControl1.Width / (double)openGLControl1.Height, 0.01, double.MaxValue);
                 openGL.MatrixMode(OpenGL.GL_MODELVIEW);
                 openGL.LoadIdentity();
-                openGL.LookAt(cameraPosition.X + centerScene.X, 
-                    cameraPosition.Y + centerScene.Y, 
-                    cameraPosition.Z + centerScene.Z, 
-                    cameraView.X + cameraPosition.X +centerScene.X,
-                    cameraView.Y + cameraPosition.Y+centerScene.Y, 
-                    cameraView.Z + cameraPosition.Z+centerScene.Z,
+                openGL.LookAt(cameraPosition.X,
+                    cameraPosition.Y,
+                    cameraPosition.Z,
+                    cameraView.X + cameraPosition.X,
+                    cameraView.Y + cameraPosition.Y,
+                    cameraView.Z + cameraPosition.Z,
                     0, 1, 0);
             }
             catch (Exception)
@@ -333,18 +402,21 @@ namespace OpenGL3DApp
                 centerCube = Translate3D(centerCube, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
                 centerSphere = Translate3D(centerSphere, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
                 centerHeart = Translate3D(centerHeart, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
+                centerCylinder = Translate3D(centerCylinder, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
             }
             else if (radioButton2.Checked)
             {
                 pointsCube = Rotate3D(pointsCube, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
                 pointsSphere = Rotate3D(pointsSphere, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
                 pointsHeart = Rotate3D(pointsHeart, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
+                pointsCylinder = Rotate3D(pointsCylinder, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
             }
             else
             {
                 pointsCube = Scale3D(pointsCube, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
                 pointsSphere = Scale3D(pointsSphere, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
                 pointsHeart = Scale3D(pointsHeart, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
+                pointsCylinder = Scale3D(pointsCylinder, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
             }
         }
 
@@ -476,108 +548,99 @@ namespace OpenGL3DApp
                 centerCube = Translate3D(centerCube, 0, 5, 0);
                 centerSphere = Translate3D(centerSphere, 0, 5, 0);
                 centerHeart = Translate3D(centerHeart, 0, 5, 0);
+                centerCylinder = Translate3D(centerCylinder, 0, 5, 0);
             }
             else if (e.KeyCode == Keys.Down)
             {
                 centerCube = Translate3D(centerCube, 0, -5, 0);
                 centerSphere = Translate3D(centerSphere, 0, -5, 0);
                 centerHeart = Translate3D(centerHeart, 0, -5, 0);
+                centerCylinder = Translate3D(centerCylinder, 0, -5, 0);
             }
             else if (e.KeyCode == Keys.Left)
             {
                 centerCube = Translate3D(centerCube, -5, 0, 0);
                 centerSphere = Translate3D(centerSphere, -5, 0, 0);
                 centerHeart = Translate3D(centerHeart, -5, 0, 0);
+                centerCylinder = Translate3D(centerCylinder, -5, 0, 0);
             }
             else if (e.KeyCode == Keys.Right)
             {
                 centerCube = Translate3D(centerCube, 5, 0, 0);
                 centerSphere = Translate3D(centerSphere, 5, 0, 0);
                 centerHeart = Translate3D(centerHeart, 5, 0, 0);
+                centerCylinder = Translate3D(centerCylinder, 5, 0, 0);
             }
             else if (e.KeyCode == Keys.PageUp)
             {
                 centerCube = Translate3D(centerCube, 0, 0, 5);
                 centerSphere = Translate3D(centerSphere, 0, 0, 5);
                 centerHeart = Translate3D(centerHeart, 0, 0, 5);
+                centerCylinder = Translate3D(centerCylinder, 0, 0, 5);
             }
             else if (e.KeyCode == Keys.PageDown)
             {
                 centerCube = Translate3D(centerCube, 0, 0, -5);
                 centerSphere = Translate3D(centerSphere, 0, 0, -5);
                 centerHeart = Translate3D(centerHeart, 0, 0, -5);
+                centerCylinder = Translate3D(centerCylinder, 0, 0, -5);
             }
             else if (e.KeyCode == Keys.Space)
             {
                 pointsCube = Rotate3D(pointsCube, 60, 60, 60);
                 pointsSphere = Rotate3D(pointsSphere, 60, 60, 60);
                 pointsHeart = Rotate3D(pointsHeart, 60, 60, 60);
+                pointsCylinder = Rotate3D(pointsCylinder, 60, 60, 60);
             }
             else if (e.KeyCode == Keys.NumPad8)
             {
-                cameraPosition.Y -= 5.0f;
-                openGL.Translate(0.0f, -5.0f, 0.0f);
+                cameraPosition = Translate3D(cameraPosition, 0, 5, 0);
+                SetCamera(cameraPosition, cameraView);
             }
             else if (e.KeyCode == Keys.NumPad2)
             {
-                cameraPosition.Y += 5.0f;
-                openGL.Translate(0.0f, 5.0f, 0.0f);
+                cameraPosition = Translate3D(cameraPosition, 0, -5, 0);
+                SetCamera(cameraPosition, cameraView);
             }
             else if (e.KeyCode == Keys.NumPad4)
             {
-                cameraPosition.X += 5.0f;
-                openGL.Translate(5.0f, 0.0f, 0.0f);
+                cameraPosition = Translate3D(cameraPosition, -5, 0, 0);
+                SetCamera(cameraPosition, cameraView);
             }
             else if (e.KeyCode == Keys.NumPad6)
             {
-                cameraPosition.X -= 5.0f;
-                openGL.Translate(-5.0f, 0.0f, 0.0f);
+                cameraPosition = Translate3D(cameraPosition, 5, 0, 0);
+                SetCamera(cameraPosition, cameraView);
             }
             else if (e.KeyCode == Keys.NumPad9)
             {
-                cameraPosition.Z += 5.0f;
-                openGL.Translate(0.0f, 0.0f, 5.0f);
+                cameraPosition = Translate3D(cameraPosition, 0, 0, -5);
+                SetCamera(cameraPosition, cameraView);
             }
             else if (e.KeyCode == Keys.NumPad3)
             {
-                cameraPosition.Z -= 5.0f;
-                openGL.Translate(0.0f, 0.0f, -5.0f);
-            }
-            else if (e.KeyCode == Keys.S)
-            {
-                openGL.Rotate(-5.0f, 1.0f, 0.0f, 0.0f);
+                cameraPosition = Translate3D(cameraPosition, 0, 0, 5);
+                SetCamera(cameraPosition, cameraView);
             }
             else if (e.KeyCode == Keys.W)
             {
-                openGL.Rotate(5.0f, 1.0f, 0.0f, 0.0f);
+                cameraView = Rotate3D(cameraView, 5, 0, 0);
+                SetCamera(cameraPosition, cameraView);
             }
-            else if (e.KeyCode == Keys.D)
+            else if (e.KeyCode == Keys.S)
             {
-                openGL.Rotate(-5.0f, 0.0f, 1.0f, 0.0f);
+                cameraView = Rotate3D(cameraView, -5, 0, 0);
+                SetCamera(cameraPosition, cameraView);
             }
             else if (e.KeyCode == Keys.A)
             {
-                openGL.Rotate(5.0f, 0.0f, 1.0f, 0.0f);
-            }
-            else if (e.KeyCode == Keys.Z)
-            {
-                cameraView = Rotate3D(cameraView, 5, 0, 0);
-                SetCamera(cameraPosition, cameraView, centerScene);
-            }
-            else if (e.KeyCode == Keys.X)
-            {
-                cameraView = Rotate3D(cameraView, -5, 0, 0);
-                SetCamera(cameraPosition, cameraView, centerScene);
-            }
-            else if (e.KeyCode == Keys.C)
-            {
                 cameraView = Rotate3D(cameraView, 0, 5, 0);
-                SetCamera(cameraPosition, cameraView, centerScene);
+                SetCamera(cameraPosition, cameraView);
             }
-            else if (e.KeyCode == Keys.V)
+            else if (e.KeyCode == Keys.D)
             {
                 cameraView = Rotate3D(cameraView, 0, -5, 0);
-                SetCamera(cameraPosition, cameraView, centerScene);
+                SetCamera(cameraPosition, cameraView);
             }
         }
 
@@ -601,12 +664,14 @@ namespace OpenGL3DApp
                 pointsCube = Scale3D(pointsCube, 1.5, 1.5, 1.5);
                 pointsSphere = Scale3D(pointsSphere, 1.5, 1.5, 1.5);
                 pointsHeart = Scale3D(pointsHeart, 1.5, 1.5, 1.5);
+                pointsCylinder = Scale3D(pointsCylinder, 1.5, 1.5, 1.5);
             }
             else
             {
                 pointsCube = Scale3D(pointsCube, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
                 pointsSphere = Scale3D(pointsSphere, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
                 pointsHeart = Scale3D(pointsHeart, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
+                pointsCylinder = Scale3D(pointsCylinder, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
             }
         }
 
