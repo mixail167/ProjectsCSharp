@@ -21,13 +21,17 @@ namespace OpenGL3DApp
         private Texture[] textures;
         private double radiusSphere;
         private double radiusCylinder;
+        private double intRadiusTorus;
+        private double extRadiusTorus;
         private Point3DUV[] pointsSphere;
         private Point3D[] pointsHeart;
         private Point3D[] pointsCylinder;
+        private Point3D[] pointsTorus;
         private Point3D centerHeart;
         private Point3D centerCylinder;
         private Point3D cameraPosition;
         private Point3D cameraView;
+        private Point3D centerTorus;
 
         public Form1()
         {
@@ -38,6 +42,8 @@ namespace OpenGL3DApp
             radiusSphere = 25;
             radiusCylinder = 25;
             widthCylinder = 50;
+            intRadiusTorus = 10;
+            extRadiusTorus = 50;
             Init();
         }
 
@@ -56,6 +62,8 @@ namespace OpenGL3DApp
             pointsSphere = Rotate3D(CreateSphere(radiusSphere, 64, 64), 90, 0, 0);
             pointsCylinder = Rotate3D(CreateCylinder(radiusCylinder, widthCylinder, 10), 90, 0, 0);
             pointsHeart = CreateHeart(widthHeart);
+            pointsTorus = CreateTorus(intRadiusTorus, extRadiusTorus);
+            centerTorus = new Point3D(0, 0, 0);
             centerCube = new Point3D(150, 0, 0);
             centerSphere = new Point3D(-150, 0, 0);
             centerHeart = new Point3D(0, 150, 0);
@@ -63,6 +71,31 @@ namespace OpenGL3DApp
             cameraPosition = new Point3D(0, 0, 500);
             cameraView = new Point3D(0, 0, -500);
             SetCamera(cameraPosition, cameraView);
+        }
+
+        private Point3D[] CreateTorus(double intR, double extR, int startAlpha = 0, int startBeta = 0, int finishAlpha = 360, int finishBeta = 360, int extStep = 10, int intStep = 10)
+        {
+            List<Point3D> points = new List<Point3D>();
+            for (int i = startBeta; i < finishBeta; i += extStep)
+            {
+                for (int j = startAlpha; j < finishAlpha; j += intStep)
+                {
+                    points.Add(GetPointTorus(intR, extR, j, i));
+                    points.Add(GetPointTorus(intR, extR, j + intStep, i));
+                    points.Add(GetPointTorus(intR, extR, j + intStep, i + extStep));
+                    points.Add(GetPointTorus(intR, extR, j, i + extStep));
+                }
+            }
+            return points.ToArray();
+        }
+
+        private Point3D GetPointTorus(double intR, double extR, double alpha, double beta)
+        {
+            alpha *= Math.PI / 180;
+            beta *= Math.PI / 180;
+            return new Point3D((extR + intR * Math.Cos(alpha)) * Math.Sin(beta),
+                               (extR + intR * Math.Cos(alpha)) * Math.Cos(beta),
+                               intR * Math.Sin(alpha));
         }
 
         private Point3D[] CreateCylinder(double radiusCylinder, double widthCylinder, int step)
@@ -114,9 +147,82 @@ namespace OpenGL3DApp
             openGL.Vertex(0, 0, 100000);
             openGL.End();
 
+            //Тор
+            Random r = new Random();
+            for (int i = 0; i < pointsTorus.Length; i += 4)
+            {
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Begin(OpenGL.GL_QUADS);
+                openGL.Vertex(pointsTorus[i].X + centerTorus.X, pointsTorus[i].Y + centerTorus.Y, pointsTorus[i].Z + centerTorus.Z);
+                openGL.Vertex(pointsTorus[i + 1].X + centerTorus.X, pointsTorus[i + 1].Y + centerTorus.Y, pointsTorus[i + 1].Z + centerTorus.Z);
+                openGL.Vertex(pointsTorus[i + 2].X + centerTorus.X, pointsTorus[i + 2].Y + centerTorus.Y, pointsTorus[i + 2].Z + centerTorus.Z);
+                openGL.Vertex(pointsTorus[i + 3].X + centerTorus.X, pointsTorus[i + 3].Y + centerTorus.Y, pointsTorus[i + 3].Z + centerTorus.Z);
+                openGL.End();
+            }
+
+            //Сердце
+            int middle = pointsHeart.Length / 2;
+            int quarter = (middle - 1) / 2;
+            openGL.Begin(OpenGL.GL_POLYGON);
+            for (int i = 0; i < quarter; i++)
+            {
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Vertex(pointsHeart[i].X + centerHeart.X, pointsHeart[i].Y + centerHeart.Y, pointsHeart[i].Z + centerHeart.Z);
+            }
+            openGL.End();
+            openGL.Begin(OpenGL.GL_POLYGON);
+            for (int i = quarter; i < middle - 1; i++)
+            {
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Vertex(pointsHeart[i].X + centerHeart.X, pointsHeart[i].Y + centerHeart.Y, pointsHeart[i].Z + centerHeart.Z);
+            }
+            openGL.End();
+            openGL.Begin(OpenGL.GL_POLYGON);
+            for (int i = 0; i < quarter; i++)
+            {
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Vertex(pointsHeart[i + middle].X + centerHeart.X, pointsHeart[i + middle].Y + centerHeart.Y, pointsHeart[i + middle].Z + centerHeart.Z);
+            }
+            openGL.End();
+            openGL.Begin(OpenGL.GL_POLYGON);
+            for (int i = quarter; i < middle - 1; i++)
+            {
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Vertex(pointsHeart[i + middle].X + centerHeart.X, pointsHeart[i + middle].Y + centerHeart.Y, pointsHeart[i + middle].Z + centerHeart.Z);
+            }
+            openGL.End();
+            openGL.Begin(OpenGL.GL_TRIANGLES);
+            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            openGL.Vertex(pointsHeart[0].X + centerHeart.X, pointsHeart[0].Y + centerHeart.Y, pointsHeart[0].Z + centerHeart.Z);
+            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            openGL.Vertex(pointsHeart[middle - 2].X + centerHeart.X, pointsHeart[middle - 2].Y + centerHeart.Y, pointsHeart[middle - 2].Z + centerHeart.Z);
+            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            openGL.Vertex(pointsHeart[middle - 1].X + centerHeart.X, pointsHeart[middle - 1].Y + centerHeart.Y, pointsHeart[middle - 1].Z + centerHeart.Z);
+            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            openGL.Vertex(pointsHeart[middle].X + centerHeart.X, pointsHeart[middle].Y + centerHeart.Y, pointsHeart[middle].Z + centerHeart.Z);
+            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            openGL.Vertex(pointsHeart[pointsHeart.Length - 2].X + centerHeart.X, pointsHeart[pointsHeart.Length - 2].Y + centerHeart.Y, pointsHeart[pointsHeart.Length - 2].Z + centerHeart.Z);
+            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            openGL.Vertex(pointsHeart[pointsHeart.Length - 1].X + centerHeart.X, pointsHeart[pointsHeart.Length - 1].Y + centerHeart.Y, pointsHeart[pointsHeart.Length - 1].Z + centerHeart.Z);
+            openGL.End();
+            openGL.Begin(OpenGL.GL_QUAD_STRIP);
+            for (int i = 0; i < middle; i++)
+            {
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Vertex(pointsHeart[i].X + centerHeart.X, pointsHeart[i].Y + centerHeart.Y, pointsHeart[i].Z + centerHeart.Z);
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Vertex(pointsHeart[i + middle].X + centerHeart.X, pointsHeart[i + middle].Y + centerHeart.Y, pointsHeart[i + middle].Z + centerHeart.Z);
+            }
+            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            openGL.Vertex(pointsHeart[0].X + centerHeart.X, pointsHeart[0].Y + centerHeart.Y, pointsHeart[0].Z + centerHeart.Z);
+            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            openGL.Vertex(pointsHeart[middle].X + centerHeart.X, pointsHeart[middle].Y + centerHeart.Y, pointsHeart[middle].Z + centerHeart.Z);
+            openGL.End();
+
             openGL.Enable(OpenGL.GL_TEXTURE_2D);
 
             //Куб
+            openGL.Color(1.0f, 1.0f, 1.0f, 1.0f);
             textures[0].Bind(openGL);
 
             openGL.Begin(OpenGL.GL_QUADS);
@@ -177,66 +283,6 @@ namespace OpenGL3DApp
             {
                 openGL.DrawText(5, (int)(openGLControl1.Height - (i + 2) * fontSize), 1, 1, 1, string.Empty, fontSize, GetInfo(pointsCube[i], i + 1, centerCube));
             }
-
-            //Сердце
-            Random r = new Random();
-            int middle = pointsHeart.Length / 2;
-            int quarter = (middle - 1) / 2;
-            openGL.Begin(OpenGL.GL_POLYGON);
-            for (int i = 0; i < quarter; i++)
-            {
-                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-                openGL.Vertex(pointsHeart[i].X + centerHeart.X, pointsHeart[i].Y + centerHeart.Y, pointsHeart[i].Z + centerHeart.Z);
-            }
-            openGL.End();
-            openGL.Begin(OpenGL.GL_POLYGON);
-            for (int i = quarter; i < middle - 1; i++)
-            {
-                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-                openGL.Vertex(pointsHeart[i].X + centerHeart.X, pointsHeart[i].Y + centerHeart.Y, pointsHeart[i].Z + centerHeart.Z);
-            }
-            openGL.End();
-            openGL.Begin(OpenGL.GL_POLYGON);
-            for (int i = 0; i < quarter; i++)
-            {
-                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-                openGL.Vertex(pointsHeart[i + middle].X + centerHeart.X, pointsHeart[i + middle].Y + centerHeart.Y, pointsHeart[i + middle].Z + centerHeart.Z);
-            }
-            openGL.End();
-            openGL.Begin(OpenGL.GL_POLYGON);
-            for (int i = quarter; i < middle - 1; i++)
-            {
-                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-                openGL.Vertex(pointsHeart[i + middle].X + centerHeart.X, pointsHeart[i + middle].Y + centerHeart.Y, pointsHeart[i + middle].Z + centerHeart.Z);
-            }
-            openGL.End();
-            openGL.Begin(OpenGL.GL_TRIANGLES);
-            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-            openGL.Vertex(pointsHeart[0].X + centerHeart.X, pointsHeart[0].Y + centerHeart.Y, pointsHeart[0].Z + centerHeart.Z);
-            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-            openGL.Vertex(pointsHeart[middle - 2].X + centerHeart.X, pointsHeart[middle - 2].Y + centerHeart.Y, pointsHeart[middle - 2].Z + centerHeart.Z);
-            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-            openGL.Vertex(pointsHeart[middle - 1].X + centerHeart.X, pointsHeart[middle - 1].Y + centerHeart.Y, pointsHeart[middle - 1].Z + centerHeart.Z);
-            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-            openGL.Vertex(pointsHeart[middle].X + centerHeart.X, pointsHeart[middle].Y + centerHeart.Y, pointsHeart[middle].Z + centerHeart.Z);
-            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-            openGL.Vertex(pointsHeart[pointsHeart.Length - 2].X + centerHeart.X, pointsHeart[pointsHeart.Length - 2].Y + centerHeart.Y, pointsHeart[pointsHeart.Length - 2].Z + centerHeart.Z);
-            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-            openGL.Vertex(pointsHeart[pointsHeart.Length - 1].X + centerHeart.X, pointsHeart[pointsHeart.Length - 1].Y + centerHeart.Y, pointsHeart[pointsHeart.Length - 1].Z + centerHeart.Z);
-            openGL.End();
-            openGL.Begin(OpenGL.GL_QUAD_STRIP);
-            for (int i = 0; i < middle; i++)
-            {
-                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-                openGL.Vertex(pointsHeart[i].X + centerHeart.X, pointsHeart[i].Y + centerHeart.Y, pointsHeart[i].Z + centerHeart.Z);
-                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-                openGL.Vertex(pointsHeart[i + middle].X + centerHeart.X, pointsHeart[i + middle].Y + centerHeart.Y, pointsHeart[i + middle].Z + centerHeart.Z);
-            }
-            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-            openGL.Vertex(pointsHeart[0].X + centerHeart.X, pointsHeart[0].Y + centerHeart.Y, pointsHeart[0].Z + centerHeart.Z);
-            openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
-            openGL.Vertex(pointsHeart[middle].X + centerHeart.X, pointsHeart[middle].Y + centerHeart.Y, pointsHeart[middle].Z + centerHeart.Z);
-            openGL.End();
 
             //Цилиндр
             textures[7].Bind(openGL);
@@ -403,6 +449,7 @@ namespace OpenGL3DApp
                 centerSphere = Translate3D(centerSphere, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
                 centerHeart = Translate3D(centerHeart, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
                 centerCylinder = Translate3D(centerCylinder, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
+                centerTorus = Translate3D(centerTorus, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
             }
             else if (radioButton2.Checked)
             {
@@ -410,6 +457,7 @@ namespace OpenGL3DApp
                 pointsSphere = Rotate3D(pointsSphere, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
                 pointsHeart = Rotate3D(pointsHeart, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
                 pointsCylinder = Rotate3D(pointsCylinder, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
+                pointsTorus = Rotate3D(pointsTorus, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
             }
             else
             {
@@ -417,6 +465,7 @@ namespace OpenGL3DApp
                 pointsSphere = Scale3D(pointsSphere, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
                 pointsHeart = Scale3D(pointsHeart, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
                 pointsCylinder = Scale3D(pointsCylinder, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
+                pointsTorus = Scale3D(pointsTorus, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
             }
         }
 
@@ -549,6 +598,7 @@ namespace OpenGL3DApp
                 centerSphere = Translate3D(centerSphere, 0, 5, 0);
                 centerHeart = Translate3D(centerHeart, 0, 5, 0);
                 centerCylinder = Translate3D(centerCylinder, 0, 5, 0);
+                centerTorus = Translate3D(centerTorus, 0, 5, 0);
             }
             else if (e.KeyCode == Keys.Down)
             {
@@ -556,6 +606,7 @@ namespace OpenGL3DApp
                 centerSphere = Translate3D(centerSphere, 0, -5, 0);
                 centerHeart = Translate3D(centerHeart, 0, -5, 0);
                 centerCylinder = Translate3D(centerCylinder, 0, -5, 0);
+                centerTorus = Translate3D(centerTorus, 0, -5, 0);
             }
             else if (e.KeyCode == Keys.Left)
             {
@@ -563,6 +614,7 @@ namespace OpenGL3DApp
                 centerSphere = Translate3D(centerSphere, -5, 0, 0);
                 centerHeart = Translate3D(centerHeart, -5, 0, 0);
                 centerCylinder = Translate3D(centerCylinder, -5, 0, 0);
+                centerTorus = Translate3D(centerTorus, -5, 0, 0);
             }
             else if (e.KeyCode == Keys.Right)
             {
@@ -570,6 +622,7 @@ namespace OpenGL3DApp
                 centerSphere = Translate3D(centerSphere, 5, 0, 0);
                 centerHeart = Translate3D(centerHeart, 5, 0, 0);
                 centerCylinder = Translate3D(centerCylinder, 5, 0, 0);
+                centerTorus = Translate3D(centerTorus, 5, 0, 0);
             }
             else if (e.KeyCode == Keys.PageUp)
             {
@@ -577,6 +630,7 @@ namespace OpenGL3DApp
                 centerSphere = Translate3D(centerSphere, 0, 0, 5);
                 centerHeart = Translate3D(centerHeart, 0, 0, 5);
                 centerCylinder = Translate3D(centerCylinder, 0, 0, 5);
+                centerTorus = Translate3D(centerTorus, 0, 0, 5);
             }
             else if (e.KeyCode == Keys.PageDown)
             {
@@ -584,6 +638,7 @@ namespace OpenGL3DApp
                 centerSphere = Translate3D(centerSphere, 0, 0, -5);
                 centerHeart = Translate3D(centerHeart, 0, 0, -5);
                 centerCylinder = Translate3D(centerCylinder, 0, 0, -5);
+                centerTorus = Translate3D(centerTorus, 0, 0, -5);
             }
             else if (e.KeyCode == Keys.Space)
             {
@@ -591,6 +646,7 @@ namespace OpenGL3DApp
                 pointsSphere = Rotate3D(pointsSphere, 60, 60, 60);
                 pointsHeart = Rotate3D(pointsHeart, 60, 60, 60);
                 pointsCylinder = Rotate3D(pointsCylinder, 60, 60, 60);
+                pointsTorus = Rotate3D(pointsTorus, 60, 60, 60);
             }
             else if (e.KeyCode == Keys.NumPad8)
             {
@@ -665,6 +721,7 @@ namespace OpenGL3DApp
                 pointsSphere = Scale3D(pointsSphere, 1.5, 1.5, 1.5);
                 pointsHeart = Scale3D(pointsHeart, 1.5, 1.5, 1.5);
                 pointsCylinder = Scale3D(pointsCylinder, 1.5, 1.5, 1.5);
+                pointsTorus = Scale3D(pointsTorus, 1.5, 1.5, 1.5);
             }
             else
             {
@@ -672,6 +729,7 @@ namespace OpenGL3DApp
                 pointsSphere = Scale3D(pointsSphere, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
                 pointsHeart = Scale3D(pointsHeart, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
                 pointsCylinder = Scale3D(pointsCylinder, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
+                pointsTorus = Scale3D(pointsTorus, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
             }
         }
 
