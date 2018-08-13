@@ -112,10 +112,10 @@
     <None Include="Resources\WOT.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\earth3.png" />
+    <None Include="Resources\kirpich.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\kirpich.png" />
+    <None Include="Resources\earth3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
