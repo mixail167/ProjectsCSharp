@@ -62,7 +62,7 @@ namespace OpenGL3DApp
             pointsSphere = Rotate3D(CreateSphere(radiusSphere, 64, 64), 90, 0, 0);
             pointsCylinder = Rotate3D(CreateCylinder(radiusCylinder, widthCylinder, 10), 90, 0, 0);
             pointsHeart = CreateHeart(widthHeart);
-            pointsTorus = CreateTorus(intRadiusTorus, extRadiusTorus);
+            pointsTorus = CreateTorus(intRadiusTorus, extRadiusTorus/*, 0, 0, 360, 1800, 10, 10, 5, 1*/);
             centerTorus = new Point3D(0, 0, 0);
             centerCube = new Point3D(150, 0, 0);
             centerSphere = new Point3D(-150, 0, 0);
@@ -73,29 +73,30 @@ namespace OpenGL3DApp
             SetCamera(cameraPosition, cameraView);
         }
 
-        private Point3D[] CreateTorus(double intR, double extR, int startAlpha = 0, int startBeta = 0, int finishAlpha = 360, int finishBeta = 360, int extStep = 10, int intStep = 10)
+        private Point3D[] CreateTorus(double intR, double extR, int startAlpha = 0, int startBeta = 0, int finishAlpha = 360, int finishBeta = 360, int extStep = 10, int intStep = 10, double k = 0, double p = 0)
         {
             List<Point3D> points = new List<Point3D>();
             for (int i = startBeta; i < finishBeta; i += extStep)
             {
                 for (int j = startAlpha; j < finishAlpha; j += intStep)
                 {
-                    points.Add(GetPointTorus(intR, extR, j, i));
-                    points.Add(GetPointTorus(intR, extR, j + intStep, i));
-                    points.Add(GetPointTorus(intR, extR, j + intStep, i + extStep));
-                    points.Add(GetPointTorus(intR, extR, j, i + extStep));
+                    points.Add(GetPointTorus(intR, extR, j, i, k, p));
+                    points.Add(GetPointTorus(intR, extR, j + intStep, i, k, p));
+                    points.Add(GetPointTorus(intR, extR, j + intStep, i + extStep, k, p));
+                    points.Add(GetPointTorus(intR, extR, j, i + extStep, k, p));
                 }
             }
             return points.ToArray();
         }
 
-        private Point3D GetPointTorus(double intR, double extR, double alpha, double beta)
+        private Point3D GetPointTorus(double intR, double extR, double alpha, double beta, double k, double p)
         {
             alpha *= Math.PI / 180;
             beta *= Math.PI / 180;
+            extR += p * beta;
             return new Point3D((extR + intR * Math.Cos(alpha)) * Math.Sin(beta),
                                (extR + intR * Math.Cos(alpha)) * Math.Cos(beta),
-                               intR * Math.Sin(alpha));
+                               intR * Math.Sin(alpha) + k * beta);
         }
 
         private Point3D[] CreateCylinder(double radiusCylinder, double widthCylinder, int step)
