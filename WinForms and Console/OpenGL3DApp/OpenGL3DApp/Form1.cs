@@ -42,8 +42,8 @@ namespace OpenGL3DApp
             radiusSphere = 25;
             radiusCylinder = 25;
             widthCylinder = 50;
-            intRadiusTorus = 10;
-            extRadiusTorus = 50;
+            intRadiusTorus = 5;
+            extRadiusTorus = 25;
             Init();
         }
 
@@ -59,15 +59,15 @@ namespace OpenGL3DApp
                 new Point3D(-_widthCube/2,_widthCube/2,_widthCube/2),
                 new Point3D(_widthCube/2,_widthCube/2,_widthCube/2)
             };
-            pointsSphere = Rotate3D(CreateSphere(radiusSphere, 64, 64), 90, 0, 0);
+            pointsSphere = Rotate3D(CreateSphere(radiusSphere), 270, 0, 0);
             pointsCylinder = Rotate3D(CreateCylinder(radiusCylinder, widthCylinder, 10), 90, 0, 0);
             pointsHeart = CreateHeart(widthHeart);
             pointsTorus = CreateTorus(intRadiusTorus, extRadiusTorus/*, 0, 0, 360, 1800, 10, 10, 5, 1*/);
-            centerTorus = new Point3D(0, 0, 0);
-            centerCube = new Point3D(150, 0, 0);
-            centerSphere = new Point3D(-150, 0, 0);
-            centerHeart = new Point3D(0, 150, 0);
-            centerCylinder = new Point3D(0, -150, 0);
+            centerTorus = new Point3D(-200, 0, 0);
+            centerCube = new Point3D(200, 0, 0);
+            centerSphere = new Point3D(0, 0, 0);
+            centerHeart = new Point3D(0, 200, 0);
+            centerCylinder = new Point3D(0, -200, 0);
             cameraPosition = new Point3D(0, 0, 500);
             cameraView = new Point3D(0, 0, -500);
             SetCamera(cameraPosition, cameraView);
@@ -89,6 +89,33 @@ namespace OpenGL3DApp
             return points.ToArray();
         }
 
+        private Point3DUV[] CreateSphere(double radius, int startAlpha = 0, int startBeta = 0, int finishAlpha = 360, int finishBeta = 180, int extStep = 10, int intStep = 10)
+        {
+            List<Point3DUV> points = new List<Point3DUV>();
+            double dV = extStep * 1.0 / (finishBeta - startBeta);
+            double dU = intStep * 1.0 / (finishAlpha - startAlpha);
+            for (double j = startBeta, v = 0; j < finishBeta; j += extStep, v += dV)
+            {
+                for (double i = startAlpha, u = 0; i < finishAlpha; i += intStep, u += dU)
+                {
+                    points.Add(GetPointSphere(radius, j, i, u, v));
+                    points.Add(GetPointSphere(radius, j + extStep, i, u, v + dV));
+                    points.Add(GetPointSphere(radius, j + extStep, i + intStep, u + dU, v + dV));
+                    points.Add(GetPointSphere(radius, j, i + intStep, u + dU, v));
+                }
+            }
+            return points.ToArray();
+        }
+
+        private Point3DUV GetPointSphere(double radius, double alpha, double beta, double u, double v)
+        {
+            alpha *= Math.PI / 180;
+            beta *= Math.PI / 180;
+            return new Point3DUV(radius * Math.Sin(alpha) * Math.Cos(beta),
+                               radius * Math.Sin(alpha) * Math.Sin(beta),
+                               radius * Math.Cos(alpha), u, v);
+        }
+
         private Point3D GetPointTorus(double intR, double extR, double alpha, double beta, double k, double p)
         {
             alpha *= Math.PI / 180;
@@ -99,13 +126,13 @@ namespace OpenGL3DApp
                                intR * Math.Sin(alpha) + k * beta);
         }
 
-        private Point3D[] CreateCylinder(double radiusCylinder, double widthCylinder, int step)
+        private Point3D[] CreateCylinder(double radius, double width, int step)
         {
             List<Point3D> points = new List<Point3D>();
-            points.AddRange(DrawCircule(0, 0, radiusCylinder, step: step, z: -widthCylinder / 2));
-            points.Add(new Point3D(0, 0, -widthCylinder / 2));
-            points.AddRange(DrawCircule(0, 0, radiusCylinder, step: step, z: widthCylinder / 2));
-            points.Add(new Point3D(0, 0, widthCylinder / 2));
+            points.AddRange(DrawCircule(0, 0, radius, step: step, z: -width / 2));
+            points.Add(new Point3D(0, 0, -width / 2));
+            points.AddRange(DrawCircule(0, 0, radius, step: step, z: width / 2));
+            points.Add(new Point3D(0, 0, width / 2));
             return points.ToArray();
         }
 
@@ -276,14 +303,7 @@ namespace OpenGL3DApp
             openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(pointsCube[3].X + centerCube.X, pointsCube[3].Y + centerCube.Y, pointsCube[3].Z + centerCube.Z);
             openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(pointsCube[4].X + centerCube.X, pointsCube[4].Y + centerCube.Y, pointsCube[4].Z + centerCube.Z);
             openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(pointsCube[7].X + centerCube.X, pointsCube[7].Y + centerCube.Y, pointsCube[7].Z + centerCube.Z);
-            openGL.End();
-
-            //Текст
-            openGL.DrawText(5, (int)(openGLControl1.Height - fontSize), 1, 1, 1, string.Empty, fontSize, "Info");
-            for (int i = 0; i < pointsCube.Length; i++)
-            {
-                openGL.DrawText(5, (int)(openGLControl1.Height - (i + 2) * fontSize), 1, 1, 1, string.Empty, fontSize, GetInfo(pointsCube[i], i + 1, centerCube));
-            }
+            openGL.End();            
 
             //Цилиндр
             textures[7].Bind(openGL);
@@ -333,15 +353,24 @@ namespace OpenGL3DApp
             //Сфера
             openGL.Color(1.0f, 1.0f, 1.0f, 1.0f);
             textures[6].Bind(openGL);
-            openGL.Begin(OpenGL.GL_QUAD_STRIP);
-            foreach (Point3DUV item in pointsSphere)
+            for (int i = 0; i < pointsSphere.Length; i += 4)
             {
-                openGL.TexCoord(item.U, item.V);
-                openGL.Vertex(item.X + centerSphere.X, item.Y + centerSphere.Y, item.Z + centerSphere.Z);
+                openGL.Begin(OpenGL.GL_QUADS);
+                openGL.TexCoord(pointsSphere[i].U, pointsSphere[i].V); openGL.Vertex(pointsSphere[i].X + centerSphere.X, pointsSphere[i].Y + centerSphere.Y, pointsSphere[i].Z + centerSphere.Z);
+                openGL.TexCoord(pointsSphere[i + 1].U, pointsSphere[i + 1].V); openGL.Vertex(pointsSphere[i + 1].X + centerSphere.X, pointsSphere[i + 1].Y + centerSphere.Y, pointsSphere[i + 1].Z + centerSphere.Z);
+                openGL.TexCoord(pointsSphere[i + 2].U, pointsSphere[i + 2].V); openGL.Vertex(pointsSphere[i + 2].X + centerSphere.X, pointsSphere[i + 2].Y + centerSphere.Y, pointsSphere[i + 2].Z + centerSphere.Z);
+                openGL.TexCoord(pointsSphere[i + 3].U, pointsSphere[i + 3].V); openGL.Vertex(pointsSphere[i + 3].X + centerSphere.X, pointsSphere[i + 3].Y + centerSphere.Y, pointsSphere[i + 3].Z + centerSphere.Z);
+                openGL.End();
             }
-            openGL.End();
 
             openGL.Disable(OpenGL.GL_TEXTURE_2D);
+
+            //Текст
+            openGL.DrawText(5, (int)(openGLControl1.Height - fontSize), 1, 1, 1, string.Empty, fontSize, "Info");
+            for (int i = 0; i < pointsCube.Length; i++)
+            {
+                openGL.DrawText(5, (int)(openGLControl1.Height - (i + 2) * fontSize), 1, 1, 1, string.Empty, fontSize, GetInfo(pointsCube[i], i + 1, centerCube));
+            }
 
             openGL.Flush();
         }
@@ -349,47 +378,6 @@ namespace OpenGL3DApp
         private double GetDistance(Point3D point1, Point3D point2)
         {
             return Math.Sqrt(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2) + Math.Pow(point2.Z - point1.Z, 2));
-        }
-
-        private Point3DUV[] CreateSphere(double r, int nx, int ny)
-        {
-            Point3DUV[] pointsSphere = new Point3DUV[(nx + 1) * ny * 2];
-            double x, y, z, sy, cy, sy1, cy1, sx, cx, piy, pix, ay, ay1, ax, tx, ty, ty1, dnx, dny, diy;
-            dnx = 1.0 / (double)nx;
-            dny = 1.0 / (double)ny;
-            piy = Math.PI * dny;
-            pix = Math.PI * dnx;
-            int iterator = 0;
-            for (int iy = 0; iy < ny; iy++)
-            {
-                diy = (double)iy;
-                ay = diy * piy;
-                sy = Math.Sin(ay);
-                cy = Math.Cos(ay);
-                ty = diy * dny;
-                ay1 = ay + piy;
-                sy1 = Math.Sin(ay1);
-                cy1 = Math.Cos(ay1);
-                ty1 = ty + dny;
-                for (int ix = 0; ix <= nx; ix++)
-                {
-                    ax = 2.0 * ix * pix;
-                    sx = Math.Sin(ax);
-                    cx = Math.Cos(ax);
-                    x = r * sy * cx;
-                    y = r * sy * sx;
-                    z = -r * cy;
-                    tx = (double)ix * dnx;
-                    pointsSphere[iterator] = new Point3DUV(x, y, z, tx, ty);
-                    iterator++;
-                    x = r * sy1 * cx;
-                    y = r * sy1 * sx;
-                    z = -r * cy1;
-                    pointsSphere[iterator] = new Point3DUV(x, y, z, tx, ty1);
-                    iterator++;
-                }
-            }
-            return pointsSphere;
         }
 
         private string GetInfo(Point3D point, int index, Point3D center)

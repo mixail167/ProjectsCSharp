@@ -404,7 +404,6 @@
             this.openGLControl1.BackColor = System.Drawing.SystemColors.Control;
             this.openGLControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.openGLControl1.DrawFPS = true;
-            this.openGLControl1.FrameRate = 30;
             this.openGLControl1.Location = new System.Drawing.Point(144, 3);
             this.openGLControl1.Name = "openGLControl1";
             this.openGLControl1.OpenGLVersion = SharpGL.Version.OpenGLVersion.OpenGL2_1;
