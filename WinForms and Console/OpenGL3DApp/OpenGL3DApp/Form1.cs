@@ -13,6 +13,8 @@ namespace OpenGL3DApp
         private double _widthCube;
         private double widthHeart;
         private double widthCylinder;
+        private double widthTetraedron;
+        private double widthTriangle;
         private Point3D[] pointsCube;
         private Point3D centerCube;
         private Point3D centerSphere;
@@ -27,11 +29,16 @@ namespace OpenGL3DApp
         private Point3D[] pointsHeart;
         private Point3D[] pointsCylinder;
         private Point3D[] pointsTorus;
+        private Point3D[] pointsSerpinski;
+        private Point3D[] pointsKox;
         private Point3D centerHeart;
         private Point3D centerCylinder;
+        private Point3D centerSerpinski;
+        private Point3D centerKox;
         private Point3D cameraPosition;
         private Point3D cameraView;
         private Point3D centerTorus;
+        private int countIterations;
 
         public Form1()
         {
@@ -44,11 +51,23 @@ namespace OpenGL3DApp
             widthCylinder = 50;
             intRadiusTorus = 5;
             extRadiusTorus = 25;
+            widthTetraedron = 50;
+            countIterations = 5;
+            widthTriangle = 50;
             Init();
         }
 
         private void Init()
         {
+            centerSerpinski = new Point3D(-200, -200, 0);
+            centerKox = new Point3D(0, 0, 0);
+            centerTorus = new Point3D(-200, 0, 0);
+            centerCube = new Point3D(200, 0, 0);
+            centerSphere = new Point3D(200, 200, 0);
+            centerHeart = new Point3D(0, 200, 0);
+            centerCylinder = new Point3D(0, -200, 0);
+            cameraPosition = new Point3D(0, 0, 500);
+            cameraView = new Point3D(0, 0, -500);
             pointsCube = new Point3D[8]{
                 new Point3D(-_widthCube/2,-_widthCube/2, -_widthCube/2),
                 new Point3D(-_widthCube/2,_widthCube/2,-_widthCube/2),
@@ -62,18 +81,111 @@ namespace OpenGL3DApp
             pointsSphere = Rotate3D(CreateSphere(radiusSphere), 270, 0, 0);
             pointsCylinder = Rotate3D(CreateCylinder(radiusCylinder, widthCylinder, 10), 90, 0, 0);
             pointsHeart = CreateHeart(widthHeart);
+            pointsSerpinski = CreateSerpinski(widthTetraedron, countIterations);
+            pointsKox = CreateKox(widthTriangle, 8);
             pointsTorus = CreateTorus(intRadiusTorus, extRadiusTorus/*, 0, 0, 360, 1800, 10, 10, 5, 1*/);
-            centerTorus = new Point3D(-200, 0, 0);
-            centerCube = new Point3D(200, 0, 0);
-            centerSphere = new Point3D(0, 0, 0);
-            centerHeart = new Point3D(0, 200, 0);
-            centerCylinder = new Point3D(0, -200, 0);
-            cameraPosition = new Point3D(0, 0, 500);
-            cameraView = new Point3D(0, 0, -500);
             SetCamera(cameraPosition, cameraView);
         }
 
-        private Point3D[] CreateTorus(double intR, double extR, int startAlpha = 0, int startBeta = 0, int finishAlpha = 360, int finishBeta = 360, int extStep = 10, int intStep = 10, double k = 0, double p = 0)
+        private List<Point3D> Fractal(Point3D p1, Point3D p2, Point3D p3, int countIterations, List<Point3D> points)
+        {
+            if (countIterations > 0)
+            {
+                Point3D p4 = new Point3D((p2.X + 2 * p1.X) / 3, (p2.Y + 2 * p1.Y) / 3, 0);
+                Point3D p5 = new Point3D((2 * p2.X + p1.X) / 3, (p1.Y + 2 * p2.Y) / 3, 0);
+                Point3D ps = new Point3D((p2.X + p1.X) / 2, (p2.Y + p1.Y) / 2, 0);
+                Point3D pn = new Point3D((4 * ps.X - p3.X) / 3, (4 * ps.Y - p3.Y) / 3, 0);
+                points.Add(p4);
+                points.Add(pn);
+                points.Add(p5);
+                points = Fractal(p4, pn, p5, countIterations - 1, points);
+                points = Fractal(pn, p5, p4, countIterations - 1, points);
+                points = Fractal(p1, p4, new Point3D((2 * p1.X + p3.X) / 3, (2 * p1.Y + p3.Y) / 3, 0), countIterations - 1, points);
+                points = Fractal(p5, p2, new Point3D((2 * p2.X + p3.X) / 3, (2 * p2.Y + p3.Y) / 3, 0), countIterations - 1, points);
+
+            }
+            return points;
+        }
+
+        private Point3D[] CreateKox(double width, int countIterations)
+        {
+            List<Point3D> points = new List<Point3D>();
+            double h1 = width / 2 * Math.Sqrt(3);
+            points.Add(new Point3D(0, (h1 * 2) / 3, 0));
+            points.Add(new Point3D(-width / 2, -h1 / 3, 0));
+            points.Add(new Point3D(width / 2, -h1 / 3, 0));
+            points = Fractal(points[0], points[1], points[2], countIterations, points);
+            points = Fractal(points[1], points[2], points[0], countIterations, points);
+            points = Fractal(points[2], points[0], points[1], countIterations, points);
+            return points.ToArray();
+        }
+
+        private Point3D[] CreateSerpinski(double width, int countIterations)
+        {
+            Point3D[] startPoints = new Point3D[4];
+            double h1 = width / 2 * Math.Sqrt(3);
+            double h2 = width * Math.Sqrt(2.0 / 3.0);
+            startPoints[0] = new Point3D(0, 0, h2 / 2);
+            startPoints[1] = new Point3D(0, (h1 * 2) / 3, -h2 / 2);
+            startPoints[2] = new Point3D(-width / 2, -h1 / 3, -h2 / 2);
+            startPoints[3] = new Point3D(width / 2, -h1 / 3, -h2 / 2);
+            List<Point3D> points = DivideTriangle(startPoints[0], startPoints[1], startPoints[2], countIterations, new List<Point3D>());
+            points = DivideTriangle(startPoints[3], startPoints[2], startPoints[1], countIterations, points);
+            points = DivideTriangle(startPoints[0], startPoints[3], startPoints[1], countIterations, points);
+            points = DivideTriangle(startPoints[0], startPoints[2], startPoints[3], countIterations, points);
+            return points.ToArray();
+        }
+
+        private List<Point3D> DivideTriangle(Point3D a, Point3D b, Point3D c, int countIterations, List<Point3D> points)
+        {
+            if (countIterations > 0)
+            {
+                Point3D v1 = new Point3D((a.X + b.X) / 2, (a.Y + b.Y) / 2, (a.Z + b.Z) / 2);
+                Point3D v2 = new Point3D((a.X + c.X) / 2, (a.Y + c.Y) / 2, (a.Z + c.Z) / 2);
+                Point3D v3 = new Point3D((b.X + c.X) / 2, (b.Y + c.Y) / 2, (b.Z + c.Z) / 2);
+                points = DivideTriangle(a, v1, v2, countIterations - 1, points);
+                points = DivideTriangle(c, v2, v3, countIterations - 1, points);
+                points = DivideTriangle(b, v3, v1, countIterations - 1, points);
+            }
+            else
+            {
+                points.Add(a);
+                points.Add(b);
+                points.Add(c);
+            }
+            return points;
+        }
+
+        //private List<Point3D> DivideQuads(Point3D a, Point3D b, Point3D c, Point3D d, double widthCube, int countIterations, List<Point3D> points)
+        //{
+        //    if (countIterations > 0)
+        //    {
+        //        widthCube /= 3;
+        //        Point3D v1 = new Point3D(a.X + widthCube, a.Y, a.Z);
+        //        Point3D v2 = new Point3D(a.X + widthCube * 2, a.Y, a.Z);
+        //        Point3D v3 = new Point3D(a.X, a.Y * widthCube, a.Z);
+        //        Point3D v4 = new Point3D(a.X, a.Y * widthCube * 2, a.Z);
+        //        Point3D v5 = new Point3D(a.X + widthCube, a.Y * widthCube, a.Z);
+        //        points = DivideQuads(a, v3, v5, v1, widthCube, countIterations - 1, points);//v3 v4
+        //        //points = DivideQuads(c, v4, v3, v2, widthCube, countIterations - 1, points);//v1 v2
+        //        //points = DivideQuads(b, v3, v1, v4, widthCube, countIterations - 1, points);//v2 v4
+        //        //points = DivideQuads(d, v2, v4, v1, widthCube, countIterations - 1, points);//v1 v3
+        //        //points = DivideQuads(a, v1, v2, v3, widthCube, countIterations - 1, points);//v3 v4
+        //        //points = DivideQuads(c, v4, v3, v2, widthCube, countIterations - 1, points);//v1 v2
+        //        //points = DivideQuads(b, v3, v1, v4, widthCube, countIterations - 1, points);//v2 v4
+        //        //points = DivideQuads(d, v2, v4, v1, widthCube, countIterations - 1, points);//v1 v3
+        //    }
+        //    else
+        //    {
+        //        points.Add(a);
+        //        points.Add(b);
+        //        points.Add(c);
+        //        points.Add(d);
+        //    }
+        //    return points;
+        //}
+
+        private Point3D[] CreateTorus(double intR, double extR, int startAlpha = 0, int startBeta = 0, int finishAlpha = 360, int finishBeta = 360, int extStep = 5, int intStep = 5, double k = 0, double p = 0)
         {
             List<Point3D> points = new List<Point3D>();
             for (int i = startBeta; i < finishBeta; i += extStep)
@@ -89,7 +201,7 @@ namespace OpenGL3DApp
             return points.ToArray();
         }
 
-        private Point3DUV[] CreateSphere(double radius, int startAlpha = 0, int startBeta = 0, int finishAlpha = 360, int finishBeta = 180, int extStep = 10, int intStep = 10)
+        private Point3DUV[] CreateSphere(double radius, int startAlpha = 0, int startBeta = 0, int finishAlpha = 360, int finishBeta = 180, int extStep = 5, int intStep = 5)
         {
             List<Point3DUV> points = new List<Point3DUV>();
             double dV = extStep * 1.0 / (finishBeta - startBeta);
@@ -175,8 +287,27 @@ namespace OpenGL3DApp
             openGL.Vertex(0, 0, 100000);
             openGL.End();
 
-            //Тор
             Random r = new Random();
+
+            //Узор Серпинского
+            openGL.Begin(OpenGL.GL_TRIANGLES);
+            for (int i = 0; i < pointsSerpinski.Length; i++)
+            {
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Vertex(pointsSerpinski[i].X + centerSerpinski.X, pointsSerpinski[i].Y + centerSerpinski.Y, pointsSerpinski[i].Z + centerSerpinski.Z);
+            }
+            openGL.End();
+
+            //Снежинка Коха
+            openGL.Begin(OpenGL.GL_TRIANGLES);
+            for (int i = 0; i < pointsKox.Length; i++)
+            {
+                openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
+                openGL.Vertex(pointsKox[i].X + centerKox.X, pointsKox[i].Y + centerKox.Y, pointsKox[i].Z + centerKox.Z);
+            }
+            openGL.End();
+
+            //Тор
             for (int i = 0; i < pointsTorus.Length; i += 4)
             {
                 openGL.Color(r.NextDouble(), r.NextDouble(), r.NextDouble());
@@ -303,7 +434,7 @@ namespace OpenGL3DApp
             openGL.TexCoord(1.0f, 1.0f); openGL.Vertex(pointsCube[3].X + centerCube.X, pointsCube[3].Y + centerCube.Y, pointsCube[3].Z + centerCube.Z);
             openGL.TexCoord(0.0f, 1.0f); openGL.Vertex(pointsCube[4].X + centerCube.X, pointsCube[4].Y + centerCube.Y, pointsCube[4].Z + centerCube.Z);
             openGL.TexCoord(0.0f, 0.0f); openGL.Vertex(pointsCube[7].X + centerCube.X, pointsCube[7].Y + centerCube.Y, pointsCube[7].Z + centerCube.Z);
-            openGL.End();            
+            openGL.End();
 
             //Цилиндр
             textures[7].Bind(openGL);
@@ -439,6 +570,8 @@ namespace OpenGL3DApp
                 centerHeart = Translate3D(centerHeart, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
                 centerCylinder = Translate3D(centerCylinder, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
                 centerTorus = Translate3D(centerTorus, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
+                centerSerpinski = Translate3D(centerSerpinski, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
+                centerKox = Translate3D(centerKox, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value);
             }
             else if (radioButton2.Checked)
             {
@@ -447,6 +580,8 @@ namespace OpenGL3DApp
                 pointsHeart = Rotate3D(pointsHeart, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
                 pointsCylinder = Rotate3D(pointsCylinder, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
                 pointsTorus = Rotate3D(pointsTorus, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
+                pointsSerpinski = Rotate3D(pointsSerpinski, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
+                pointsKox = Rotate3D(pointsKox, (double)numericUpDown7.Value, (double)numericUpDown8.Value, (double)numericUpDown4.Value);
             }
             else
             {
@@ -455,6 +590,8 @@ namespace OpenGL3DApp
                 pointsHeart = Scale3D(pointsHeart, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
                 pointsCylinder = Scale3D(pointsCylinder, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
                 pointsTorus = Scale3D(pointsTorus, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
+                pointsSerpinski = Scale3D(pointsSerpinski, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
+                pointsKox = Scale3D(pointsKox, (double)numericUpDown5.Value, (double)numericUpDown6.Value, (double)numericUpDown9.Value);
             }
         }
 
@@ -588,6 +725,8 @@ namespace OpenGL3DApp
                 centerHeart = Translate3D(centerHeart, 0, 5, 0);
                 centerCylinder = Translate3D(centerCylinder, 0, 5, 0);
                 centerTorus = Translate3D(centerTorus, 0, 5, 0);
+                centerSerpinski = Translate3D(centerSerpinski, 0, 5, 0);
+                centerKox = Translate3D(centerKox, 0, 5, 0);
             }
             else if (e.KeyCode == Keys.Down)
             {
@@ -596,6 +735,8 @@ namespace OpenGL3DApp
                 centerHeart = Translate3D(centerHeart, 0, -5, 0);
                 centerCylinder = Translate3D(centerCylinder, 0, -5, 0);
                 centerTorus = Translate3D(centerTorus, 0, -5, 0);
+                centerSerpinski = Translate3D(centerSerpinski, 0, -5, 0);
+                centerKox = Translate3D(centerKox, 0, -5, 0);
             }
             else if (e.KeyCode == Keys.Left)
             {
@@ -604,6 +745,8 @@ namespace OpenGL3DApp
                 centerHeart = Translate3D(centerHeart, -5, 0, 0);
                 centerCylinder = Translate3D(centerCylinder, -5, 0, 0);
                 centerTorus = Translate3D(centerTorus, -5, 0, 0);
+                centerSerpinski = Translate3D(centerSerpinski, -5, 0, 0);
+                centerKox = Translate3D(centerKox, -5, 0, 0);
             }
             else if (e.KeyCode == Keys.Right)
             {
@@ -612,6 +755,8 @@ namespace OpenGL3DApp
                 centerHeart = Translate3D(centerHeart, 5, 0, 0);
                 centerCylinder = Translate3D(centerCylinder, 5, 0, 0);
                 centerTorus = Translate3D(centerTorus, 5, 0, 0);
+                centerSerpinski = Translate3D(centerSerpinski, 5, 0, 0);
+                centerKox = Translate3D(centerKox, 5, 0, 0);
             }
             else if (e.KeyCode == Keys.PageUp)
             {
@@ -620,6 +765,8 @@ namespace OpenGL3DApp
                 centerHeart = Translate3D(centerHeart, 0, 0, 5);
                 centerCylinder = Translate3D(centerCylinder, 0, 0, 5);
                 centerTorus = Translate3D(centerTorus, 0, 0, 5);
+                centerSerpinski = Translate3D(centerSerpinski, 0, 0, 5);
+                centerKox = Translate3D(centerKox, 0, 0, 5);
             }
             else if (e.KeyCode == Keys.PageDown)
             {
@@ -628,6 +775,8 @@ namespace OpenGL3DApp
                 centerHeart = Translate3D(centerHeart, 0, 0, -5);
                 centerCylinder = Translate3D(centerCylinder, 0, 0, -5);
                 centerTorus = Translate3D(centerTorus, 0, 0, -5);
+                centerSerpinski = Translate3D(centerSerpinski, 0, 0, -5);
+                centerKox = Translate3D(centerKox, 0, 0, -5);
             }
             else if (e.KeyCode == Keys.Space)
             {
@@ -636,6 +785,8 @@ namespace OpenGL3DApp
                 pointsHeart = Rotate3D(pointsHeart, 60, 60, 60);
                 pointsCylinder = Rotate3D(pointsCylinder, 60, 60, 60);
                 pointsTorus = Rotate3D(pointsTorus, 60, 60, 60);
+                pointsSerpinski = Rotate3D(pointsSerpinski, 60, 60, 60);
+                pointsKox = Rotate3D(pointsKox, 60, 60, 60);
             }
             else if (e.KeyCode == Keys.NumPad8)
             {
@@ -711,6 +862,8 @@ namespace OpenGL3DApp
                 pointsHeart = Scale3D(pointsHeart, 1.5, 1.5, 1.5);
                 pointsCylinder = Scale3D(pointsCylinder, 1.5, 1.5, 1.5);
                 pointsTorus = Scale3D(pointsTorus, 1.5, 1.5, 1.5);
+                pointsSerpinski = Scale3D(pointsSerpinski, 1.5, 1.5, 1.5);
+                pointsKox = Scale3D(pointsKox, 1.5, 1.5, 1.5);
             }
             else
             {
@@ -719,6 +872,8 @@ namespace OpenGL3DApp
                 pointsHeart = Scale3D(pointsHeart, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
                 pointsCylinder = Scale3D(pointsCylinder, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
                 pointsTorus = Scale3D(pointsTorus, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
+                pointsSerpinski = Scale3D(pointsSerpinski, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
+                pointsKox = Scale3D(pointsKox, 2.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
             }
         }
 
