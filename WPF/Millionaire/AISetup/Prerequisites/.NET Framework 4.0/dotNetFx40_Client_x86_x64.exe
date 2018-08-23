@@ -1,0 +1,864 @@
+   
+ 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="author" content="ЛРиИТ" />
+<meta name="description" content="ИССЗ." />
+<meta name="keywords" content="Информационно-справочная система завода" />
+<title>ИССЗ - Информационно-справочная система завода</title>
+
+
+<link rel="shortcut icon" href="http://infobmz/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="http://infobmz/Templates/css/reset.css" />
+<link rel="stylesheet" type="text/css" href="http://infobmz/Templates/css/menu.css" />
+<link rel="stylesheet" type="text/css" href="http://infobmz/Templates/css/default.css" />
+<link rel="stylesheet" type="text/css" href="http://infobmz/Templates/css/fancybox.css" />
+<link rel="stylesheet" type="text/css" href="http://infobmz/Templates/css/skins.css" />
+
+<script type="text/javascript" src="http://infobmz/Templates/js/jquery-1.3.2.min.js"></script>
+
+
+
+<script type="text/javascript" src="http://infobmz/Templates/js/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="http://infobmz/Templates/js/hoverIntent.js"></script>
+<script type="text/javascript" src="http://infobmz/Templates/js/superfish.js"></script>
+<script type="text/javascript" src="http://infobmz/Templates/js/jquery.cycle.all.min.js"></script>
+<script type="text/javascript" src="http://infobmz/Templates/js/jquery.scrollTo-min.js"></script>
+<script type="text/javascript" src="http://infobmz/Templates/js/jquery.localscroll-min.js"></script>
+<script type="text/javascript" src="http://infobmz/Templates/js/jquery.fancybox-1.2.6.pack.js"></script>
+<script type="text/javascript" src="http://infobmz/Templates/js/pngFix.js"></script>
+<script type="text/javascript" src="http://infobmz/Templates/js/onLoad.js"></script>
+
+ 
+<!--[if lt IE 7]>
+
+
+	<link rel="stylesheet" type="text/css" href="http://infobmz/Templates/css/ie-only.css" media="all">
+<![endif]-->
+
+ 
+<link type='text/css' href='http://infobmz/osx/css/osx.css' rel='stylesheet' media='screen' />
+
+<script type='text/javascript' src='http://infobmz/osx/js/osx.js'></script>
+<script type='text/javascript' src='http://infobmz/osx/js/jquery.simplemodal.js'></script>
+
+
+<!-- BEGIN: For Demo Only -->
+	<!--	These entries are only needed for demo features, such as the real-time skin changer.
+			They can be deleted for production installs without effecting the theme's design or 
+			any of the funcionality.
+	-->
+	<script type="text/javascript" src="http://infobmz/Templates/js/demo.js"></script>	
+	<link rel="stylesheet" type="text/css" href="http://infobmz/Templates/css/demo.css" />
+
+ 
+
+<!-- END: For Demo Only -->
+</head>
+
+<body class="home"  >
+   
+
+
+<div id="wrapper">
+	 <!-- BEGIN: Top -->
+	<a name="top" class="hidden"></a>
+	<div id="top">
+		<div id="top-content">
+			<div id="top-content-icons">
+								<a href="http://infobmz/search/search.php" ><img src="images/icon-feed.gif" width="95" height="35" alt="Поиск" title="Поиск по сайту." /></a>
+                                
+                       <a href="http://infobmz/admin/     " ><img src="images/icon-login.gif" width="92" height="35" title="Вход в систему." alt="Вход в систему" /></a>        
+                                
+			</div>
+			<a href="http://infobmz/index.php">ГЛАВНАЯ</a>
+			<a href='#' class='osx'>КОНТАКТЫ</a>
+             <a href="http://itm/infosys/me/" target="_blank"> ТЕХПОДДЕРЖКА УА </a>
+
+			   <a href="#" id="theme-prev" style="width: 80px; text-align:right;">&laquo; </a>
+			<a href="#" id="theme-title" onclick="switchSkin(this.title); return false;">ПРИМЕНИТЬ ТЕМУ</a>
+            
+            <a href="#" id="theme-next" style="width: 80px; text-align:right;">  &raquo;</a>
+            
+            <div id="theme-changer"  style="margin:-20px 0 0 410px; border:none;" > <img src="http://infobmz/images/content/skins/skin-thumb-blue.jpg" width="107" height="26" alt="blue" onclick="switchSkin(this.alt); return false;" /> <img src="http://infobmz/images/content/skins/skin-thumb-teal.jpg" width="107" height="26" alt="teal" onclick="switchSkin(this.alt); return false;" /> <img src="http://infobmz/images/content/skins/skin-thumb-green.jpg" width="107" height="26" alt="green" onclick="switchSkin(this.alt); return false;" /> <img src="http://infobmz/images/content/skins/skin-thumb-orange.jpg" width="107" height="26" alt="orange" onclick="switchSkin(this.alt); return false;" /> <img src="http://infobmz/images/content/skins/skin-thumb-purple.jpg" width="107" height="26" alt="purple" onclick="switchSkin(this.alt); return false;" /> <img src="http://infobmz/images/content/skins/skin-thumb-red.jpg" width="107" height="26" alt="red" onclick="switchSkin(this.alt); return false;" /> <img src="http://infobmz/images/content/skins/skin-thumb-chocolate.jpg" width="107" height="26" alt="chocolate" onclick="switchSkin(this.alt); return false;" /> <img src="http://infobmz/images/content/skins/skin-thumb-mirage.jpg" width="107" height="26" alt="mirage" onclick="switchSkin(this.alt); return false;" /> </div>
+
+           
+		</div>
+	</div>
+
+	<!-- END: Top -->
+  
+	
+	<div id="main">
+		<div id="main-content">
+		
+			<!-- BEGIN: Header -->
+		  <div id="header" style="background:url(images/logo.gif) no-repeat;">
+			
+		            
+			 <ul class="main-menu">
+				 <li ><span class="rnd"></span><a href="Body/about/index.php">О ЗАВОДЕ</a><span class="rnd"></span> </li>
+				 <li><span class="rnd"></span><a href="Body/quality/index.php">КАЧЕСТВО</a><span class="rnd"></span>  </li>
+				  	<li><span class="rnd"></span><a href="Body/ohrana/index.php">ОХРАНА ТРУДА</a><span class="rnd"></span></li>
+				<li><span class="rnd"></span><a href="Body/ecology/index.php">ЭКОЛОГИЯ</a><span class="rnd"></span> </li>	
+					<li><span class="rnd"></span><a href="Body/economy/index.php">ЭКОНОМИКА</a><span class="rnd"></span> </li>	
+             <li><span class="rnd"></span><a href="Body/kadry/index.php">ПЕРСОНАЛ</a><span class="rnd"></span></li>	
+                    <li><span class="rnd"></span><a href="Body/info/index.php">ИНФОРМАЦИЯ</a><span class="rnd"></span></li>	
+          
+        <li><span class="rnd"></span><a href="frm/index.php" target="_blank">ФОРУМ</a><span class="rnd"></span></li>	             
+		    </ul>
+				
+			<!-- <div id="header-graphic" ></div>-->
+				
+			</div>
+            
+            
+			<!-- END: Header -->
+            
+             <div id="slideshow" style=" margin:0 0 0 0 ; height: 200px; ">
+             
+              <!--<div style="width: 990px; height: 200px;" > <img src="images/slides/2.png" style="float:left" alt="Slide 0" width="990" height="200" />
+                      </div>-->
+             
+             <div style="width: 990px; height: 200px;" > <img  src="images/slides/00-1.png" style="float:left" alt="Slide 3" width="672" height="200"  /> <img src="images/slides/00-2.png" style="float:left" alt="Slide 0" width="312" height="154" />
+                      <a class="slide-sample-button rounded"  href="mailto:HOTLINE@BMZ.GOMEL.BY"   style=" color:#FFF; text-decoration: none;">HOTLINE@BMZ.GOMEL.BY</a>
+                    </div>
+                        <div style="width: 990px; height: 200px;" > <img  src="images/slides/00-1.png" style="float:left" alt="Slide 0" width="672" height="200"  /> <img src="images/slides/00-2.png" style="float:left" alt="Slide 0" width="312" height="154" />
+                      <a class="slide-sample-button rounded"  href="mailto:HOTLINE@BMZ.GOMEL.BY"   style=" color:#FFF; text-decoration: none;">HOTLINE@BMZ.GOMEL.BY</a>
+                    </div>
+                          <!--<div style="width: 990px; height: 200px;" > <img src="images/slides/2.png" style="float:left" alt="Slide 0" width="990" height="200" />
+                      </div>-->
+                    
+                     <div style="width: 990px; height: 200px;" > <img src="images/slides/6.png" style="float:left" alt="Slide 0" width="990" height="200" />
+                      </div>
+             
+                  <div style="width: 990px; height: 200px;" > <img  src="images/slides/0-1.png" style="float:left" alt="Slide 3" width="414" height="200"  /> <img src="images/slides/0-2.png" style="float:left" alt="Slide 3" width="576" height="152" />
+                      <button class="slide-sample-button rounded" onclick="window.open('http://itm/infosys/email/','email','')" onmouseover="this.style.backgroundColor='#000';" onmouseout="this.style.backgroundColor='#444';"  >ЗАРЕГИСТРИРОВАТЬСЯ</button>
+                    </div>
+                    <div style="width: 990px; height: 200px;" > <img src="images/slides/3-2.png" style="float:left" alt="Slide 4" width="391" height="200"  /> <img src="images/slides/3-1.png" style="float:left" alt="Slide 4" width="599" height="142"  />
+                      <button class="slide-sample-button rounded" onclick="window.open('http://itm/infosys/me/','help','')" onmouseover="this.style.backgroundColor='#000';" onmouseout="this.style.backgroundColor='#444';" >ОБРАЩАЙТЕСЬ</button>
+                    </div>
+                  </div>
+            	<!-- BEGIN: Slideshow --><!-- END: Slideshow -->
+       	  <div id="page">
+	
+		  <div id="page-content">
+				
+					<!-- BEGIN: Page content -->
+ 	
+
+
+          
+            
+             
+<!--             
+<div class="full-page">
+  <p>Для обмена сообщениями внутри предприятия на РУП &quot;БМЗ&quot;  введена в   эксплуатацию система внутренней электронной почты. Для получения  адреса   электронной почты нужно зарегистрироваться по следующей <a href="http://itm/infosys/email" target="_blank">ссылке</a>. После    регистрации нужно позвонить администратору (68-84) для активации вашей   учетной записи. 
+		        </p>
+					  
+</div>-->
+                    
+                    
+            <div class="one-third">
+                   
+              <h3 style="padding: 0 0 3px; font-size:14px;"><img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Новости сайта</h3>
+    
+               
+               
+ 		<script type="text/javascript">
+		/* <![CDATA[ */
+		function createXMLHttpRequest(){
+			if (window.ActiveXObject){
+				xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}else if (window.XMLHttpRequest){
+				xmlHttp = new XMLHttpRequest();
+			}
+		}
+		
+		
+		function senddata(type,parent,value){
+			createXMLHttpRequest();
+			if(type == ''){
+				xmlHttp.onreadystatechange = handleStateChange;
+				xmlHttp.open("POST", "?system=news", true);
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				var username = document.getElementById('name').value;
+				username = username.replace('&', '%26');
+				var email = document.getElementById('email').value;
+				email = email.replace('&', '%26');
+				var message = document.getElementById('message').value;
+				message = message.replace('&', '%26');
+				var skey = '';
+				var recaptcha_response_field = '';
+				var recaptcha_challenge_field = '';
+				if(document.getElementById('skey')){
+					skey = document.getElementById('skey').value;
+				}else if(document.getElementById('recaptcha_response_field')){
+					recaptcha_response_field = document.getElementById('recaptcha_response_field').value;
+					recaptcha_challenge_field = document.getElementById('recaptcha_challenge_field').value;
+				}
+				var id = escape('');
+				xmlHttp.send("ajax=true&id="+id+"&name="+username+"&email="+email+"&message="+message+"&skey="+skey+"&recaptcha_response_field="+recaptcha_response_field+"&recaptcha_challenge_field="+recaptcha_challenge_field);
+			}else{
+				xmlHttp.onreadystatechange = handleStateChangeRating;
+				xmlHttp.open("POST", "?system=news", true);
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				xmlHttp.send('rating=true&parent='+parent+'&value='+value);
+			}
+		}
+		
+		function handleStateChangeRating() {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var data = xmlHttp.responseText.split('<!-- ####@@@**split**@@@### -->');
+				if(document.getElementById('ratingstars_text_'+data[1])){
+					document.getElementById('ratingstars_text_'+data[1]).innerHTML = data[2];
+				}else{
+					alert(data[2]);
+				}
+			}
+		}
+		
+		function handleStateChange() {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var data = xmlHttp.responseText;
+				data = data.split('<!-- ####@@@**split**@@@### -->');
+				
+				if(data[1].search("invalidkey") != -1){
+					alert('Недействительный ключ безопасности');
+				}else{
+					alert(data[1]);
+				}
+				document.getElementById('allbody').innerHTML = data[2];
+				if(document.getElementById('skey')){
+					document.getElementById('skeyimage').src = document.getElementById('skeyimage').src + '#' + (new Date()).getTime();
+				}else if(document.getElementById('recaptcha_div')){
+					Recaptcha.create("6Lc8JgwAAAAAAI5NI_jBvrXrcgysIijSoKDa-UHx",
+					"recaptcha_div", {
+					   callback: Recaptcha.focus_response_field
+					});
+				}				
+			}
+		}
+
+		function submitcomment(useajax){
+			if(useajax == 'yes'){
+				senddata('');
+				return false;	
+			}else{
+				return true;
+			}
+		}
+
+		function ratingstarshover(parent, value){
+			var starslocation = 'http://infobmz/news/images/';
+			for(i=1; i<=5; i++){
+				if(value < i){
+					document.getElementById(parent+'_stars_'+i).src = starslocation + 'stars_6.png';
+				}else{
+					document.getElementById(parent+'_stars_'+i).src = starslocation + 'stars_7.png';
+				}
+			}
+		}
+		/* ]]> */
+		</script>
+		
+
+<div id="allbody"><em> 14-08-2018 </em></br>
+<b>Информация/Справочная информация</b>
+<p>
+	<a href="http://infobmz/Body/info/info/doc/dir2018.pdf">Положение о Дирекции ОАО &laquo;БМЗ-управляющая компания холдинга &laquo;БМК&raquo; </a></p>
+
+
+ <a href="/news/fullnews.php?id=383">Подробнее... </a>  
+<hr><em> 09-08-2018 </em></br>
+<b>О заводе/Общественные структуры/БРСМ</b>
+<a href="http://infobmz/Body/about/brsm/doc/molodpr.pdf" target="_blank">Положения о звании "Лауреат молодежной премии БМЗ</a>
+
+ <a href="/news/fullnews.php?id=379">Подробнее... </a>  
+<hr><em> 31-07-2018 </em></br>
+<b>Прямая линия</b>
+<p>
+	<strong>3 августа 2018года с 11.00 до 12.00</strong></p>
+<p>
+	на все интересующие вас вопросы ответит</p>
+<p>
+	председатель профсоюзного комитета</p>
+<p>
+	<strong>Александр Александрович Коледа</strong></p>
+<p>
+	по телефону <strong>(5) 49 -72</strong></p>
+<p>
+	Свои вопросы Вы можете задать предварительно.</p>
+
+
+ <a href="/news/fullnews.php?id=374">Подробнее... </a>  
+<hr>
+</div>  
+                     
+             
+               <p><a href="news/arch_news.php"><em></em>Архив</a></p>
+            </div> 
+            <div class="one-third">
+                   
+            <h3 style="padding: 0 0 3px; font-size:14px;"><img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Новости БМЗ</h3>
+ 		<script type="text/javascript">
+		/* <![CDATA[ */
+		function createXMLHttpRequest(){
+			if (window.ActiveXObject){
+				xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}else if (window.XMLHttpRequest){
+				xmlHttp = new XMLHttpRequest();
+			}
+		}
+		
+		
+		function senddata(type,parent,value){
+			createXMLHttpRequest();
+			if(type == ''){
+				xmlHttp.onreadystatechange = handleStateChange;
+				xmlHttp.open("POST", "?system=news", true);
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				var username = document.getElementById('name').value;
+				username = username.replace('&', '%26');
+				var email = document.getElementById('email').value;
+				email = email.replace('&', '%26');
+				var message = document.getElementById('message').value;
+				message = message.replace('&', '%26');
+				var skey = '';
+				var recaptcha_response_field = '';
+				var recaptcha_challenge_field = '';
+				if(document.getElementById('skey')){
+					skey = document.getElementById('skey').value;
+				}else if(document.getElementById('recaptcha_response_field')){
+					recaptcha_response_field = document.getElementById('recaptcha_response_field').value;
+					recaptcha_challenge_field = document.getElementById('recaptcha_challenge_field').value;
+				}
+				var id = escape('');
+				xmlHttp.send("ajax=true&id="+id+"&name="+username+"&email="+email+"&message="+message+"&skey="+skey+"&recaptcha_response_field="+recaptcha_response_field+"&recaptcha_challenge_field="+recaptcha_challenge_field);
+			}else{
+				xmlHttp.onreadystatechange = handleStateChangeRating;
+				xmlHttp.open("POST", "?system=news", true);
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				xmlHttp.send('rating=true&parent='+parent+'&value='+value);
+			}
+		}
+		
+		function handleStateChangeRating() {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var data = xmlHttp.responseText.split('<!-- ####@@@**split**@@@### -->');
+				if(document.getElementById('ratingstars_text_'+data[1])){
+					document.getElementById('ratingstars_text_'+data[1]).innerHTML = data[2];
+				}else{
+					alert(data[2]);
+				}
+			}
+		}
+		
+		function handleStateChange() {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var data = xmlHttp.responseText;
+				data = data.split('<!-- ####@@@**split**@@@### -->');
+				
+				if(data[1].search("invalidkey") != -1){
+					alert('Недействительный ключ безопасности');
+				}else{
+					alert(data[1]);
+				}
+				document.getElementById('allbody').innerHTML = data[2];
+				if(document.getElementById('skey')){
+					document.getElementById('skeyimage').src = document.getElementById('skeyimage').src + '#' + (new Date()).getTime();
+				}else if(document.getElementById('recaptcha_div')){
+					Recaptcha.create("6Lc8JgwAAAAAAI5NI_jBvrXrcgysIijSoKDa-UHx",
+					"recaptcha_div", {
+					   callback: Recaptcha.focus_response_field
+					});
+				}				
+			}
+		}
+
+		function submitcomment(useajax){
+			if(useajax == 'yes'){
+				senddata('');
+				return false;	
+			}else{
+				return true;
+			}
+		}
+
+		function ratingstarshover(parent, value){
+			var starslocation = 'http://infobmz/news/images/';
+			for(i=1; i<=5; i++){
+				if(value < i){
+					document.getElementById(parent+'_stars_'+i).src = starslocation + 'stars_6.png';
+				}else{
+					document.getElementById(parent+'_stars_'+i).src = starslocation + 'stars_7.png';
+				}
+			}
+		}
+		/* ]]> */
+		</script>
+		
+
+<div id="allbody"><em> 17-08-2018 </em></br>
+<b>В Жлобине появился автобус с социальной рекламой по охране труда</b>
+<p>
+	На этой неделе на городском маршруте №7 Жлобина стал курсировать автобус с социальной рекламой по охране труда. Такая инициатива была реализована специалистами отдела охраны труда ОАО &laquo;БМЗ &mdash; управляющая компания холдинга &laquo;БМК&raquo;.</p>
+
+
+ <a href="/news/fullnews.php?id=385">Подробнее... </a>  
+<hr><em> 06-08-2018 </em></br>
+<b>Коллектив БМЗ пополнят более 200 молодых специалистов</b>
+<p>
+	В текущем году на ОАО &laquo;БМЗ &mdash; управляющая компания холдинга &laquo;БМК&raquo; будет трудоустроено более 200 выпускников вузов и учреждений среднего специального образования. Уже в августе ребята приступят к работе в заводских цехах и различных службах предприятия.</p>
+
+
+ <a href="/news/fullnews.php?id=376">Подробнее... </a>  
+<hr><em> 24-07-2018 </em></br>
+<b>Жлобинский государственный металлургический колледж получил статус филиала БНТУ</b>
+<p>
+	<em>С нынешнего года Жлобинский государственный металлургический колледж является филиалом Белорусского национального технического университета.</em></p>
+
+
+ <a href="/news/fullnews.php?id=369">Подробнее... </a>  
+<hr>
+</div>      
+               <p><a href="news/arch.php">Архив</a></p>
+ </div> 
+
+              			  
+				 
+                      
+		          
+           		<script type="text/javascript">
+		/* <![CDATA[ */
+		function createXMLHttpRequest(){
+			if (window.ActiveXObject){
+				xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}else if (window.XMLHttpRequest){
+				xmlHttp = new XMLHttpRequest();
+			}
+		}
+		
+		
+		function senddata(type,parent,value){
+			createXMLHttpRequest();
+			if(type == ''){
+				xmlHttp.onreadystatechange = handleStateChange;
+				xmlHttp.open("POST", "?system=news", true);
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				var username = document.getElementById('name').value;
+				username = username.replace('&', '%26');
+				var email = document.getElementById('email').value;
+				email = email.replace('&', '%26');
+				var message = document.getElementById('message').value;
+				message = message.replace('&', '%26');
+				var skey = '';
+				var recaptcha_response_field = '';
+				var recaptcha_challenge_field = '';
+				if(document.getElementById('skey')){
+					skey = document.getElementById('skey').value;
+				}else if(document.getElementById('recaptcha_response_field')){
+					recaptcha_response_field = document.getElementById('recaptcha_response_field').value;
+					recaptcha_challenge_field = document.getElementById('recaptcha_challenge_field').value;
+				}
+				var id = escape('');
+				xmlHttp.send("ajax=true&id="+id+"&name="+username+"&email="+email+"&message="+message+"&skey="+skey+"&recaptcha_response_field="+recaptcha_response_field+"&recaptcha_challenge_field="+recaptcha_challenge_field);
+			}else{
+				xmlHttp.onreadystatechange = handleStateChangeRating;
+				xmlHttp.open("POST", "?system=news", true);
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				xmlHttp.send('rating=true&parent='+parent+'&value='+value);
+			}
+		}
+		
+		function handleStateChangeRating() {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var data = xmlHttp.responseText.split('<!-- ####@@@**split**@@@### -->');
+				if(document.getElementById('ratingstars_text_'+data[1])){
+					document.getElementById('ratingstars_text_'+data[1]).innerHTML = data[2];
+				}else{
+					alert(data[2]);
+				}
+			}
+		}
+		
+		function handleStateChange() {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var data = xmlHttp.responseText;
+				data = data.split('<!-- ####@@@**split**@@@### -->');
+				
+				if(data[1].search("invalidkey") != -1){
+					alert('Недействительный ключ безопасности');
+				}else{
+					alert(data[1]);
+				}
+				document.getElementById('allbody').innerHTML = data[2];
+				if(document.getElementById('skey')){
+					document.getElementById('skeyimage').src = document.getElementById('skeyimage').src + '#' + (new Date()).getTime();
+				}else if(document.getElementById('recaptcha_div')){
+					Recaptcha.create("6Lc8JgwAAAAAAI5NI_jBvrXrcgysIijSoKDa-UHx",
+					"recaptcha_div", {
+					   callback: Recaptcha.focus_response_field
+					});
+				}				
+			}
+		}
+
+		function submitcomment(useajax){
+			if(useajax == 'yes'){
+				senddata('');
+				return false;	
+			}else{
+				return true;
+			}
+		}
+
+		function ratingstarshover(parent, value){
+			var starslocation = 'http://infobmz/news/images/';
+			for(i=1; i<=5; i++){
+				if(value < i){
+					document.getElementById(parent+'_stars_'+i).src = starslocation + 'stars_6.png';
+				}else{
+					document.getElementById(parent+'_stars_'+i).src = starslocation + 'stars_7.png';
+				}
+			}
+		}
+		/* ]]> */
+		</script>
+		
+
+<div id="allbody">
+</div> 
+           <div class="one-third" style="width:320px;">
+                    <h3 style="padding: 0 0 3px;font-size:14px;"> <img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Предложения карьеры</h3>
+                   		<script type="text/javascript">
+		/* <![CDATA[ */
+		function createXMLHttpRequest(){
+			if (window.ActiveXObject){
+				xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}else if (window.XMLHttpRequest){
+				xmlHttp = new XMLHttpRequest();
+			}
+		}
+		
+		
+		function senddata(type,parent,value){
+			createXMLHttpRequest();
+			if(type == ''){
+				xmlHttp.onreadystatechange = handleStateChange;
+				xmlHttp.open("POST", "?system=news", true);
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				var username = document.getElementById('name').value;
+				username = username.replace('&', '%26');
+				var email = document.getElementById('email').value;
+				email = email.replace('&', '%26');
+				var message = document.getElementById('message').value;
+				message = message.replace('&', '%26');
+				var skey = '';
+				var recaptcha_response_field = '';
+				var recaptcha_challenge_field = '';
+				if(document.getElementById('skey')){
+					skey = document.getElementById('skey').value;
+				}else if(document.getElementById('recaptcha_response_field')){
+					recaptcha_response_field = document.getElementById('recaptcha_response_field').value;
+					recaptcha_challenge_field = document.getElementById('recaptcha_challenge_field').value;
+				}
+				var id = escape('');
+				xmlHttp.send("ajax=true&id="+id+"&name="+username+"&email="+email+"&message="+message+"&skey="+skey+"&recaptcha_response_field="+recaptcha_response_field+"&recaptcha_challenge_field="+recaptcha_challenge_field);
+			}else{
+				xmlHttp.onreadystatechange = handleStateChangeRating;
+				xmlHttp.open("POST", "?system=news", true);
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				xmlHttp.send('rating=true&parent='+parent+'&value='+value);
+			}
+		}
+		
+		function handleStateChangeRating() {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var data = xmlHttp.responseText.split('<!-- ####@@@**split**@@@### -->');
+				if(document.getElementById('ratingstars_text_'+data[1])){
+					document.getElementById('ratingstars_text_'+data[1]).innerHTML = data[2];
+				}else{
+					alert(data[2]);
+				}
+			}
+		}
+		
+		function handleStateChange() {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var data = xmlHttp.responseText;
+				data = data.split('<!-- ####@@@**split**@@@### -->');
+				
+				if(data[1].search("invalidkey") != -1){
+					alert('Недействительный ключ безопасности');
+				}else{
+					alert(data[1]);
+				}
+				document.getElementById('allbody').innerHTML = data[2];
+				if(document.getElementById('skey')){
+					document.getElementById('skeyimage').src = document.getElementById('skeyimage').src + '#' + (new Date()).getTime();
+				}else if(document.getElementById('recaptcha_div')){
+					Recaptcha.create("6Lc8JgwAAAAAAI5NI_jBvrXrcgysIijSoKDa-UHx",
+					"recaptcha_div", {
+					   callback: Recaptcha.focus_response_field
+					});
+				}				
+			}
+		}
+
+		function submitcomment(useajax){
+			if(useajax == 'yes'){
+				senddata('');
+				return false;	
+			}else{
+				return true;
+			}
+		}
+
+		function ratingstarshover(parent, value){
+			var starslocation = 'http://infobmz/news/images/';
+			for(i=1; i<=5; i++){
+				if(value < i){
+					document.getElementById(parent+'_stars_'+i).src = starslocation + 'stars_6.png';
+				}else{
+					document.getElementById(parent+'_stars_'+i).src = starslocation + 'stars_7.png';
+				}
+			}
+		}
+		/* ]]> */
+		</script>
+		
+
+<div id="allbody"><li><a href="/news/fullnews.php?id=387">Экономист по материально-техническому снабжению (бюро металлопроката и инструмента) управления снабжения на период отсутствия основного работника</a></li>
+
+<li><a href="/news/fullnews.php?id=386">Экономист по материально-техническому снабжению (транспортное бюро) управления снабжения на период отсутствия основного работника</a></li>
+
+<li><a href="/news/fullnews.php?id=381">ПРЕДЛОЖЕНИЯ ДЛЯ ПЕРСПЕКТИВНЫХ МОЛОДЫХ РАБОТНИКОВ БЕЛОРУССКОГО МЕТАЛЛУРГИЧЕСКОГО ЗАВОДА</a></li>
+
+<li><a href="/news/fullnews.php?id=380">Ищем кандидатуры в бюро аналитики (закупок)</a></li>
+
+<li><a href="/news/fullnews.php?id=378">экономист по материально-техническому снабжению (бюро ферросплавов) управления снабжения</a></li>
+
+<li><a href="/news/fullnews.php?id=377">Экономист по планированию УПЭА </a></li>
+
+<li><a href="/news/fullnews.php?id=375">Мастер адъюстажа стана горячей прокатки 850 СПЦ-1 </a></li>
+
+<li><a href="/news/fullnews.php?id=373">Экономист по финансовой работе ФУ </a></li>
+
+<li><a href="/news/fullnews.php?id=371">Мастер (разливки стали на горячих работах) ЭСПЦ-2</a></li>
+
+<li><a href="/news/fullnews.php?id=370">Мастер отделения подготовки лома КЦ (на ротацию)</a></li>
+
+
+</div>                  </div>
+                     
+            <div class="one-third" style="width:320px;">
+                    <h3 style="padding: 0 0 3px;font-size:14px;"> <img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Новости металлургии</h3>
+                   <iframe  id='frame' src="http://infobmz/rss_news.php"  frameborder="0" width="320px"  height="500px" scrolling="Auto"></iframe> 
+                  </div>
+                
+                  
+                  
+      <div class="one-third" style="width:100%; float:right;">
+                    <h3 style="padding: 0 0 3px; font-size:14px;"><img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Информация</h3>
+                    <div class="one-third">
+                      <ul class="bullet-disc-red">
+                      
+                      
+                        <li><a href="doc/pvtr.pdf" target="_blank">ПРАВИЛА ВНУТРЕННЕГО ТРУДОВОГО РАСПОРЯДКА</a>. <a href="doc/dop-prav-tr-raspor.pdf" target="_blank">ДОПОЛНЕНИЕ</a></li>
+                      
+                        <li><a href="doc/korpor-kodeks-2017.pdf" target="_blank">Корпоративный кодекс ОАО &quot;БМЗ-управляющая компания холдинга &quot;БМК&quot;</a></li>
+                        <li><a href="doc/corpor-pol-celi-2018.pdf" target="_blank">Корпоративная политика и целевые показатели ОАО &quot;БМЗ-управляющая компания холдинга &quot;БМК&quot; на 2018 год</a></li>
+                        <li><a href="doc/etich-kodeks-2017.pdf" target="_blank">Этический кодекс ОАО &quot;БМЗ - управляющая компания холдинга &quot;БМК&quot;</a></li>
+                        <li><a href="doc/anticorrup-povedenie.pdf" target="_blank">Правила антикоррупционного поведения на ОАО &quot;БМЗ-управляющая компания холдинга &quot;БМК&quot;</a></li>
+                      </ul>
+                      <ul class="bullet-disc-orange">
+                        <li><a href="Body/about/proff/doc/koldogovor-2018-2021.pdf" target="_blank">Коллективный договор ОАО &quot;БМЗ - управляющая компания холдинга &quot;БМК&quot; на 2018-2021</a></li>
+                      </ul>
+                      
+                      <ul class="bullet-disc-blue">
+                        <li>
+                          <a href="http://infobmz/Body/about/holding.php">Состав холдинга &quot;Белорусская     металлургическая компания&quot;</a>
+                        </li>
+                      </ul>
+               </div>   
+               
+               
+     
+                  
+            <div class="one-third">
+
+<ul class="post-list">
+                        <li> <img src="images/oxrana.png" width="59" height="57" alt="XSL"   style="border:none;" />
+                        <a href="http://infobmz/info/trud/16.08.2018.xls">17.08.2018</a>
+                          <p>Данные сдачи экзаменов по охране труда<a href="http://infobmz/info/trud/16.08.2018.xls" target="_blank" style="text-decoration:none;"> посмотреть </a></p>
+                        </li>
+                        <li> <a href="Body/info/phone/15.08.18.xls" target="_blank"><img src="images/icons/icon_phone_book.gif" width="59" height="53" alt="Телефонный справочник РУП &quot;БМЗ&quot;"   style="border:none;" /></a> <a href="Body/info/phone/15.08.18.xls" target="_blank">Август 15 , 2018</a>
+                          <p>Телефонный справочник ОАО &quot;БМЗ&quot; <a href="Body/info/phone/15.08.18.xls" target="_blank"  style="text-decoration:none;">посмотреть</a></p>
+                        </li>
+                        
+                        <li> <img src="images/email-logo-psd-416940.png" width="49" height="57"     style="border:none;" /> 
+                       
+<br />
+  <p>Справочник электронных адресов <a href="http://poisk.bsw.iron" target="_blank"  style="text-decoration:none;">посмотреть</a></p>
+                </li>
+                             
+                        
+                    </ul  >
+            </div>
+            
+            <div class="one-third">
+<ul class="post-list">
+                        <li> <a href="resume/index.php"><img src="images/icons/resume.gif" width="48" height="48" alt="XSL"   style="border:none;" /></a><a href="doc/resume.doc" target="_blank">Анкета соискателя (резюме)</a>
+                          <p>&nbsp;</p>
+                           <p>&nbsp;</p>
+                </li>
+                <li> <a href="doc/kalend-2018.pdf" target="_blank"><img src="images/icons/kor-2018.jpg" width="75" height="75" alt="XSL"   style="border:ridge;" /></a> <a href="doc/kalend-2018.pdf" target="_blank">Корпоративный календарь - 2018</a>
+                  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                  <a href="doc/kid-2018.pdf" target="_blank"><img src="images/icons/det-2018.jpg" width="75" height="75" alt="XSL"   style="border:ridge;" /></a><a href="doc/kid-2018.pdf" target="_blank">
+    Календарь детских рисунков - 2018</a> 
+                  <p>&nbsp;</p>
+                           <p>&nbsp;</p>
+                </li>
+</ul>
+
+            </div>
+            
+            
+             
+            <!--<div class="one-third">
+<ul class="post-list">
+                        <li> <a href="resume/index.php"><img src="images/icons/resume.gif" width="48" height="48" alt="XSL"   style="border:none;"" /></a><a href="resume/index.php" target="_blank">Анкета соискателя (резюме)</a>
+                          <p>&nbsp;</p>
+                </li>
+              </ul> 
+                    
+              <p>Для просмотра <strong>PDF</strong> необходим <a href="program/AdbeRdr602_rus.exe" target="_blank">Acrobat Reader</a>. <br />
+                    Для просмотра <strong>DJVU</strong> необходим <a href="program/WinDjView-1.0.3-Setup.exe" target="_blank">WinDjView</a>.</h3>
+              </div>-->
+            </div>
+                  <div class="clear"><!-- add to the end of each page to help extend container (or, optional: after a group of layout elements) -->
+</div>
+    <div class="clear"><!-- add to the end of each page to help extend container (or, optional: after a group of layout elements) -->
+</div>
+               
+                 <div class="one-third" >
+                   <h3 style="padding: 0 0 3px; font-size:14px;"><img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Погода по Жлобину</h3>
+                   <ul class="bullet-orange">
+                   
+                    <li>от <a href="http://infobmz/box/internet/www.meteoprog.by/ru/weather/Zhlobin/7days/default.htm" target="_blank">meteoprog.by</a></li> 
+                   
+			    </ul>          
+</div>
+                 
+            <div class="half-page" style="width:390px;">
+              <div class="half-page" style="width:380px;">
+                <h3 style="padding: 0 0 3px; font-size:14px;"><img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Котировки</h3>
+                <span style="font-size:80%; color:#F00;">Данные курсы валют НБРБ имеют справочный характер. <br />
+                  В работе пользуйтесь курсами валют из системы SAP/R3 </span>
+                <iframe  id='frame2' src="rss_nbrb.php"  frameborder="0" width="380" height="130" scrolling="No" ></iframe> 
+                <p>Цены на драгоценные металлы на: 
+                  <a href="http://infobmz/info/drag/08_2018.doc"><strong>08_2018.doc</strong></a> </p>
+              </div>
+            <span style="font-size:80%; color:#F00;"></span></div>
+            <div class="one-third" style="width:190px;">
+                   <h3 style="padding: 0 0 3px; font-size:14px;" ><img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Статистика</h3>
+                   <div class="day">
+                     <div  style="font-size:11px;">
+                       <blockquote>
+                        <div class="day" style="width:150px;">
+  
+
+   <div >
+     <strong> 126</strong> - Online<br />   
+     3151 - Сегодня<br />
+     4599 - Вчера<br />
+     12875 - За неделю<br />
+     72283 - За месяц<br />
+     712188 - За год<br />
+     3658811 - Всего   
+   </div>
+
+   <div >
+      Рекорд: 557225 (23.03.2017)
+    
+   </div>
+</div> 
+                       </blockquote>
+                     </div>
+                   </div>
+                 </div>
+            
+            <div class="clear">
+  <div class="half-page" style="width:100%;">
+    <h3 style="padding: 0 0 3px; font-size:14px;"><img src="images/icons/star.png" width="30" height="30" alt="star" style="margin: 0 0 -8px;" />Реализуем</h3>
+    <ul class="bullet-check">
+        <li><a href="http://infobmz/box/site/tnp.belsteel.com/" target="_blank">Сайт ТНП </a></li>
+     
+     <li><a href="doc/Oborud-15.02.2018.xls" target="_blank">Перечень оборудования </a><img src="images/icons/excel.gif" alt="Excel" width="19" height="16" hspace="0" vspace="0" border="0" align="texttop" />- 74 KB<br />
+        (по состоянию на 15.02.2018г.)      </li>
+      <li><a href="doc/nelikvid-12.06.2018.xls" target="_blank">Перечень неликвидных запасов ТМЦ</a> <img src="images/icons/excel.gif" alt="Excel" width="19" height="16" hspace="0" vspace="0" border="0" align="texttop" /><br />
+        -  (по состоянию на 12.06.2018г.)</li>
+        <li><a href="doc/mc.pdf" target="_blank">Каталог продукции множительного центра БМЗ</a> <img src="images/icons/pdf.gif" alt="Excel" width="19" height="16" hspace="0" vspace="0" border="0" align="texttop" /></li>
+      </ul>
+    </div>
+    </div>
+
+
+
+  
+<!--sphider_noindex-->					
+					<!-- END: Page content -->
+                    
+                    
+                    
+<!-- modal content -->
+		<div id="osx-modal-content">
+			<div id="osx-modal-title">Контакты</div>
+			<div class="close"><a href="#" class="simplemodal-close">x</a></div>
+			<div id="osx-modal-data">
+				<h3>Отдел по рекламе и информационным технологиям</h3>
+				<p><strong>Начальник отдела по рекламе и информационным технологиям</strong><br />
+			  Дюбкина Оксана Ивановна -  60-69</p>
+				<p><strong>Инженеры-программисты отдела:</strong><br />
+					Беленченко Владимир - 64-03<br />
+					Мищенко Владлен - 53-94
+                
+                
+                </p>
+                <p> e-mail: <a href="mailto:admin.iss@bmz.gomel.by"  ><span>admin.iss@bmz.gomel.by</span></a></p>
+                
+                
+                
+			  <p><button class="simplemodal-close">Закрыть</button> <span>(либо нажать ESC)</span></p>
+			</div>
+		</div>
+        
+        
+                       
+                    
+					
+				  <div class="clear"><!-- add to the end of each page to help extend container (or, optional: after a group of layout elements) --></div>
+			</div>
+		  </div>
+		</div>
+	</div>
+	
+	<!-- BEGIN: Footer -->
+	<div id="footer">
+		<div id="footer-content">
+			<a href="http://infobmz/index.php" id="logo-footer"><img  style="padding-top:10px;" src="images/br.png" alt="" width="223" height="62" align="baseline" /><img src="images/logo-footer.gif" /></a>
+			<div> Copyright &copy; 
+			2018             - <a href="mailto:admin.iss@bmz.gomel.by">infoBMZ</a> - УМ Отдел по рекламе и информационным технологиям <br />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>e-mail:</strong><a href="mailto:admin.iss@bmz.gomel.by" class='contact'> <span style="font-size:14px;">admin.iss@bmz.gomel.by</span></a>,<strong> телефон: </strong><span style="font-size:14px;">64-03, 53-94 </span></div>
+		</div>
+	</div>
+	<!-- END: Footer -->
+</div>
+<!--/sphider_noindex--> 
+
+</body>
+</html>
+  
