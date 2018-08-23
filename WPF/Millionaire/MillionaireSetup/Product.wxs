@@ -1,44 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+xmlns:game="http://schemas.microsoft.com/wix/GamingExtension"
+xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
+     >
   <?include $(sys.CURRENTDIR)\Vars.wxi?>
-  <Product Id="$(var.ProductCode)" Name="$(var.ProductName)" Language="1049" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
+  <Product
+    Id="$(var.ProductCode)"
+    Name="$(var.ProductName)"
+    Language="1049"
+    Version="$(var.ProductVersion)"
+    Manufacturer="$(var.Manufacturer)"
+    UpgradeCode="$(var.UpgradeCode)"
+    Codepage="1251">
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-    <MediaTemplate />
+    <Package
+      InstallerVersion="200"
+      Compressed="yes"
+      InstallScope="perMachine"
+      SummaryCodepage="1251"
+      Description ="Пакет установки"
+      Manufacturer="$(var.Manufacturer)"/>
+
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
+    <!--<WixVariable Id="WixUIBannerBmp" Value="BannerImageSizes.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="DialogImageSizes.bmp" />-->
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <!--<PropertyRef Id="NETFRAMEWORK40CLIENT" />
+    <PropertyRef Id="NETFRAMEWORK40CLIENT_RU_RU_LANGPACK" />-->
+    <!--<Condition Message="Необходимо не менее 4Гб ОЗУ">PhysicalMemory >= 8192</Condition>-->
+    <!--<Condition Message="Необходимо установить .NET Framework 4.0 или более поздней версии">WIX_IS_NETFRAMEWORK_40_OR_LATER_INSTALLED</Condition>-->
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLLOCATION" Name="$(var.ProductName)">
-          <Component Id="ProductComponent" Guid="b11556a2-e066-4393-af5c-9c9210187eb2">
-            <File Id='Calc' DiskId='1' Source='C:\WINDOWS\system32\calc.exe'/>
-          </Component>
+        <Directory Id="CompanyNameFolder" Name="$(var.Manufacturer)">
+          <Directory Id="INSTALLLOCATION" Name="$(var.ProductName)">
+          </Directory>
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
-        <Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)">
-          <Component Id="ApplicationShortcutCalc" Guid="4CEBD68F-E933-47f9-B02C-A4FC69FDB551">
-            <Shortcut Id="ShortcutCalc"
-                 Name="Calc"
-                 Description="$(var.ProductName)"
-                 Target="[INSTALLLOCATION]Calc.exe"
-                 WorkingDirectory="INSTALLLOCATION"/>
-            <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
-            <RegistryValue Root="HKCU" Key="Software\$(var.Manufacturer)\$(var.ProductName)" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
-          </Component>
+        <Directory Id="ProgramMenuCompany" Name="$(var.Manufacturer)">
+          <Directory Id="ProgramMenuDir" Name="Миллионер"/>
         </Directory>
       </Directory>
+      <Directory Id="DesktopFolder"/>
     </Directory>
 
-    <Feature Id="ProductFeature" Title="SetupProject1" Level="1">
-      <ComponentRef Id="ProductComponent" />
-      <ComponentRef Id="ApplicationShortcutCalc" />
+    <Icon Id="Millionaire.exe" SourceFile="$(var.Millionaire.TargetPath)"/>
+
+    <DirectoryRef Id="INSTALLLOCATION">
+      <Component Id="GameComponent" Guid="FDA981C4-F9D6-4376-84A1-8FFA57CA0BD5">
+        <File Id="Game" Name ="$(var.Millionaire.TargetFileName)" Source="$(var.Millionaire.TargetPath)" DiskId="1" KeyPath="yes">
+          <Shortcut Id="DesktopShortcut" Name="Миллионер" Description="Игра Миллионер" Directory="DesktopFolder" Advertise="yes" Icon ="Millionaire.exe"/>
+          <game:Game Id="FA3017E7-0AE5-4A8E-8CF4-5F098D201BF2"/>
+        </File>
+        <File Id="ReadMe" Name ="ReadMe.txt" Source="$(var.Millionaire.TargetDir)ReadMe.txt" DiskId="1"/>
+        <File Id="LiveCharts" Name ="LiveCharts.dll" Source="$(var.Millionaire.TargetDir)LiveCharts.dll" DiskId="1"/>
+        <File Id="LiveChartsWpf" Name ="LiveCharts.Wpf.dll" Source="$(var.Millionaire.TargetDir)LiveCharts.Wpf.dll" DiskId="1"/>
+      </Component>
+      <Component Id="DataBaseComponent" Guid="39483E20-D50B-4CA4-B51F-93C127309461">
+        <File Id="Data" Name="data.bin" Source="$(var.Millionaire.TargetDir)data.bin" DiskId="1" KeyPath="yes" ReadOnly="yes"/>
+      </Component>
+      <Component Id="UserFiles" Guid="D6062DD3-3ABD-4218-867B-EF759871483E" KeyPath="yes">
+        <RemoveFile Id="Records" On="uninstall" Name="records.bin" Directory="INSTALLLOCATION"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ProgramMenuCompany">
+      <Component Id="ProgramMenuCompanyComponent" Guid="ABF56228-E7BD-4839-952B-BB26B0DE52EB">
+        <RemoveFolder Id="ProgramMenuCompany" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\[Manufacturer]" Type="string" Value="" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ProgramMenuDir">
+      <Component Id="ProgramMenuDirComponent" Guid="DC3156A2-2012-483E-BD75-8B72368A5F1F">
+        <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ProgramMenuDir">
+      <Component Id="ProgramsMenuShortcut" Guid="538BEB3D-B154-4732-8CA1-BDA43F6472B1">
+        <Shortcut Id="RunProduct" Name="Запустить игру Миллионер" WorkingDirectory="INSTALLLOCATION" Advertise="no" Description="Запускает игру Миллионер на данном компьютера" Icon ="Millionaire.exe" Target="[INSTALLLOCATION]\Millionaire.exe"/>
+        <Shortcut Id="UninstallProduct" Name="Удалить игру Миллионер" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Description="Удаляет игру Миллионер с данного компьютера" />
+        <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="MainFeature" Title="Игра" Description="Игра" Level="1" ConfigurableDirectory="INSTALLLOCATION">
+      <ComponentRef Id="GameComponent"/>
+      <ComponentRef Id="ProgramMenuCompanyComponent" />
+      <ComponentRef Id="ProgramMenuDirComponent" />
+      <ComponentRef Id="ProgramsMenuShortcut" />
+      <ComponentRef Id="UserFiles"/>
+      <Feature Id="DataBaseFeature" Title="База данных" Description="База данных" Level="1">
+        <ComponentRef Id="DataBaseComponent"/>
+      </Feature>
     </Feature>
 
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" ></Property>
-    <!--<WixVariable Id="WixUILicenseRtf" Overridable="yes" Value="License.rtf"/>-->
-    <UIRef Id="WixUI_InstallDir"/>
+    <!--<Control Id="StartProgramCheckBox" Type="CheckBox" X="100" Y="290" Text="Запустить программу после окончания установки" Width="250" Height="22" Property="StartProgram" CheckBoxValue="0">
+      <Condition Action="hide">Installed</Condition>
+    </Control>-->
+
+    <UI Id="MyWixUI">
+      <UIRef Id="WixUI_FeatureTree"/>
+      <UIRef Id="WixUI_ErrorProgressText"/>
+    </UI>
 
   </Product>
-
 </Wix>

@@ -192,8 +192,8 @@
   <String Id="SetupTypeDlg_Title" Overridable="yes">Программа установки [ProductName]</String>
   <String Id="SetupTypeDlgTypicalButton" Overridable="yes">&amp;Обычная</String>
   <String Id="SetupTypeDlgTypicalButtonTooltip" Overridable="yes">Обычная установка</String>
-  <String Id="SetupTypeDlgCustomButton" Overridable="yes">&amp;Выборочноя</String>
-  <String Id="SetupTypeDlgCustomButtonTooltip" Overridable="yes">Выборочноя установка</String>
+  <String Id="SetupTypeDlgCustomButton" Overridable="yes">&amp;Выборочная</String>
+  <String Id="SetupTypeDlgCustomButtonTooltip" Overridable="yes">Выборочная установка</String>
   <String Id="SetupTypeDlgCompleteButton" Overridable="yes">&amp;Полная установка</String>
   <String Id="SetupTypeDlgCompleteButtonTooltip" Overridable="yes">Полная установка</String>
   <String Id="SetupTypeDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
