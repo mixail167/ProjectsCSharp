@@ -1,29 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MineSweeper.Classes;
+using MineSweeper.Windows;
+using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MineSweeper
 {
+    public enum Level { Easy = 0, Middle = 1, Hard = 2};
+
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        Level currentLevel;
+
         public MainWindow()
         {
             InitializeComponent();
+            switch (Properties.Settings.Default.Level)
+            {
+                case 1:
+                    currentLevel = Level.Middle;
+                    break;
+                case 2:
+                    currentLevel = Level.Hard;
+                    break;
+                default:
+                    currentLevel = Level.Easy;
+                    break;
+            }
+            WAVPlayer.sound = Properties.Settings.Default.Sound;
+
 
             App.LanguageChanged += LanguageChanged;
             CultureInfo currLang = App.Language;
@@ -62,7 +72,18 @@ namespace MineSweeper
                     App.Language = lang;
                 }
             }
+        }
 
+        private void RecordsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            RecordsWindow recordsWindow = new RecordsWindow(currentLevel);
+            recordsWindow.ShowDialog();
+        }
+
+        private void ParametersMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ParametersWindow parametersWindow = new ParametersWindow(currentLevel);
+            parametersWindow.ShowDialog();
         }
     }
 }

@@ -1,5 +1,24 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:v="clr-namespace:System;assembly=mscorlib">
+    
     <v:String x:Key="MainWindowTitle">Сапер</v:String>    
+    <v:String x:Key="Game">Игра</v:String>
+    <v:String x:Key="Parameters">Параметры</v:String>
+    <v:String x:Key="Records">Рекорды</v:String>
+    <v:String x:Key="NewGame">Новая игра</v:String>
+    <v:String x:Key="Exit">Выход</v:String>
+
+    <v:String x:Key="RecordsWindowTitle">Рекорды</v:String>
+    <v:String x:Key="Level">Уровень сложности</v:String>
+    <v:String x:Key="EasyLevel">Легкий</v:String>
+    <v:String x:Key="MiddleLevel">Средний</v:String>
+    <v:String x:Key="HardLevel">Тяжелый</v:String>
+    <v:String x:Key="CountGames">Сыграно игр:</v:String>
+    <v:String x:Key="WinGames">Выйграно игр:</v:String>
+    <v:String x:Key="PercentWin">Процент выйгрыша:</v:String>
+    <v:String x:Key="ClearStatistics">Обнулить статистику</v:String>
+
+    <v:String x:Key="ParametersWindowTitle">Параметры</v:String>
+    <v:String x:Key="Sound">Звук</v:String>
 </ResourceDictionary>
