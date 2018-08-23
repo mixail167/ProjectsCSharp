@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Millionaire")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("SuperGame")]
 [assembly: AssemblyProduct("Millionaire")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
