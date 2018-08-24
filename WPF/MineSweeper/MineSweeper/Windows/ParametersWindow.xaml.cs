@@ -1,6 +1,9 @@
 ﻿using MineSweeper.Classes;
 using System.ComponentModel;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MineSweeper.Windows
 {
@@ -27,6 +30,14 @@ namespace MineSweeper.Windows
                     break;
             }
             SoundCheckBox.IsChecked = WAVPlayer.sound;
+            if (Properties.Settings.Default.DefaultLanguage.Equals(CultureInfo.GetCultureInfo("en-US")))
+            {
+                LanguageComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                LanguageComboBox.SelectedIndex = 1;
+            }
         }
 
         private void EasyRadioButton_Checked(object sender, RoutedEventArgs e)
@@ -59,6 +70,19 @@ namespace MineSweeper.Windows
         private void SoundCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             WAVPlayer.sound = false;
+        }
+
+        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (LanguageComboBox.SelectedIndex)
+            {
+                case 0:
+                    App.Set(CultureInfo.GetCultureInfo("en-US"));
+                    break;
+                default:
+                    App.Set(CultureInfo.GetCultureInfo("ru-RU"));
+                    break;
+            }
         }
     }
 }

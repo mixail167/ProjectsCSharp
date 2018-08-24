@@ -6,9 +6,9 @@
         <StackPanel>
             <Menu x:Name="Menu" Height="30" VerticalAlignment="Top" Margin="0">
                 <MenuItem x:Name="GameMenuItem" Header="{DynamicResource Game}" Padding="5">
-                    <MenuItem Header="{DynamicResource NewGame}"/>
+                    <MenuItem x:Name="NewGameMenuItem" Header="{DynamicResource NewGame}"/>
                     <Separator Height="10" Margin="0"/>
-                    <MenuItem Header="{DynamicResource Exit}"/>
+                    <MenuItem x:Name="ExitMenuItem" Header="{DynamicResource Exit}" Click="ExitMenuItem_Click"/>
                 </MenuItem>
                 <MenuItem x:Name="ParametersMenuItem" Header="{DynamicResource Parameters}" Padding="5" Click="ParametersMenuItem_Click"/>
                 <MenuItem x:Name="RecordsMenuItem" Header="{DynamicResource Records}" Padding="5" Click="RecordsMenuItem_Click"/>

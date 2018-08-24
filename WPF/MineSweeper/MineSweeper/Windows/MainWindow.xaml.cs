@@ -2,6 +2,7 @@
 using MineSweeper.Windows;
 using System;
 using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -33,45 +34,6 @@ namespace MineSweeper
                     break;
             }
             WAVPlayer.sound = Properties.Settings.Default.Sound;
-
-
-            App.LanguageChanged += LanguageChanged;
-            CultureInfo currLang = App.Language;
-            //Заполняем меню смены языка:
-            //menuLanguage.Items.Clear();
-            //foreach (var lang in App.Languages)
-            //{
-            //    MenuItem menuLang = new MenuItem();
-            //    menuLang.Header = lang.DisplayName;
-            //    menuLang.Tag = lang;
-            //    menuLang.IsChecked = lang.Equals(currLang);
-            //    menuLang.Click += ChangeLanguageClick;
-            //    menuLanguage.Items.Add(menuLang);
-            //}
-        }
-
-        private void LanguageChanged(Object sender, EventArgs e)
-        {
-            CultureInfo currLang = App.Language;
-
-            //Отмечаем нужный пункт смены языка как выбранный язык
-            //foreach (MenuItem i in menuLanguage.Items)
-            //{
-            //    CultureInfo ci = i.Tag as CultureInfo;
-            //    i.IsChecked = ci != null && ci.Equals(currLang);
-            //}
-        }
-
-        private void ChangeLanguageClick(Object sender, EventArgs e)
-        {
-            MenuItem mi = sender as MenuItem;
-            if (mi != null)
-            {
-                CultureInfo lang = mi.Tag as CultureInfo;
-                if (lang != null) {
-                    App.Language = lang;
-                }
-            }
         }
 
         private void RecordsMenuItem_Click(object sender, RoutedEventArgs e)
@@ -84,6 +46,11 @@ namespace MineSweeper
         {
             ParametersWindow parametersWindow = new ParametersWindow(currentLevel);
             parametersWindow.ShowDialog();
+        }
+
+        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

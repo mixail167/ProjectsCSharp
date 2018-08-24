@@ -1,24 +1,30 @@
 ﻿<Window x:Class="MineSweeper.Windows.ParametersWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{DynamicResource ParametersWindowTitle}" Height="200" Width="300" Icon="/MineSweeper;component/Resources/bombIcon.png" ResizeMode="CanMinimize" Closing="Window_Closing">
+        Title="{DynamicResource ParametersWindowTitle}" Height="210" Width="300" Icon="/MineSweeper;component/Resources/bombIcon.png" ResizeMode="CanMinimize" Closing="Window_Closing">
     <Grid>
-
-        <StackPanel Margin="10">
+        <StackPanel Margin="5">
             <Label Content="{DynamicResource Level}" HorizontalAlignment="Left" VerticalAlignment="Top" />
             <StackPanel Orientation="Horizontal">
-                <StackPanel Margin="5"> 
+                <StackPanel Margin="5,0,0,0">
                     <RadioButton x:Name="EasyRadioButton" Content="{DynamicResource EasyLevel}" Margin="0,5,0,5" Checked="EasyRadioButton_Checked"/>
                     <RadioButton x:Name="MiddleRadioButton" Content="{DynamicResource MiddleLevel}" Margin="0,5,0,5" Checked="MiddleRadioButton_Checked"/>
                     <RadioButton x:Name="HardRadioButton" Content="{DynamicResource HardLevel}" Margin="0,5,0,5" Checked="HardRadioButton_Checked"/>
                 </StackPanel>
-                <StackPanel Margin="5">
+                <StackPanel Margin="5,0,0,0">
                     <Label Content="hhjsdgf"/>
                     <Label Content="hhjsdgf"/>
-                    <Label Content="hhjsdgf"/>                    
+                    <Label Content="hhjsdgf"/>
                 </StackPanel>
             </StackPanel>
-            <CheckBox x:Name="SoundCheckBox" Content="{DynamicResource Sound}" Margin="5" Checked="SoundCheckBox_Checked" Unchecked="SoundCheckBox_Unchecked"/>
+            <CheckBox x:Name="SoundCheckBox" Content="{DynamicResource Sound}" Margin="5,10,0,0" Checked="SoundCheckBox_Checked" Unchecked="SoundCheckBox_Unchecked"/>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{DynamicResource Language}"/>
+                <ComboBox x:Name="LanguageComboBox" Width="120" VerticalAlignment="Center" SelectionChanged="LanguageComboBox_SelectionChanged">
+                    <ComboBoxItem x:Name="EnglishLanguage" Content="{DynamicResource English}" Width="100"/>
+                    <ComboBoxItem x:Name="RussianLanguage" Content="{DynamicResource Russian}" Width="100"/>
+                </ComboBox>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

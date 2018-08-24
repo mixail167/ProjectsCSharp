@@ -12,9 +12,15 @@
     <v:String x:Key="Level">Level</v:String>
     <v:String x:Key="EasyLevel">Easy</v:String>
     <v:String x:Key="MiddleLevel">Middle</v:String>
-    <v:String x:Key="HardLevel">"Hard</v:String>
+    <v:String x:Key="HardLevel">Hard</v:String>
     <v:String x:Key="CountGames">Сыграно игр:</v:String>
     <v:String x:Key="WinGames">Выйграно игр:</v:String>
     <v:String x:Key="PercentWin">Процент выйгрыша:</v:String>
     <v:String x:Key="ClearStatistics">Clear Statistics</v:String>
+
+    <v:String x:Key="ParametersWindowTitle">Parameters</v:String>
+    <v:String x:Key="Sound">Sound</v:String>
+    <v:String x:Key="Language">Language</v:String>
+    <v:String x:Key="Russian">Russian</v:String>
+    <v:String x:Key="English">English</v:String>
 </ResourceDictionary>
