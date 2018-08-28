@@ -1,18 +1,31 @@
 ﻿<Window x:Name="MainWindow1" x:Class="MineSweeper.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{DynamicResource MainWindowTitle}" Height="350" Width="525" Icon="/MineSweeper;component/Resources/bombIcon.png" ResizeMode="CanMinimize">
+        Title="{DynamicResource MainWindowTitle}" Height="480" Width="640" Icon="/MineSweeper;component/Resources/bombIcon.png" ResizeMode="CanMinimize" MinWidth="640" MinHeight="480">
     <Grid>
-        <StackPanel>
-            <Menu x:Name="Menu" Height="30" VerticalAlignment="Top" Margin="0">
-                <MenuItem x:Name="GameMenuItem" Header="{DynamicResource Game}" Padding="5">
-                    <MenuItem x:Name="NewGameMenuItem" Header="{DynamicResource NewGame}"/>
-                    <Separator Height="10" Margin="0"/>
-                    <MenuItem x:Name="ExitMenuItem" Header="{DynamicResource Exit}" Click="ExitMenuItem_Click"/>
-                </MenuItem>
-                <MenuItem x:Name="ParametersMenuItem" Header="{DynamicResource Parameters}" Padding="5" Click="ParametersMenuItem_Click"/>
-                <MenuItem x:Name="RecordsMenuItem" Header="{DynamicResource Records}" Padding="5" Click="RecordsMenuItem_Click"/>
-            </Menu>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu x:Name="Menu" Height="30" VerticalAlignment="Top" Margin="0">
+            <MenuItem x:Name="GameMenuItem" Header="{DynamicResource Game}" Padding="5">
+                <MenuItem x:Name="NewGameMenuItem" Header="{DynamicResource NewGame}"/>
+                <Separator Height="10" Margin="0"/>
+                <MenuItem x:Name="ExitMenuItem" Header="{DynamicResource Exit}" Click="ExitMenuItem_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="ParametersMenuItem" Header="{DynamicResource Parameters}" Padding="5" Click="ParametersMenuItem_Click"/>
+            <MenuItem x:Name="RecordsMenuItem" Header="{DynamicResource Records}" Padding="5" Click="RecordsMenuItem_Click"/>
+        </Menu>
+        <Grid x:Name="MainGrid" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="GameGrid" Grid.ColumnSpan="2"/>
+        </Grid>
     </Grid>
 </Window>
