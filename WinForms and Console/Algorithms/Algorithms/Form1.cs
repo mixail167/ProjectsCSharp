@@ -5,6 +5,9 @@ using Microsoft.Msagl.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
+using Drawing = System.Drawing;
+using System.Windows;
+using System.Diagnostics;
 
 namespace Algorithms
 {
@@ -20,6 +23,16 @@ namespace Algorithms
         private bool semaphore2;
         private int[] path;
         private delegate T[] Sort<T>(T[] massiv, bool revers) where T : IComparable<T>;
+        private List<Drawing.Point> points;
+        private bool drawPolygon;
+        private Drawing.Bitmap bitmap;
+        private Drawing.Graphics graphics;
+        private Drawing.Graphics graphics2;
+        private Drawing.Graphics graphics3;
+        private Cell[,] map;
+        private Cell[,] map1;
+        private Cell startPosition;
+        private Cell finishPosition;
         #endregion
 
         public Form1()
@@ -38,6 +51,198 @@ namespace Algorithms
             cell = new DataGridCell(0, 0);
             semaphore = false;
             semaphore2 = false;
+            points = new List<Drawing.Point>();
+            drawPolygon = false;
+            bitmap = new Drawing.Bitmap(pictureBox1.Width, pictureBox1.Height);
+            graphics = Drawing.Graphics.FromImage(bitmap);
+        }
+
+        /// <summary>
+        /// Генератор лабиринта
+        /// </summary>
+        /// <param name="width">Ширина лабиринта</param>
+        /// <param name="height">Высота лабиринта</param>
+        /// <returns>Карта лабиринта</returns>
+        private Cell[,] GenerateLabirint(int width, int height)
+        {
+            if (width % 2 == 0)
+            {
+                width++;
+            }
+            if (height % 2 == 0)
+            {
+                height++;
+            }
+            Cell[,] map = new Cell[width, height];
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (i % 2 != 0 && j % 2 != 0)
+                        map[i, j] = new Cell(i, j, -1);
+                    else
+                        map[i, j] = new Cell(i, j, -4);
+                }
+            }
+
+            Random random = new Random();
+            Stack<Cell> path = new Stack<Cell>();
+            map[1, 1].Visited = true;
+            path.Push(map[1, 1]);
+            while (path.Count > 0)
+            {
+                Cell cell = path.Peek();
+                List<Cell> nextStep = new List<Cell>();
+                if (cell.X > 1 && !map[cell.X - 2, cell.Y].Visited)
+                    nextStep.Add(map[cell.X - 2, cell.Y]);
+                if (cell.X < width - 2 && !map[cell.X + 2, cell.Y].Visited)
+                    nextStep.Add(map[cell.X + 2, cell.Y]);
+                if (cell.Y > 1 && !map[cell.X, cell.Y - 2].Visited)
+                    nextStep.Add(map[cell.X, cell.Y - 2]);
+                if (cell.Y < height - 2 && !map[cell.X, cell.Y + 2].Visited)
+                    nextStep.Add(map[cell.X, cell.Y + 2]);
+                if (nextStep.Count() > 0)
+                {
+                    Cell next = nextStep[random.Next(nextStep.Count())];
+                    if (next.X != cell.X)
+                    {
+                        if (cell.X > next.X)
+                        {
+                            map[next.X + 1, next.Y].Value = -1;
+                        }
+                        else
+                        {
+                            map[next.X - 1, next.Y].Value = -1;
+                        }
+                    }
+                    if (next.Y != cell.Y)
+                    {
+                        if (cell.Y > next.Y)
+                        {
+                            map[next.X, next.Y + 1].Value = -1;
+                        }
+                        else
+                        {
+                            map[next.X, next.Y - 1].Value = -1;
+                        }
+                    }
+                    next.Visited = true;
+                    path.Push(next);
+                }
+                else
+                {
+                    path.Pop();
+                }
+            }
+            return map;
+        }
+
+        /// <summary>
+        /// Волновой алгоритм
+        /// </summary>
+        /// <param name="map">Карта</param>
+        /// <param name="startPosition">Начальная позиция</param>
+        /// <param name="finishPosition">Целевая позиция</param>
+        /// <returns>Карта решения</returns>
+        private static Cell[,] WavePropagation(Cell[,] map, Cell startPosition, Cell finishPosition)
+        {
+            if (map == null || startPosition == null || finishPosition == null || (startPosition.X == finishPosition.X && startPosition.Y == finishPosition.Y))
+                return null;
+            map[startPosition.X, startPosition.Y].Value = 0;
+            map[finishPosition.X, finishPosition.Y].Value = -2;
+            int width = map.GetLength(0);
+            int heigth = map.GetLength(1);
+            int step = 0;
+            bool finished = false;
+            do
+            {
+                for (int i = 0; i < width; i++)
+                {
+                    for (int j = 0; j < heigth; j++)
+                    {
+                        if (map[i, j].Value == step)
+                        {
+                            if (i != width - 1)
+                                if (map[i + 1, j].Value == -1) map[i + 1, j].Value = step + 1;
+                            if (j != heigth - 1)
+                                if (map[i, j + 1].Value == -1) map[i, j + 1].Value = step + 1;
+                            if (i != 0)
+                                if (map[i - 1, j].Value == -1) map[i - 1, j].Value = step + 1;
+                            if (j != 0)
+                                if (map[i, j - 1].Value == -1) map[i, j - 1].Value = step + 1;
+                            if (i < width - 1)
+                                if (map[i + 1, j].Value == -2)
+                                {
+                                    finishPosition.X = i + 1;
+                                    finishPosition.Y = j;
+                                    finished = true;
+                                }
+                            if (j < heigth - 1)
+                                if (map[i, j + 1].Value == -2)
+                                {
+                                    finishPosition.X = i;
+                                    finishPosition.Y = j + 1;
+                                    finished = true;
+                                }
+                            if (i > 0)
+                                if (map[i - 1, j].Value == -2)
+                                {
+                                    finishPosition.X = i - 1;
+                                    finishPosition.Y = j;
+                                    finished = true;
+                                }
+                            if (j > 0)
+                                if (map[i, j - 1].Value == -2)
+                                {
+                                    finishPosition.X = i;
+                                    finishPosition.Y = j - 1;
+                                    finished = true;
+                                }
+                        }
+                    }
+                }
+                step++;
+            } while (!finished && step < width * heigth);
+            if (finished)
+            {
+                List<Tuple<int, int>> path = new List<Tuple<int, int>>();
+                path.Add(new Tuple<int, int>(finishPosition.X, finishPosition.Y));
+                do
+                {
+                    if (finishPosition.X < width - 1)
+                        if (map[finishPosition.X + 1, finishPosition.Y].Value == step - 1)
+                        {
+                            path.Add(new Tuple<int, int>(++finishPosition.X, finishPosition.Y));
+                        }
+                    if (finishPosition.Y < heigth - 1)
+                        if (map[finishPosition.X, finishPosition.Y + 1].Value == step - 1)
+                        {
+                            path.Add(new Tuple<int, int>(finishPosition.X, ++finishPosition.Y));
+                        }
+                    if (finishPosition.X > 0)
+                        if (map[finishPosition.X - 1, finishPosition.Y].Value == step - 1)
+                        {
+                            path.Add(new Tuple<int, int>(--finishPosition.X, finishPosition.Y));
+                        }
+                    if (finishPosition.Y > 0)
+                        if (map[finishPosition.X, finishPosition.Y - 1].Value == step - 1)
+                        {
+                            path.Add(new Tuple<int, int>(finishPosition.X, --finishPosition.Y));
+                        }
+                    step--;
+                } while (step != 0);
+                foreach (Tuple<int, int> item in path)
+                {
+                    if (item == path.Last())
+                        map[item.Item1, item.Item2].Value = 0;
+                    else if (item == path.First())
+                        map[item.Item1, item.Item2].Value = -2;
+                    else
+                        map[item.Item1, item.Item2].Value = -3;
+                }
+                return map;
+            }
+            return null;
         }
 
         /// <summary>
@@ -1044,7 +1249,6 @@ namespace Algorithms
                         ButtonVisible(false);
                     }
                 }
-
             }
             else
             {
@@ -1069,6 +1273,199 @@ namespace Algorithms
                 maxDistances[i] = MaxInColumn(i, graph);
             }
             UpdateLabel(IndexMinInMassiv(maxDistances));
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            graphics.Clear(Drawing.Color.White);
+            if (drawPolygon)
+            {
+                graphics.FillPolygon(Drawing.Brushes.Red, points.ToArray());
+            }
+            for (int i = 0; i < points.Count && !drawPolygon; i++)
+            {
+                graphics.DrawEllipse(Drawing.Pens.Red, points[i].X, points[i].Y, 1, 1);
+                graphics.DrawString(i.ToString(), new Drawing.Font("Courier New", 10, Drawing.FontStyle.Italic), Drawing.Brushes.Black, points[i]);
+            }
+            pictureBox1.Image = bitmap;
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                if (points.Count > 2)
+                {
+                    drawPolygon = true;
+                }
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                if (drawPolygon)
+                {
+                    points.Clear();
+                    drawPolygon = false;
+                    label13.Text = string.Empty;
+                }
+                points.Add(new Drawing.Point(e.X, e.Y));
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                points.Clear();
+                drawPolygon = false;
+                label13.Text = string.Empty;
+            }
+            pictureBox1.Invalidate();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (drawPolygon)
+            {
+                int count = 0;
+                for (int i = 0; i < bitmap.Width; i++)
+                {
+                    for (int j = 0; j < bitmap.Height; j++)
+                    {
+                        Drawing.Color color = bitmap.GetPixel(i, j);
+                        if (color.R == 255 && color.G == 0 && color.B == 0)
+                        {
+                            count++;
+                        }
+                    }
+                }
+                double square = (double)numericUpDown5.Value * (double)numericUpDown6.Value * count / (bitmap.Width * bitmap.Height);
+                label13.Text = string.Format("{0:f2}", square);
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            startPosition = null;
+            finishPosition = null;
+            graphics3 = null;
+            map = GenerateLabirint((int)numericUpDown7.Value, (int)numericUpDown8.Value);
+            graphics2 = panel1.CreateGraphics();
+            panel1.Invalidate();
+            panel2.Invalidate();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            if (graphics2 != null)
+            {
+                int width = map.GetLength(0);
+                int height = map.GetLength(1);
+                float widthBlock = (float)(panel1.Width * 1.0f / width);
+                float heightBlock = (float)(panel1.Height * 1.0f / height);
+                for (int i = 0; i < width; i++)
+                {
+                    for (int j = 0; j < height; j++)
+                    {
+                        switch (map[i, j].Value)
+                        {
+                            case -1:
+                                graphics2.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                                break;
+                            default:
+                                graphics2.FillRectangle(Drawing.Brushes.Black, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                                break;
+                        }
+                    }
+                }
+                if (startPosition != null)
+                {
+                    graphics2.FillRectangle(Drawing.Brushes.Yellow, new Drawing.RectangleF(startPosition.X * widthBlock, startPosition.Y * heightBlock, widthBlock, heightBlock));
+                }
+                if (finishPosition != null)
+                {
+                    graphics2.FillRectangle(Drawing.Brushes.Red, new Drawing.RectangleF(finishPosition.X * widthBlock, finishPosition.Y * heightBlock, widthBlock, heightBlock));
+                }
+            }
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+            if (graphics3 != null)
+            {
+                int width = map1.GetLength(0);
+                int height = map1.GetLength(1);
+                float widthBlock = (float)(panel1.Width * 1.0f / width);
+                float heightBlock = (float)(panel1.Height * 1.0f / height);
+                for (int i = 0; i < width; i++)
+                {
+                    for (int j = 0; j < height; j++)
+                    {
+                        switch (map1[i, j].Value)
+                        {
+                            case 0:
+                                graphics3.FillRectangle(Drawing.Brushes.Yellow, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                                break;
+                            case -1:
+                                graphics3.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                                break;
+                            case -2:
+                                graphics3.FillRectangle(Drawing.Brushes.Red, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                                break;
+                            case -3:
+                                graphics3.FillRectangle(Drawing.Brushes.Blue, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                                break;
+                            case -4:
+                                graphics3.FillRectangle(Drawing.Brushes.Black, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                                break;
+                            default:
+                                graphics3.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (graphics2 != null)
+            {
+                if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+                {
+                    startPosition = null;
+                    finishPosition = null;
+                    panel1.Invalidate();
+                }
+                else
+                {
+                    int width = map.GetLength(0);
+                    int height = map.GetLength(1);
+                    double widthBlock = (double)(panel2.Width * 1.0f / width);
+                    double heightBlock = (double)(panel2.Height * 1.0f / height);
+                    int x = (int)Math.Truncate((double)e.X / widthBlock);
+                    int y = (int)Math.Truncate((double)e.Y / heightBlock);
+                    if (map[x, y].Value != -4)
+                    {
+                        if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                        {
+                            startPosition = new Cell(x, y);
+                        }
+                        else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                        {
+                            finishPosition = new Cell(x, y);
+                        }
+                        panel1.Invalidate();
+                    }
+                }
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            graphics3 = null;
+            map1 = WavePropagation(Cell.CopyMatrix(map), new Cell(startPosition), new Cell(finishPosition));
+            if (map1 != null)
+            {
+                graphics3 = panel2.CreateGraphics();
+                
+            }
+            panel2.Invalidate();
         }
     }
 }
