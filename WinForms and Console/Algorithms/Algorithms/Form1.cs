@@ -108,22 +108,22 @@ namespace Algorithms
                     {
                         if (cell.X > next.X)
                         {
-                            map[next.X + 1, next.Y].Value = -1;
+                            map[next.X + 1, next.Y].Value = (int)CellValue.EmptySpace;
                         }
                         else
                         {
-                            map[next.X - 1, next.Y].Value = -1;
+                            map[next.X - 1, next.Y].Value = (int)CellValue.EmptySpace;
                         }
                     }
                     if (next.Y != cell.Y)
                     {
                         if (cell.Y > next.Y)
                         {
-                            map[next.X, next.Y + 1].Value = -1;
+                            map[next.X, next.Y + 1].Value = (int)CellValue.EmptySpace;
                         }
                         else
                         {
-                            map[next.X, next.Y - 1].Value = -1;
+                            map[next.X, next.Y - 1].Value = (int)CellValue.EmptySpace;
                         }
                     }
                     next.Visited = true;
@@ -148,8 +148,8 @@ namespace Algorithms
         {
             if (map == null || startPosition == null || finishPosition == null || (startPosition.X == finishPosition.X && startPosition.Y == finishPosition.Y))
                 return null;
-            map[startPosition.X, startPosition.Y].Value = 0;
-            map[finishPosition.X, finishPosition.Y].Value = -2;
+            map[startPosition.X, startPosition.Y].Value = (int)CellValue.StartPosition;
+            map[finishPosition.X, finishPosition.Y].Value = (int)CellValue.Destination;
             int width = map.GetLength(0);
             int heigth = map.GetLength(1);
             int step = 0;
@@ -163,36 +163,36 @@ namespace Algorithms
                         if (map[i, j].Value == step)
                         {
                             if (i != width - 1)
-                                if (map[i + 1, j].Value == -1) map[i + 1, j].Value = step + 1;
+                                if (map[i + 1, j].Value == (int)CellValue.EmptySpace) map[i + 1, j].Value = step + 1;
                             if (j != heigth - 1)
-                                if (map[i, j + 1].Value == -1) map[i, j + 1].Value = step + 1;
+                                if (map[i, j + 1].Value == (int)CellValue.EmptySpace) map[i, j + 1].Value = step + 1;
                             if (i != 0)
-                                if (map[i - 1, j].Value == -1) map[i - 1, j].Value = step + 1;
+                                if (map[i - 1, j].Value == (int)CellValue.EmptySpace) map[i - 1, j].Value = step + 1;
                             if (j != 0)
-                                if (map[i, j - 1].Value == -1) map[i, j - 1].Value = step + 1;
+                                if (map[i, j - 1].Value == (int)CellValue.EmptySpace) map[i, j - 1].Value = step + 1;
                             if (i < width - 1)
-                                if (map[i + 1, j].Value == -2)
+                                if (map[i + 1, j].Value == (int)CellValue.Destination)
                                 {
                                     finishPosition.X = i + 1;
                                     finishPosition.Y = j;
                                     finished = true;
                                 }
                             if (j < heigth - 1)
-                                if (map[i, j + 1].Value == -2)
+                                if (map[i, j + 1].Value == (int)CellValue.Destination)
                                 {
                                     finishPosition.X = i;
                                     finishPosition.Y = j + 1;
                                     finished = true;
                                 }
                             if (i > 0)
-                                if (map[i - 1, j].Value == -2)
+                                if (map[i - 1, j].Value == (int)CellValue.Destination)
                                 {
                                     finishPosition.X = i - 1;
                                     finishPosition.Y = j;
                                     finished = true;
                                 }
                             if (j > 0)
-                                if (map[i, j - 1].Value == -2)
+                                if (map[i, j - 1].Value == (int)CellValue.Destination)
                                 {
                                     finishPosition.X = i;
                                     finishPosition.Y = j - 1;
@@ -234,11 +234,11 @@ namespace Algorithms
                 foreach (Tuple<int, int> item in path)
                 {
                     if (item == path.Last())
-                        map[item.Item1, item.Item2].Value = 0;
+                        map[item.Item1, item.Item2].Value = (int)CellValue.StartPosition;
                     else if (item == path.First())
-                        map[item.Item1, item.Item2].Value = -2;
+                        map[item.Item1, item.Item2].Value = (int)CellValue.Destination;
                     else
-                        map[item.Item1, item.Item2].Value = -3;
+                        map[item.Item1, item.Item2].Value = (int)CellValue.Path;
                 }
                 return map;
             }
@@ -297,7 +297,6 @@ namespace Algorithms
             }
             return graph;
         }
-
 
         private int[] GetPathFloyd(int[,] pathFloyd, int left, int right)
         {
@@ -1463,7 +1462,6 @@ namespace Algorithms
             if (map1 != null)
             {
                 graphics3 = panel2.CreateGraphics();
-                
             }
             panel2.Invalidate();
         }

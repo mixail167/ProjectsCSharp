@@ -2,14 +2,14 @@
 
 namespace Algorithms
 {
-	//enum CellValue
-    //    {
-    //        StartPosition = 0,
-    //        EmptySpace = -1,
-    //        Destination = -2,
-    //        Path = -3,
-    //        Barrier = -4
-    //    }
+    enum CellValue
+    {
+        StartPosition = 0,
+        EmptySpace = -1,
+        Destination = -2,
+        Path = -3,
+        Barrier = -4
+    }
 		
     class Cell
     {
