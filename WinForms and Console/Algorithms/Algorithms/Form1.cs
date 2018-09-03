@@ -33,6 +33,7 @@ namespace Algorithms
         private Cell[,] map1;
         private Cell startPosition;
         private Cell finishPosition;
+        private Romb[,] rombMesh;
         #endregion
 
         public Form1()
@@ -55,6 +56,7 @@ namespace Algorithms
             drawPolygon = false;
             bitmap = new Drawing.Bitmap(pictureBox1.Width, pictureBox1.Height);
             graphics = Drawing.Graphics.FromImage(bitmap);
+            rombMesh = Romb.CreateRombMesh(0, 200, 20, 10, 10, 2.5);
         }
 
         /// <summary>
@@ -1464,6 +1466,36 @@ namespace Algorithms
                 graphics3 = panel2.CreateGraphics();
             }
             panel2.Invalidate();
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+            for (int i = 0; i < rombMesh.GetLength(0); i++)
+            {
+                for (int j = 0; j < rombMesh.GetLength(1); j++)
+                {
+                    float d = (float)rombMesh[i, j].Radius * 2;
+                    e.Graphics.DrawEllipse(Drawing.Pens.Black, (float)(rombMesh[i, j].CenterPoint.X - rombMesh[i, j].Radius), (float)(rombMesh[i, j].CenterPoint.Y - rombMesh[i, j].Radius), d, d);
+                    e.Graphics.DrawPolygon(Drawing.Pens.Black, rombMesh[i, j].Points);
+                }
+            }
+        }
+
+        private void panel3_MouseMove(object sender, MouseEventArgs e)
+        {
+            label16.Text = e.Location.ToString();
+            Drawing.Point point = Romb.Check(rombMesh, e.Location);
+            if (point.X != -1)
+            {
+                label17.Text = point.ToString();
+            }
+            else label17.Text = string.Empty;
+        }
+
+        private void panel3_MouseLeave(object sender, EventArgs e)
+        {
+            label17.Text = string.Empty;
+            label16.Text = string.Empty;
         }
     }
 }
