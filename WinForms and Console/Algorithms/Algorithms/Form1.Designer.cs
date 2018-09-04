@@ -914,6 +914,7 @@
             this.panel3.Size = new System.Drawing.Size(610, 410);
             this.panel3.TabIndex = 0;
             this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
+            this.panel3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.panel3_MouseDoubleClick);
             this.panel3.MouseLeave += new System.EventHandler(this.panel3_MouseLeave);
             this.panel3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel3_MouseMove);
             // 

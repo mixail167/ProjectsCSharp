@@ -34,6 +34,7 @@ namespace Algorithms
         private Cell startPosition;
         private Cell finishPosition;
         private Romb[,] rombMesh;
+        private List<Sprait> objects;
         #endregion
 
         public Form1()
@@ -57,6 +58,7 @@ namespace Algorithms
             bitmap = new Drawing.Bitmap(pictureBox1.Width, pictureBox1.Height);
             graphics = Drawing.Graphics.FromImage(bitmap);
             rombMesh = Romb.CreateRombMesh(0, 200, 20, 10, 10, 2.5);
+            objects = new List<Sprait>();
         }
 
         /// <summary>
@@ -1479,6 +1481,10 @@ namespace Algorithms
                     e.Graphics.DrawPolygon(Drawing.Pens.Black, rombMesh[i, j].Points);
                 }
             }
+            foreach (Sprait item in objects)
+            {
+                e.Graphics.DrawImage(item.Image, item.Point);
+            }
         }
 
         private void panel3_MouseMove(object sender, MouseEventArgs e)
@@ -1496,6 +1502,18 @@ namespace Algorithms
         {
             label17.Text = string.Empty;
             label16.Text = string.Empty;
+        }
+
+        private void panel3_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Drawing.Point coordinate = Romb.Check(rombMesh, e.Location);
+            if (coordinate.X != -1)
+            {
+                Drawing.PointF pilot = rombMesh[coordinate.X, coordinate.Y].CenterPoint;
+                objects.Add(new Sprait(Properties.Resources.Tree, new Drawing.PointF(pilot.X - Properties.Resources.Tree.Width / 2, pilot.Y- Properties.Resources.Tree.Height)));
+                objects = objects.ToArray().OrderBy(x => x.Point.Y).ThenBy(x=>x.Point.X).ToList();
+                panel3.Invalidate();
+            }
         }
     }
 }
