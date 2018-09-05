@@ -15,6 +15,7 @@ namespace GifAnime
         bool currentlyAnimating = false;
         Bitmap animatedImage;
         private double koef;
+        List<Image> frames;
 
         public Form1()
         {
@@ -30,7 +31,7 @@ namespace GifAnime
                 koef = pictureBox1.Height * 1.0 / animatedImage.Height;
             }
             koef2 = animatedImage.Height * 1.0 / animatedImage.Width;
-            List<Image> frames = Frames(animatedImage);
+            frames = Frames(animatedImage);
             TableLayoutPanel tableLayoutPanel2 = new TableLayoutPanel()
             {
                 AutoScroll = true,
@@ -87,9 +88,15 @@ namespace GifAnime
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog()==DialogResult.OK)
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                
+                Bitmap image = new Bitmap(animatedImage.Width * frames.Count, animatedImage.Height);
+                Graphics g = Graphics.FromImage(image);
+                for (int i = 0; i < frames.Count; i++)
+                {
+                    g.DrawImage(frames[i], i * animatedImage.Width, 0);
+                }
+                image.Save(saveFileDialog1.FileName,ImageFormat.Bmp);
             }
         }
     }
