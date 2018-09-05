@@ -1,9 +1,11 @@
 ﻿using SharpGL;
+using SharpGL.SceneGraph.Assets;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -19,13 +21,35 @@ namespace OpenGl2DApp
         private PointF center;
         private OpenGL openGL;
         private float fontSize;
+        private Texture texture;
+        private int count;
+        private int k;
 
         public Form1()
         {
             InitializeComponent();
             width = 50;
             fontSize = 12;
+            texture = CreateTextureFromGif(openGL, Properties.Resources.gif4, out count);
+            texture.Bind(openGL);
+            k = 0;
             Init();
+        }
+
+        private Texture CreateTextureFromGif(OpenGL openGL, Image image, out int count)
+        {
+            Texture texture = new Texture();
+            FrameDimension d = new FrameDimension(image.FrameDimensionsList[0]);
+            count = image.GetFrameCount(d);
+            Bitmap imageTexture = new Bitmap(image.Width * count, image.Height);
+            Graphics g = Graphics.FromImage(imageTexture);
+            for (int i = 0; i < count; i++)
+            {
+                image.SelectActiveFrame(d, i);
+                g.DrawImage(new Bitmap(image), i * image.Width, 0);
+            }
+            texture.Create(openGL, imageTexture);
+            return texture;
         }
 
         private void Init()
@@ -38,22 +62,6 @@ namespace OpenGl2DApp
             };
             center = new PointF(0, 0);
             currentColor = Color.Red;
-            panel1.BackColor = currentColor;
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            panel1.BackColor = currentColor;
-        }
-
-        private void panel1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
-            {
-                currentColor = colorDialog1.Color;
-                panel1.BackColor = currentColor;
-                PaintScene();
-            }
         }
 
         void PaintScene()
@@ -66,13 +74,14 @@ namespace OpenGl2DApp
             openGL.Vertex(-openGLControl1.Width / 2, 0);
             openGL.Vertex(openGLControl1.Width / 2, 0);
             openGL.End();
-            openGL.Begin(OpenGL.GL_POLYGON);
-            openGL.Color(currentColor.R, currentColor.G, currentColor.B);
-            openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y);
-            openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y);
-            openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y);
-            openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y);
+            openGL.Enable(OpenGL.GL_TEXTURE_2D);
+            openGL.Begin(OpenGL.GL_QUADS);
+            openGL.TexCoord(k * 1.0 / count, 1.0); openGL.Vertex(points[0].X + center.X, points[0].Y + center.Y);
+            openGL.TexCoord(k * 1.0 / count, 0.0); openGL.Vertex(points[1].X + center.X, points[1].Y + center.Y);
+            openGL.TexCoord((k + 1) * 1.0 / count, 0.0); openGL.Vertex(points[2].X + center.X, points[2].Y + center.Y);
+            openGL.TexCoord((k + 1) * 1.0 / count, 1.0); openGL.Vertex(points[3].X + center.X, points[3].Y + center.Y);
             openGL.End();
+            openGL.Disable(OpenGL.GL_TEXTURE_2D);
             openGL.DrawText(5, (int)(openGLControl1.Height - fontSize), 1, 1, 1, string.Empty, fontSize, "Info");
             for (int i = 0; i < points.Length; i++)
             {
@@ -92,6 +101,7 @@ namespace OpenGl2DApp
             openGL.Enable(OpenGL.GL_DEPTH_TEST);
             openGL.DepthMask(1);
             openGL.DepthFunc(OpenGL.GL_LEQUAL);
+            timer1.Enabled = loaded;
         }
 
         private void glControl1_SizeChanged(object sender, EventArgs e)
@@ -116,7 +126,6 @@ namespace OpenGl2DApp
             {
                 points = Scale2D(points, (double)numericUpDown5.Value, (double)numericUpDown6.Value);
             }
-            PaintScene();
         }
 
         private PointF[] Scale2D(PointF[] points, double sx, double sy)
@@ -175,7 +184,6 @@ namespace OpenGl2DApp
         private void button2_Click(object sender, EventArgs e)
         {
             Init();
-            PaintScene();
         }
 
         private void openGLControl1_OpenGLDraw(object sender, RenderEventArgs args)
@@ -188,27 +196,22 @@ namespace OpenGl2DApp
             if (e.KeyCode == Keys.Up)
             {
                 center = Translate2D(center, 0, 5);
-                PaintScene();
             }
             else if (e.KeyCode == Keys.Down)
             {
                 center = Translate2D(center, 0, -5);
-                PaintScene();
             }
             else if (e.KeyCode == Keys.Left)
             {
                 center = Translate2D(center, -5, 0);
-                PaintScene();
             }
             else if (e.KeyCode == Keys.Right)
             {
                 center = Translate2D(center, 5, 0);
-                PaintScene();
             }
             else if (e.KeyCode == Keys.Space)
             {
                 points = Rotate2D(points, 60);
-                PaintScene();
             }
         }
 
@@ -235,7 +238,6 @@ namespace OpenGl2DApp
             {
                 points = Scale2D(points, 2.0 / 3.0, 2.0 / 3.0);
             }
-            PaintScene();
         }
 
         private void openGLControl1_EnterLeave(object sender, EventArgs e)
@@ -256,6 +258,14 @@ namespace OpenGl2DApp
                     e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
                 }
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (k == count - 1)
+                k = 0;
+            else
+                k++;
         }
     }
 }
