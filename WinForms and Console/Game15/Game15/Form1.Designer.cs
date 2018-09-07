@@ -31,11 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -52,10 +52,14 @@
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
             // 
+            // openFileDialog1
+            // 
+            resources.ApplyResources(this.openFileDialog1, "openFileDialog1");
+            // 
             // button4
             // 
-            resources.ApplyResources(this.button4, "button4");
             this.button4.BackgroundImage = global::Game15.Properties.Resources._70409;
+            resources.ApplyResources(this.button4, "button4");
             this.button4.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button4.FlatAppearance.BorderColor = System.Drawing.Color.DarkOrange;
             this.button4.Name = "button4";
@@ -64,8 +68,8 @@
             // 
             // button3
             // 
-            resources.ApplyResources(this.button3, "button3");
             this.button3.BackgroundImage = global::Game15.Properties.Resources._70367;
+            resources.ApplyResources(this.button3, "button3");
             this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button3.FlatAppearance.BorderColor = System.Drawing.Color.DarkOrange;
             this.button3.Name = "button3";
@@ -74,8 +78,8 @@
             // 
             // button2
             // 
-            resources.ApplyResources(this.button2, "button2");
             this.button2.BackgroundImage = global::Game15.Properties.Resources.sort_down_filled_100;
+            resources.ApplyResources(this.button2, "button2");
             this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button2.FlatAppearance.BorderColor = System.Drawing.Color.DarkOrange;
             this.button2.Name = "button2";
@@ -84,17 +88,13 @@
             // 
             // button1
             // 
-            resources.ApplyResources(this.button1, "button1");
             this.button1.BackgroundImage = global::Game15.Properties.Resources._70460;
+            resources.ApplyResources(this.button1, "button1");
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button1.FlatAppearance.BorderColor = System.Drawing.Color.DarkOrange;
             this.button1.Name = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // openFileDialog1
-            // 
-            resources.ApplyResources(this.openFileDialog1, "openFileDialog1");
             // 
             // Form1
             // 

@@ -101,6 +101,16 @@ namespace Game15.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        internal static System.Drawing.Icon rlo7 {
+            get {
+                object obj = ResourceManager.GetObject("rlo7", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap sort_down_filled_100 {
