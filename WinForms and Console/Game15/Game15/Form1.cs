@@ -140,8 +140,8 @@ namespace Game15
                 else
                 {
                     visible = true;
-                    //index = rand.Next(data.Count - 1);
-                    index = 0;
+                    index = rand.Next(data.Count - 1);
+                    //index = 0;
                 }
                 int x = (int)(i * 1.0 / 4) * 75 + ((int)(i * 1.0 / 4) + 1) * 3;
                 int y = (i % 4) * 75 + ((i % 4) + 1) * 3;
