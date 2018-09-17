@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AudioPlayer
@@ -48,6 +46,11 @@ namespace AudioPlayer
         public static int CurrentTrackNumber = -1;
 
         /// <summary>
+        /// Громкость
+        /// </summary>
+        public static int Volume;
+
+        /// <summary>
         /// Установка фильтра на расширение файлов
         /// </summary>
         public static void SetFileFilter()
@@ -84,6 +87,22 @@ namespace AudioPlayer
         }
 
         /// <summary>
+        /// Очистка формы
+        /// </summary>
+        public static void ClearForm()
+        {
+            Audio.Stop();
+            Link1.timer1.Enabled = false;
+            Link1.colorSlider1.Value = 0;
+            Link1.label1.Text = "00:00:00";
+            Link1.label2.Text = "00:00:00";
+            Link1.label4.Text = string.Empty;
+            Link1.pictureBox1.Image = null;
+            Link1.pictureBox2.Image = null;
+            Link1.pictureBox3.BackColor = Color.Black;
+        } 
+
+        /// <summary>
         /// Перерисовка плейлиста
         /// </summary>
         /// <param name="index"></param>
@@ -106,7 +125,7 @@ namespace AudioPlayer
         /// Визуализация звука
         /// </summary>
         /// <param name="isRadio"></param>
-        public static void Visualisation(bool isRadio)
+        public static void Visualisation(bool isRadio = false)
         {
             Iterator++;
             if (isRadio)
@@ -150,7 +169,7 @@ namespace AudioPlayer
         /// </summary>
         /// <param name="filepath"></param>
         /// <param name="isRadio"></param>
-        public static void ReadPlayList(string filepath, bool isRadio)
+        public static void ReadPlayList(string filepath, bool isRadio = false)
         {
             if (File.Exists(filepath))
             {
@@ -168,7 +187,7 @@ namespace AudioPlayer
                         {
                             if (File.Exists(str))
                             {
-                                AddTrackOrURL(str, false);
+                                AddTrackOrURL(str);
                             }
                         }
                     }
@@ -186,7 +205,7 @@ namespace AudioPlayer
         /// </summary>
         /// <param name="filepath"></param>
         /// <param name="isRadio"></param>
-        public static void AddTrackOrURL(string filepath, bool isRadio)
+        public static void AddTrackOrURL(string filepath, bool isRadio = false)
         {
             Tag tag = new Tag(filepath, isRadio);
             if (!tag.Error)
@@ -251,7 +270,7 @@ namespace AudioPlayer
                     foreach (Tag item in CommonInterface.Files)
                     {
                         output += item.Path + "\n";
-                    }     
+                    }
                 }
                 writer.Write(output.TrimEnd('\n'));
                 writer.Close();
@@ -261,6 +280,46 @@ namespace AudioPlayer
                 MessageBox.Show("Плейлист не сохранен", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        internal static void GetFilesFromFolder(string path)
+        {
+            DirectoryInfo dir = new DirectoryInfo(path);
+            foreach (DirectoryInfo item in dir.GetDirectories())
+            {
+                GetFilesFromFolder(item.FullName);
+            }
+            foreach (FileInfo item in dir.GetFiles())
+            {
+                CheckExtension(item);
+            }
+        }
+
+        internal static void CheckExtension(FileInfo file)
+        {
+            switch (file.Extension)
+            {
+                case ".mp3":
+                case ".m4a":
+                case ".mp4":
+                case ".ogg":
+                case ".opus":
+                case ".ac3":
+                case ".ape":
+                case ".mpc":
+                case ".flac":
+                case ".wma":
+                case ".tta":
+                case ".alac":
+                case ".wv":
+                    AddTrackOrURL(file.FullName);
+                    break;
+                case ".m3u":
+                    ReadPlayList(file.FullName);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

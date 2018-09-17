@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Un4seen.Bass;
 using Un4seen.Bass.Misc;
 
@@ -74,6 +70,7 @@ namespace AudioPlayer
         {
             if (!InitDefaultDevice)
             {
+                BassNet.Registration("mixailkovalev167@mail.ru", "2X22297242238");
                 InitDefaultDevice = Bass.BASS_Init(-1, hz, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
                 if (InitDefaultDevice)
                 {
@@ -99,25 +96,27 @@ namespace AudioPlayer
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="volume"></param>
-        public static void Play(string filename, int volume)
+        public static bool Play(string filename, int volume)
         {
             if (Bass.BASS_ChannelIsActive(Stream) != BASSActive.BASS_ACTIVE_PAUSED ||
                 (Bass.BASS_ChannelIsActive(Stream) == BASSActive.BASS_ACTIVE_PAUSED && !filename.Equals(CurrentTrackName)))
             {
                 Stop();
-                if (InitAudio(HZ) && SetStream(filename, false))
+                if (InitAudio(HZ) && SetStream(filename))
                 {
                     Volume = volume;
                     Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100f);
                     Bass.BASS_ChannelPlay(Stream, false);
                     CurrentTrackName = filename;
                 }
+                else return false;
             }
             else
             {
                 Bass.BASS_ChannelPlay(Stream, false);
             }
             isStoped = false;
+            return true;
         }
 
         /// <summary>
@@ -213,6 +212,7 @@ namespace AudioPlayer
             {
                 if (CommonInterface.Files.Count > CommonInterface.CurrentTrackNumber + 1)
                 {
+                    EndPlaylist = false;
                     if (Repeat)
                     {
                         Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume);
@@ -221,13 +221,14 @@ namespace AudioPlayer
                     {
                         Random rand = new Random();
                         CommonInterface.CurrentTrackNumber = rand.Next(CommonInterface.Files.Count);
-                        Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume);
+                        if (!Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume))
+                            return false;
                     }
                     else
                     {
-                        Play(CommonInterface.Files[++CommonInterface.CurrentTrackNumber].Path, Volume);
+                        if (!Play(CommonInterface.Files[++CommonInterface.CurrentTrackNumber].Path, Volume))
+                            return false;
                     }
-                    EndPlaylist = false;
                     return true;
                 }
                 else
@@ -242,9 +243,12 @@ namespace AudioPlayer
                     {
                         Random rand = new Random();
                         CommonInterface.CurrentTrackNumber = rand.Next(CommonInterface.Files.Count);
-                        Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume);
-                        EndPlaylist = false;
-                        return true;
+                        if (Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume))
+                        {
+                            EndPlaylist = false;
+                            return true;
+                        }
+                        else return false;
                     }
                     else
                     {
@@ -272,7 +276,7 @@ namespace AudioPlayer
         /// <param name="file"></param>
         /// <param name="isRadio"></param>
         /// <returns></returns>
-        public static bool SetStream(string file, bool isRadio)
+        public static bool SetStream(string file, bool isRadio = false)
         {
             if (isRadio)
             {
