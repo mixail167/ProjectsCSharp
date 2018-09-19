@@ -30,7 +30,7 @@ namespace AudioPlayer
         /// <summary>
         /// Громкость
         /// </summary>
-        public static int Volume = 100;
+        public static int Volume;
 
         /// <summary>
         /// Канал остановлен пользователем
@@ -61,6 +61,7 @@ namespace AudioPlayer
         /// Текущий трек
         /// </summary>
         private static string CurrentTrackName = string.Empty;
+
         /// <summary>
         /// Инициализация bass.dll
         /// </summary>
@@ -70,7 +71,6 @@ namespace AudioPlayer
         {
             if (!InitDefaultDevice)
             {
-                BassNet.Registration("mixailkovalev167@mail.ru", "2X22297242238");
                 InitDefaultDevice = Bass.BASS_Init(-1, hz, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
                 if (InitDefaultDevice)
                 {
@@ -140,7 +140,10 @@ namespace AudioPlayer
         /// </summary>
         public static void Stop()
         {
-            Visualisation.ClearPeaks();
+            if (Visualisation != null)
+            {
+                Visualisation.ClearPeaks();
+            }
             Bass.BASS_ChannelStop(Stream);
             Bass.BASS_StreamFree(Stream);
             isStoped = true;
@@ -215,44 +218,78 @@ namespace AudioPlayer
                     EndPlaylist = false;
                     if (Repeat)
                     {
-                        Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume);
+                        if (Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume))
+                            return true;
+                        return false;
                     }
                     else if (Random)
                     {
                         Random rand = new Random();
-                        CommonInterface.CurrentTrackNumber = rand.Next(CommonInterface.Files.Count);
-                        if (!Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume))
-                            return false;
+                        while (CommonInterface.Files.Count > 0)
+                        {
+                            CommonInterface.CurrentTrackNumber = rand.Next(CommonInterface.Files.Count);
+                            if (Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume))
+                                return true;
+                            else
+                            {
+                                CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                            }
+                        }
+                        return false;
                     }
                     else
                     {
-                        if (!Play(CommonInterface.Files[++CommonInterface.CurrentTrackNumber].Path, Volume))
-                            return false;
+                        while (CommonInterface.CurrentTrackNumber + 1 < CommonInterface.Files.Count)
+                        {
+                            if (Play(CommonInterface.Files[++CommonInterface.CurrentTrackNumber].Path, Volume))
+                                return true;
+                            else
+                            {
+                                CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                                CommonInterface.CurrentTrackNumber--;
+                            }
+                        }
+                        return false;
                     }
-                    return true;
                 }
                 else
                 {
                     if (Repeat)
                     {
-                        Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume);
-                        EndPlaylist = false;
-                        return true;
-                    }
-                    else if (Random)
-                    {
-                        Random rand = new Random();
-                        CommonInterface.CurrentTrackNumber = rand.Next(CommonInterface.Files.Count);
                         if (Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume))
                         {
                             EndPlaylist = false;
                             return true;
                         }
-                        else return false;
+                        else
+                        {
+                            EndPlaylist = true;
+                            return false;
+                        }
+                    }
+                    else if (Random)
+                    {
+                        Random rand = new Random();
+                        while (CommonInterface.Files.Count > 0)
+                        {
+                            CommonInterface.CurrentTrackNumber = rand.Next(CommonInterface.Files.Count);
+                            if (Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Volume))
+                            {
+                                EndPlaylist = false;
+                                return true;
+                            }
+                            else
+                            {
+                                CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                            }
+                        }
+                        EndPlaylist = true;
+                        return false;
                     }
                     else
                     {
                         EndPlaylist = true;
+                        return false;
                     }
                 }
             }

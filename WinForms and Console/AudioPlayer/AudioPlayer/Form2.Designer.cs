@@ -36,6 +36,9 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.button6 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -45,6 +48,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.button_open_folder = new System.Windows.Forms.Button();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -73,9 +80,9 @@
             this.colorSlider1.BackColor = System.Drawing.Color.Transparent;
             this.colorSlider1.BorderRoundRectSize = new System.Drawing.Size(8, 8);
             this.colorSlider1.LargeChange = ((uint)(5u));
-            this.colorSlider1.Location = new System.Drawing.Point(161, 32);
+            this.colorSlider1.Location = new System.Drawing.Point(79, 30);
             this.colorSlider1.Name = "colorSlider1";
-            this.colorSlider1.Size = new System.Drawing.Size(100, 30);
+            this.colorSlider1.Size = new System.Drawing.Size(90, 30);
             this.colorSlider1.SmallChange = ((uint)(1u));
             this.colorSlider1.TabIndex = 3;
             this.colorSlider1.Text = "colorSlider1";
@@ -95,6 +102,8 @@
             // 
             // listBox1
             // 
+            this.listBox1.AllowDrop = true;
+            this.listBox1.ContextMenuStrip = this.contextMenuStrip1;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.HorizontalScrollbar = true;
             this.listBox1.Location = new System.Drawing.Point(267, 4);
@@ -102,13 +111,38 @@
             this.listBox1.Size = new System.Drawing.Size(250, 277);
             this.listBox1.TabIndex = 12;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView1_DragDrop);
+            this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView1_DragEnter);
             this.listBox1.DoubleClick += new System.EventHandler(this.button1_Click);
+            this.listBox1.Leave += new System.EventHandler(this.listView1_Leave);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.toolStripMenuItem2});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(158, 48);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.contextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip1_ItemClicked);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(157, 22);
+            this.toolStripMenuItem1.Text = "Воспроизвести";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(157, 22);
+            this.toolStripMenuItem2.Text = "Удалить";
             // 
             // button6
             // 
             this.button6.BackgroundImage = global::AudioPlayer.Properties.Resources._260938;
             this.button6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button6.Location = new System.Drawing.Point(523, 80);
+            this.button6.Location = new System.Drawing.Point(523, 118);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(32, 32);
             this.button6.TabIndex = 15;
@@ -119,7 +153,7 @@
             // 
             this.button4.BackgroundImage = global::AudioPlayer.Properties.Resources.delete_512;
             this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button4.Location = new System.Drawing.Point(523, 42);
+            this.button4.Location = new System.Drawing.Point(523, 80);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(32, 32);
             this.button4.TabIndex = 13;
@@ -130,7 +164,7 @@
             // 
             this.button3.BackgroundImage = global::AudioPlayer.Properties.Resources._264423;
             this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button3.Location = new System.Drawing.Point(523, 4);
+            this.button3.Location = new System.Drawing.Point(523, 42);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(32, 32);
             this.button3.TabIndex = 9;
@@ -168,7 +202,7 @@
             // 
             this.button2.BackgroundImage = global::AudioPlayer.Properties.Resources.stop_100;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Location = new System.Drawing.Point(46, 30);
+            this.button2.Location = new System.Drawing.Point(41, 30);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(32, 32);
             this.button2.TabIndex = 4;
@@ -191,11 +225,37 @@
             this.saveFileDialog1.Filter = "Playlist (*.m3u)|*.m3u";
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
             // 
+            // checkBox2
+            // 
+            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(175, 32);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(86, 30);
+            this.checkBox2.TabIndex = 21;
+            this.checkBox2.Text = "Выключить \r\nзвук";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // button_open_folder
+            // 
+            this.button_open_folder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_open_folder.BackgroundImage = global::AudioPlayer.Properties.Resources.opened_folder_512;
+            this.button_open_folder.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button_open_folder.Location = new System.Drawing.Point(523, 4);
+            this.button_open_folder.Name = "button_open_folder";
+            this.button_open_folder.Size = new System.Drawing.Size(32, 32);
+            this.button_open_folder.TabIndex = 22;
+            this.button_open_folder.UseVisualStyleBackColor = true;
+            this.button_open_folder.Click += new System.EventHandler(this.button_open_folder_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(560, 282);
+            this.Controls.Add(this.button_open_folder);
+            this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.listBox1);
@@ -215,6 +275,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Интернет-Радио";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
+            this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -240,5 +301,11 @@
         public System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.Button button_open_folder;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }
 }

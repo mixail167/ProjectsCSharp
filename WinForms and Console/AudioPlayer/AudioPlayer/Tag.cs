@@ -5,17 +5,17 @@ namespace AudioPlayer
 {
     public class Tag
     {
-        public int BitRate;
-        public int Freq;
-        public string Channels;
-        public string Album;
-        public string Artist;
-        public string Title;
-        public string Year;
-        public string Genre;
-        public string Path;
-        public string FileName;
-        public bool Error;
+        private int bitRate;
+        private int freq;
+        private string channels;
+        private string album;
+        private string artist;
+        private string title;
+        private string year;
+        private string genre;
+        private string path;
+        private string fileName;
+        private bool error;
 
         Dictionary<int, string> ChannelsDict = new Dictionary<int, string>()
         {
@@ -29,7 +29,7 @@ namespace AudioPlayer
             TAG_INFO tagInfo = null;
             if (isRadio)
             {
-                if (CommonInterface.IsValid(path))
+                if (CommonInterface.IsValid(path, CommonInterface.URLPattern) && !CommonInterface.IsValid(path, CommonInterface.PathPattern2))
                 {
                     tagInfo = new TAG_INFO(path);
                 }
@@ -40,23 +40,77 @@ namespace AudioPlayer
             }
             if (tagInfo != null)
             {
-                BitRate = tagInfo.bitrate;
-                Freq = tagInfo.channelinfo.freq;
-                Channels = ChannelsDict[tagInfo.channelinfo.chans];
-                Artist = tagInfo.artist;
-                Album = tagInfo.album;
-                Genre = tagInfo.genre;
-                Title = tagInfo.title;
-                Year = tagInfo.year;
-                Path = path;
-                string[] tmp = path.Split('\\');
-                FileName = tmp[tmp.Length - 1];
-                Error = false;
+                bitRate = tagInfo.bitrate;
+                freq = tagInfo.channelinfo.freq;
+                channels = ChannelsDict[tagInfo.channelinfo.chans];
+                artist = tagInfo.artist;
+                album = tagInfo.album;
+                genre = tagInfo.genre;
+                title = tagInfo.title;
+                year = tagInfo.year;
+                this.path = path;
+                fileName = System.IO.Path.GetFileName(path);
+                error = false;
             }
             else
             {
-                Error = true;
+                error = true;
             }
+        }
+
+        public int BitRate
+        {
+            get { return bitRate; }
+        }
+
+        public int Freq
+        {
+            get { return freq; }
+        }
+
+        public bool Error
+        {
+            get { return error; }
+        }
+
+        public string Channels
+        {
+            get { return channels; }
+        }
+
+        public string Artist
+        {
+            get { return artist; }
+        }
+
+        public string Album
+        {
+            get { return album; }
+        }
+
+        public string Genre
+        {
+            get { return genre; }
+        }
+
+        public string Title
+        {
+            get { return title; }
+        }
+
+        public string Year
+        {
+            get { return year; }
+        }
+
+        public string Path
+        {
+            get { return path; }
+        }
+
+        public string FileName
+        {
+            get { return fileName; }
         }
     }
 }

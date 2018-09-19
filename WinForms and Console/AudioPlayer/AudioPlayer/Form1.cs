@@ -9,6 +9,7 @@ namespace AudioPlayer
     {
         ListViewHitTestInfo listViewHitTestInfo;
         ToolTip toolTip;
+        public bool pause;
 
         public Form1()
         {
@@ -16,7 +17,36 @@ namespace AudioPlayer
             CommonInterface.Link1 = this;
             CommonInterface.SetFileFilter();
             Audio.InitAudio(Audio.HZ);
-            comboBox1.SelectedIndex = 0;
+            comboBox1.SelectedIndex = Properties.Settings.Default.RepeatMode;
+            checkBox1.Checked = Properties.Settings.Default.RandomMode;
+            colorSlider2.Value = Properties.Settings.Default.Volume;
+            checkBox2.Checked = Properties.Settings.Default.SoundOff;
+            CommonInterface.Volume = Properties.Settings.Default.Volume2;
+            Audio.Volume = colorSlider2.Value;
+            pause = false;
+        }
+
+        public Form1(string path, bool isFile = false)
+        {
+            InitializeComponent();
+            CommonInterface.Link1 = this;
+            CommonInterface.SetFileFilter();
+            Audio.InitAudio(Audio.HZ);
+            comboBox1.SelectedIndex = Properties.Settings.Default.RepeatMode;
+            checkBox1.Checked = Properties.Settings.Default.RandomMode;
+            colorSlider2.Value = Properties.Settings.Default.Volume;
+            checkBox2.Checked = Properties.Settings.Default.SoundOff;
+            CommonInterface.Volume = Properties.Settings.Default.Volume2;
+            Audio.Volume = colorSlider2.Value;
+            pause = false;
+            if (isFile)
+            {
+                CommonInterface.AddTrackOrURL(path);
+            }
+            else
+            {
+                CommonInterface.GetFilesFromFolder(path);
+            }
         }
 
         private void button_Open_file_Click(object sender, EventArgs e)
@@ -41,17 +71,17 @@ namespace AudioPlayer
 
         private void button_Play_Click(object sender, EventArgs e)
         {
-            if ((listView1.Items.Count != 0) && (listView1.SelectedItems.Count != 0))
+            if (!pause)
             {
-                string current = CommonInterface.Files[listView1.SelectedItems[0].Index].Path;
-                CommonInterface.CurrentTrackNumber = listView1.SelectedItems[0].Index;
-                label4.Text = CommonInterface.Files[listView1.SelectedItems[0].Index].FileName;
-                if (Audio.Play(current, Audio.Volume))
-                {
-                    CommonInterface.RefreshForm(listView1.SelectedItems[0].Index);
-                    timer1.Enabled = true;
-                }
-                else CommonInterface.ClearForm();
+                CommonInterface.Play(false);
+            }
+            else if (CommonInterface.CurrentTrackNumber >= 0)
+            {
+                CommonInterface.Play(true);
+            }
+            else 
+            {
+                CommonInterface.Play(false);
             }
         }
 
@@ -97,7 +127,15 @@ namespace AudioPlayer
 
         private void button_Pause_Click(object sender, EventArgs e)
         {
-            Audio.Pause();
+            if (pause)
+            {
+                CommonInterface.Play(true);
+            }
+            else
+            {
+                Audio.Pause();
+                pause = true;
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -130,13 +168,20 @@ namespace AudioPlayer
             {
                 CommonInterface.ClearForm();
                 CommonInterface.CurrentTrackNumber = 0;
-                label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
-                if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                while (CommonInterface.Files.Count > 0)
                 {
-                    CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
-                    timer1.Enabled = true;
+                    if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                    {
+                        label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
+                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                        timer1.Enabled = true;
+                        return;
+                    }
+                    else
+                    {
+                        CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                    }
                 }
-                else timer1.Enabled = false;
             }
         }
 
@@ -145,14 +190,22 @@ namespace AudioPlayer
             if (listView1.Items.Count != 0)
             {
                 CommonInterface.ClearForm();
-                CommonInterface.CurrentTrackNumber = CommonInterface.Files.Count - 1;
-                label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
-                if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                while (CommonInterface.Files.Count > 0)
                 {
-                    CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
-                    timer1.Enabled = true;
+                    CommonInterface.CurrentTrackNumber = CommonInterface.Files.Count - 1;
+                    if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                    {
+                        label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
+                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                        timer1.Enabled = true;
+                        return;
+                    }
+                    else
+                    {
+                        CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                    }
                 }
-                else timer1.Enabled = false;
+
             }
         }
 
@@ -161,14 +214,27 @@ namespace AudioPlayer
             if (listView1.Items.Count != 0 && CommonInterface.CurrentTrackNumber > 0)
             {
                 CommonInterface.ClearForm();
-                CommonInterface.CurrentTrackNumber--;
-                label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
+                while (CommonInterface.CurrentTrackNumber > 0)
+                {
+                    CommonInterface.CurrentTrackNumber--;
+                    if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                    {
+                        label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
+                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                        timer1.Enabled = true;
+                        return;
+                    }
+                    else
+                    {
+                        CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                    }
+                }
                 if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                 {
+                    label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
                     CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
                     timer1.Enabled = true;
                 }
-                else timer1.Enabled = false;
             }
         }
 
@@ -177,21 +243,35 @@ namespace AudioPlayer
             if (listView1.Items.Count != 0 && CommonInterface.CurrentTrackNumber >= 0 && CommonInterface.CurrentTrackNumber < CommonInterface.Files.Count - 1)
             {
                 CommonInterface.ClearForm();
-                CommonInterface.CurrentTrackNumber++;
-                label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
+                while (CommonInterface.CurrentTrackNumber < CommonInterface.Files.Count - 1)
+                {
+                    CommonInterface.CurrentTrackNumber++;
+                    if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                    {
+                        label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
+                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                        timer1.Enabled = true;
+                        return;
+                    }
+                    else
+                    {
+                        CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                        CommonInterface.CurrentTrackNumber--;
+                    }
+                }
                 if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                 {
+                    label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
                     CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
                     timer1.Enabled = true;
                 }
-                else timer1.Enabled = false;
             }
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
             CommonInterface.ClearForm();
-            Form2 form2 = new Form2(Audio.Volume);
+            Form2 form2 = new Form2(Audio.Volume, checkBox2.Checked);
             form2.ShowDialog();
             colorSlider2.Value = Audio.Volume;
         }
@@ -205,26 +285,31 @@ namespace AudioPlayer
                     CommonInterface.ClearForm();
                     CommonInterface.CurrentTrackNumber = -1;
                 }
-                CommonInterface.Files.RemoveAt(listView1.SelectedItems[0].Index);
-                listView1.Items.RemoveAt(listView1.SelectedItems[0].Index);
+                else if (listView1.SelectedItems[0].Index < CommonInterface.CurrentTrackNumber)
+                {
+                    CommonInterface.CurrentTrackNumber--;
+                }
+                CommonInterface.DeleteTrack(listView1.SelectedItems[0].Index);
             }
         }
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Left)
             {
-                button6_Click(this, new EventArgs());
-            }
-            else if (e.Button == MouseButtons.Left)
-            {
-                button_Play_Click(this, new EventArgs());
+                CommonInterface.Play(false);
             }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Audio.Free();
+            Properties.Settings.Default.Volume = colorSlider2.Value;
+            Properties.Settings.Default.RepeatMode = comboBox1.SelectedIndex;
+            Properties.Settings.Default.RandomMode = checkBox1.Checked;
+            Properties.Settings.Default.SoundOff = checkBox2.Checked;
+            Properties.Settings.Default.Volume2 = CommonInterface.Volume;
+            Properties.Settings.Default.Save();
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -263,7 +348,14 @@ namespace AudioPlayer
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (string filePath in files)
                 {
-                    CommonInterface.CheckExtension(new FileInfo(filePath));
+                    if (Directory.Exists(filePath))
+                    {
+                        CommonInterface.GetFilesFromFolder(filePath);
+                    }
+                    else
+                    {
+                        CommonInterface.CheckExtension(new FileInfo(filePath));
+                    }
                 }
             }
         }
@@ -325,6 +417,26 @@ namespace AudioPlayer
                     throw new Exception();
             }
             catch (Exception)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Equals(toolStripMenuItem1))
+            {
+                CommonInterface.Play(false);
+            }
+            else
+            {
+                button6_Click(this, new EventArgs());
+            }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0)
             {
                 e.Cancel = true;
             }
