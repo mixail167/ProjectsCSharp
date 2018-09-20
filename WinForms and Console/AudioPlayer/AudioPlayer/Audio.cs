@@ -157,6 +157,7 @@ namespace AudioPlayer
             if (Bass.BASS_ChannelIsActive(Stream) == BASSActive.BASS_ACTIVE_PLAYING)
             {
                 Bass.BASS_ChannelPause(Stream);
+                CommonInterface.Pause = true;
             }
         }
 

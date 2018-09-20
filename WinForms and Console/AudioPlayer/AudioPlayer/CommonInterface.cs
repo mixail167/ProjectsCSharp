@@ -61,6 +61,11 @@ namespace AudioPlayer
         public static int Volume;
 
         /// <summary>
+        /// Флаг приостановки 
+        /// </summary>
+        public static bool Pause = false;
+
+        /// <summary>
         /// Установка фильтра на расширение файлов
         /// </summary>
         public static void SetFileFilter()
@@ -400,7 +405,7 @@ namespace AudioPlayer
                     }
                 }
             }
-            Link1.pause = false;
+            Pause = false;
         }
     }
 }

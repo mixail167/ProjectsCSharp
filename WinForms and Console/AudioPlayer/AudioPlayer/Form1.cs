@@ -9,7 +9,6 @@ namespace AudioPlayer
     {
         ListViewHitTestInfo listViewHitTestInfo;
         ToolTip toolTip;
-        public bool pause;
 
         public Form1()
         {
@@ -23,7 +22,6 @@ namespace AudioPlayer
             checkBox2.Checked = Properties.Settings.Default.SoundOff;
             CommonInterface.Volume = Properties.Settings.Default.Volume2;
             Audio.Volume = colorSlider2.Value;
-            pause = false;
         }
 
         public Form1(string path, bool isFile = false)
@@ -38,7 +36,6 @@ namespace AudioPlayer
             checkBox2.Checked = Properties.Settings.Default.SoundOff;
             CommonInterface.Volume = Properties.Settings.Default.Volume2;
             Audio.Volume = colorSlider2.Value;
-            pause = false;
             if (isFile)
             {
                 CommonInterface.AddTrackOrURL(path);
@@ -71,7 +68,7 @@ namespace AudioPlayer
 
         private void button_Play_Click(object sender, EventArgs e)
         {
-            if (!pause)
+            if (!CommonInterface.Pause)
             {
                 CommonInterface.Play(false);
             }
@@ -127,14 +124,13 @@ namespace AudioPlayer
 
         private void button_Pause_Click(object sender, EventArgs e)
         {
-            if (pause)
+            if (CommonInterface.Pause)
             {
                 CommonInterface.Play(true);
             }
             else
             {
                 Audio.Pause();
-                pause = true;
             }
         }
 
