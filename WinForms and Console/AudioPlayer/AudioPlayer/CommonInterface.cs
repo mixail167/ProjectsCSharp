@@ -379,7 +379,11 @@ namespace AudioPlayer
                         RefreshForm(Link1.listView1.SelectedItems[0].Index);
                         Link1.timer1.Enabled = true;
                     }
-                    else ClearForm();
+                    else
+                    {
+                        DeleteTrack(Link1.listView1.SelectedItems[0].Index);
+                        ClearForm();
+                    }
                 }
                 else if (flag && CurrentTrackNumber >= 0)
                 {
@@ -389,7 +393,11 @@ namespace AudioPlayer
                         RefreshForm(CurrentTrackNumber);
                         Link1.timer1.Enabled = true;
                     }
-                    else ClearForm();
+                    else
+                    {
+                        DeleteTrack(CurrentTrackNumber);
+                        ClearForm();
+                    }
                 }
             }
             Link1.pause = false;
