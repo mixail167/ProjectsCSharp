@@ -240,6 +240,7 @@
     <Content Include="Libraries\tags.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\no-photo.bmp" />
     <None Include="Resources\opened_folder-512.png" />
     <None Include="Resources\260938.png" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -76,7 +77,7 @@ namespace AudioPlayer
             {
                 CommonInterface.Play(true);
             }
-            else 
+            else
             {
                 CommonInterface.Play(false);
             }
@@ -88,7 +89,6 @@ namespace AudioPlayer
             colorSlider1.Value = Audio.GetPosOfStream(Audio.Stream);
             if (Audio.ToNextTrack())
             {
-                label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
                 CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
             }
             else if (Audio.Stream == 0)
@@ -168,9 +168,7 @@ namespace AudioPlayer
                 {
                     if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
                         CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
-                        timer1.Enabled = true;
                         return;
                     }
                     else
@@ -191,9 +189,7 @@ namespace AudioPlayer
                     CommonInterface.CurrentTrackNumber = CommonInterface.Files.Count - 1;
                     if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
                         CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
-                        timer1.Enabled = true;
                         return;
                     }
                     else
@@ -207,59 +203,65 @@ namespace AudioPlayer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (listView1.Items.Count != 0 && CommonInterface.CurrentTrackNumber > 0)
+            if (listView1.Items.Count != 0 && CommonInterface.CurrentTrackNumber >= 0)
             {
-                CommonInterface.ClearForm();
-                while (CommonInterface.CurrentTrackNumber > 0)
+                if (!Audio.Random && CommonInterface.CurrentTrackNumber > 0)
                 {
-                    CommonInterface.CurrentTrackNumber--;
+                    CommonInterface.ClearForm();
+                    while (CommonInterface.CurrentTrackNumber > 0)
+                    {
+                        CommonInterface.CurrentTrackNumber--;
+                        if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                        {
+                            CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                            return;
+                        }
+                        else
+                        {
+                            CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                        }
+                    }
                     if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
                         CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
-                        timer1.Enabled = true;
-                        return;
-                    }
-                    else
-                    {
-                        CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
                     }
                 }
-                if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                else if (Audio.Random)
                 {
-                    label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
-                    CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
-                    timer1.Enabled = true;
+                    CommonInterface.RandomTrack();
                 }
+
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (listView1.Items.Count != 0 && CommonInterface.CurrentTrackNumber >= 0 && CommonInterface.CurrentTrackNumber < CommonInterface.Files.Count - 1)
+            if (listView1.Items.Count != 0 && CommonInterface.CurrentTrackNumber >= 0)
             {
-                CommonInterface.ClearForm();
-                while (CommonInterface.CurrentTrackNumber < CommonInterface.Files.Count - 1)
+                if (!Audio.Random && CommonInterface.CurrentTrackNumber < CommonInterface.Files.Count - 1)
                 {
-                    CommonInterface.CurrentTrackNumber++;
+                    while (CommonInterface.CurrentTrackNumber < CommonInterface.Files.Count - 1)
+                    {
+                        CommonInterface.CurrentTrackNumber++;
+                        if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                        {
+                            CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                            return;
+                        }
+                        else
+                        {
+                            CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
+                            CommonInterface.CurrentTrackNumber--;
+                        }
+                    }
                     if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
                         CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
-                        timer1.Enabled = true;
-                        return;
-                    }
-                    else
-                    {
-                        CommonInterface.DeleteTrack(CommonInterface.CurrentTrackNumber);
-                        CommonInterface.CurrentTrackNumber--;
                     }
                 }
-                if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
+                else if (Audio.Random)
                 {
-                    label4.Text = CommonInterface.Files[CommonInterface.CurrentTrackNumber].FileName;
-                    CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
-                    timer1.Enabled = true;
+                    CommonInterface.RandomTrack();
                 }
             }
         }
@@ -388,7 +390,7 @@ namespace AudioPlayer
             if (listViewHitTestInfo != null && listViewHitTestInfo.Location == ListViewHitTestLocations.Label)
             {
                 toolTip = new ToolTip();
-                toolTip.Popup += toolTip1_Popup;
+                toolTip.Popup += toolTip_Popup;
                 toolTip.SetToolTip(listView1, listViewHitTestInfo.SubItem.Text);
             }
         }
@@ -405,7 +407,7 @@ namespace AudioPlayer
             }
         }
 
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        private void toolTip_Popup(object sender, PopupEventArgs e)
         {
             try
             {
@@ -436,6 +438,20 @@ namespace AudioPlayer
             {
                 e.Cancel = true;
             }
+        }
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+            e.ToolTipSize = new Size(100, 100);
+        }
+
+        private void toolTip1_Draw(object sender, DrawToolTipEventArgs e)
+        {
+            if (pictureBox4.Image != null)
+            {                
+                e.Graphics.DrawImage(pictureBox4.Image, new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height));
+            }
+            else e.Graphics.DrawImage(pictureBox4.BackgroundImage, new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height));
         }
     }
 }

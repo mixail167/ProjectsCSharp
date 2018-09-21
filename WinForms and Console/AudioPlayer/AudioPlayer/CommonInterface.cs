@@ -97,8 +97,11 @@ namespace AudioPlayer
             Link1.label2.Text = TimeSpan.FromSeconds(Audio.GetTimeOfStream(Audio.Stream)).ToString();
             Link1.colorSlider1.Maximum = Audio.GetTimeOfStream(Audio.Stream);
             Link1.colorSlider1.Value = Audio.GetPosOfStream(Audio.Stream);
+            Link1.label4.Text = Files[index].FileName;
+            Link1.pictureBox4.Image = Files[index].Image;
             Iterator = 0;
             RefreshPlayList(index);
+            Link1.timer1.Enabled = true;
         }
 
         /// <summary>
@@ -115,6 +118,7 @@ namespace AudioPlayer
             Link1.pictureBox1.Image = null;
             Link1.pictureBox2.Image = null;
             Link1.pictureBox3.BackColor = Color.Black;
+            Link1.pictureBox4.Image = null;
         }
 
         /// <summary>
@@ -148,7 +152,7 @@ namespace AudioPlayer
                 if (Iterator == 2)
                 {
                     Link2.pictureBox1.Image = Audio.Visualisation.CreateSpectrumLinePeak(Audio.Stream, Link2.pictureBox1.Width, Link2.pictureBox1.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 2, 1, 1, 10, false, true, true);
-                    Link2.pictureBox2.Image = Audio.Visualisation.CreateWaveForm(Audio.Stream, Link2.pictureBox1.Width, Link2.pictureBox1.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 3, true, false, true);
+                    Link2.pictureBox2.Image = Audio.Visualisation.CreateWaveForm(Audio.Stream, Link2.pictureBox2.Width, Link2.pictureBox2.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 3, true, false, true);
                     Iterator = 0;
                 }
                 if (Audio.Visualisation.DetectFrequency(Audio.Stream, 10, 500, true) > 0.3)
@@ -165,7 +169,7 @@ namespace AudioPlayer
                 if (Iterator == 2)
                 {
                     Link1.pictureBox1.Image = Audio.Visualisation.CreateSpectrumLinePeak(Audio.Stream, Link1.pictureBox1.Width, Link1.pictureBox1.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 2, 1, 1, 10, false, true, true);
-                    Link1.pictureBox2.Image = Audio.Visualisation.CreateWaveForm(Audio.Stream, Link1.pictureBox1.Width, Link1.pictureBox1.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 3, true, false, true);
+                    Link1.pictureBox2.Image = Audio.Visualisation.CreateWaveForm(Audio.Stream, Link1.pictureBox2.Width, Link1.pictureBox2.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 3, true, false, true);
                     Iterator = 0;
                 }
                 if (Audio.Visualisation.DetectFrequency(Audio.Stream, 10, 500, true) > 0.3)
@@ -380,9 +384,7 @@ namespace AudioPlayer
                     if (Audio.Play(Files[Link1.listView1.SelectedItems[0].Index].Path, Audio.Volume))
                     {
                         CurrentTrackNumber = Link1.listView1.SelectedItems[0].Index;
-                        Link1.label4.Text = Files[Link1.listView1.SelectedItems[0].Index].FileName;
-                        RefreshForm(Link1.listView1.SelectedItems[0].Index);
-                        Link1.timer1.Enabled = true;
+                        RefreshForm(CurrentTrackNumber);
                     }
                     else
                     {
@@ -394,9 +396,7 @@ namespace AudioPlayer
                 {
                     if (Audio.Play(Files[CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        Link1.label4.Text = Files[CurrentTrackNumber].FileName;
                         RefreshForm(CurrentTrackNumber);
-                        Link1.timer1.Enabled = true;
                     }
                     else
                     {
@@ -406,6 +406,28 @@ namespace AudioPlayer
                 }
             }
             Pause = false;
+        }
+
+        /// <summary>
+        /// Случайный трек
+        /// </summary>
+        internal static void RandomTrack()
+        {
+            Random rand = new Random();
+            while (Files.Count > 0)
+            {
+                CurrentTrackNumber = rand.Next(Files.Count);
+                if (Audio.Play(Files[CurrentTrackNumber].Path, Audio.Volume))
+                {
+                    RefreshForm(CurrentTrackNumber);
+                    return;
+                }
+                else
+                {
+                    DeleteTrack(CurrentTrackNumber);
+                }
+            }
+            ClearForm();
         }
     }
 }

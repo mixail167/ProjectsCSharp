@@ -123,6 +123,16 @@ namespace AudioPlayer.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap no_photo {
+            get {
+                object obj = ResourceManager.GetObject("no_photo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap opened_folder_512 {
             get {
                 object obj = ResourceManager.GetObject("opened_folder_512", resourceCulture);

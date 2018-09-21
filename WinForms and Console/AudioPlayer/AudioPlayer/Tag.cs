@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using Un4seen.Bass.AddOn.Tags;
 
 namespace AudioPlayer
@@ -16,6 +17,7 @@ namespace AudioPlayer
         private string path;
         private string fileName;
         private bool error;
+        private Image image;
 
         Dictionary<int, string> ChannelsDict = new Dictionary<int, string>()
         {
@@ -50,12 +52,18 @@ namespace AudioPlayer
                 year = tagInfo.year;
                 this.path = path;
                 fileName = System.IO.Path.GetFileName(path);
+                image = tagInfo.PictureGetImage(0);
                 error = false;
             }
             else
             {
                 error = true;
             }
+        }
+
+        public Image Image
+        {
+            get { return image; }
         }
 
         public int BitRate
