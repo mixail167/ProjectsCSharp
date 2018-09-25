@@ -58,7 +58,7 @@
     </Reference>
     <Reference Include="ColorSlider, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\ColorSlider.dll</HintPath>
+      <HintPath>..\ColorSlider\bin\Debug\ColorSlider.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
@@ -154,9 +154,6 @@
   <ItemGroup>
     <Content Include="14700.ico" />
     <Content Include="bass.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ColorSlider.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Libraries\bassalac.dll">

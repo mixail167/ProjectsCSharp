@@ -112,7 +112,18 @@ namespace AudioPlayer
 
         private void colorSlider1_Scroll(object sender, ScrollEventArgs e)
         {
-            Audio.SetPosOfScroll(Audio.Stream, colorSlider1.Value);
+            if (!Audio.isStoped)
+            {
+                Audio.SetPosOfScroll(Audio.Stream, colorSlider1.Value);
+            }
+            else if (e.OldValue != -1)
+            {
+                colorSlider1.Value = e.OldValue;
+            }
+            else
+            {
+                colorSlider1.Value = 0;
+            }
         }
 
         private void colorSlider2_Scroll(object sender, ScrollEventArgs e)
@@ -448,10 +459,42 @@ namespace AudioPlayer
         private void toolTip1_Draw(object sender, DrawToolTipEventArgs e)
         {
             if (pictureBox4.Image != null)
-            {                
+            {
                 e.Graphics.DrawImage(pictureBox4.Image, new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height));
             }
             else e.Graphics.DrawImage(pictureBox4.BackgroundImage, new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height));
+        }
+
+        private void pictureBox4_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.Show(".", pictureBox4, 0, -100, int.MaxValue);
+        }
+
+        private void pictureBox4_MouseLeave(object sender, EventArgs e)
+        {
+            toolTip1.Hide(pictureBox4);
+        }
+
+        private void colorSlider1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                case Keys.Right:
+                case Keys.Up:
+                case Keys.Down:
+                case Keys.PageDown:
+                case Keys.PageUp:
+                case Keys.Home:
+                case Keys.End:
+                    if (!Audio.isStoped)
+                    {
+                        e.Handled = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

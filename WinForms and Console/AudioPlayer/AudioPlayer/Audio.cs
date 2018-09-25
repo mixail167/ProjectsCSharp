@@ -35,7 +35,7 @@ namespace AudioPlayer
         /// <summary>
         /// Канал остановлен пользователем
         /// </summary>
-        private static bool isStoped = true;
+        public static bool isStoped = true;
 
         /// <summary>
         /// Треклист полностью проигран

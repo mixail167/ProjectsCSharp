@@ -124,7 +124,8 @@
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox4.TabIndex = 22;
             this.pictureBox4.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox4, ".");
+            this.pictureBox4.MouseLeave += new System.EventHandler(this.pictureBox4_MouseLeave);
+            this.pictureBox4.MouseHover += new System.EventHandler(this.pictureBox4_MouseEnter);
             // 
             // label5
             // 
@@ -388,6 +389,7 @@
             this.colorSlider1.ThumbRoundRectSize = new System.Drawing.Size(8, 8);
             this.colorSlider1.Value = 0;
             this.colorSlider1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.colorSlider1_Scroll);
+            this.colorSlider1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.colorSlider1_KeyDown);
             // 
             // openFileDialog1
             // 
@@ -531,6 +533,7 @@
             // toolTip1
             // 
             this.toolTip1.OwnerDraw = true;
+            this.toolTip1.ShowAlways = true;
             this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
             this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
