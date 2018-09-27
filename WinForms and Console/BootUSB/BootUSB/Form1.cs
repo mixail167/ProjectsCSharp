@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SevenZip;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,39 +7,35 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
+using System.Threading;
 
 namespace BootUSB
 {
     public partial class Form1 : Form
-    {
-        ProcessStartInfo psi;
+    {        
+        ProcessStartInfo processStartInfo;
         Process process;
         string text;
         int stage = 0;
         string letter;
 
-        /// <summary>
-        /// Конструктор формы
-        /// </summary>
         public Form1()
         {
             InitializeComponent();
-            psi = new ProcessStartInfo();
-            psi.Verb = "runas";
-            psi.CreateNoWindow = true;
-            psi.RedirectStandardOutput = true;
-            psi.RedirectStandardInput = true;
-            psi.StandardOutputEncoding = Encoding.GetEncoding(866);
-            psi.UseShellExecute = false;
+            processStartInfo = new ProcessStartInfo();
+            processStartInfo.Verb = "runas";
+            processStartInfo.CreateNoWindow = true;
+            processStartInfo.RedirectStandardOutput = true;
+            processStartInfo.RedirectStandardInput = true;
+            processStartInfo.StandardOutputEncoding = Encoding.GetEncoding(866);
+            processStartInfo.UseShellExecute = false;
             text = string.Empty;
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
+            SevenZipExtractor.SetLibraryPath(Path.Combine(Application.StartupPath, "7z.dll"));
         }
 
-        /// <summary>
-        /// Немедленная остановка процесса
-        /// </summary>
-        /// <returns>Значение, определяющее, следовало ли останавливать процесс</returns>
         bool KillProcess()
         {
             try
@@ -60,14 +57,11 @@ namespace BootUSB
             }
         }
 
-        /// <summary>
-        /// Сброс параметров
-        /// </summary>
         void Reset(bool flag)
         {
             if (tableLayoutPanel1.InvokeRequired)
             {
-                tableLayoutPanel1.BeginInvoke(new Action<bool>(Reset), flag);
+                tableLayoutPanel1.Invoke(new Action<bool>(Reset), flag);
             }
             else
             {
@@ -81,23 +75,17 @@ namespace BootUSB
             }
         }
 
-        /// <summary>
-        /// Инитиализация и запуск процесса
-        /// </summary>
-        /// <param name="fileName">Имя процесса</param>
-        /// <param name="arguments">Аргументы процесса</param>
-        /// <returns>Значение, определяющее, был ли процесс успешно инициализирован</returns>
         bool InitProcess(string fileName, string arguments)
         {
             try
             {
-                psi.FileName = fileName;
-                psi.Arguments = arguments;
+                processStartInfo.FileName = fileName;
+                processStartInfo.Arguments = arguments;
                 process = new Process();
                 process.EnableRaisingEvents = true;
                 process.OutputDataReceived += new DataReceivedEventHandler(process1_OutputDataReceived);
                 process.Exited += new EventHandler(process1_Exited);
-                process.StartInfo = psi;
+                process.StartInfo = processStartInfo;
                 process.Start();
                 process.BeginOutputReadLine();
                 Reset(false);
@@ -111,21 +99,28 @@ namespace BootUSB
             }
         }
 
-        /// <summary>
-        /// Обновление консоли ошибок
-        /// </summary>
-        /// <param name="data">Текст для вывода</param>
         void RefreshMainConsole(string data)
         {
             if (!String.IsNullOrEmpty(data) && !text.Equals(data))
             {
                 if (richTextBox1.InvokeRequired)
                 {
-                    richTextBox1.BeginInvoke(new Action<string>(RefreshMainConsole), new[] { data });
+                    richTextBox1.Invoke(new Action<string>(RefreshMainConsole), new[] { data });
                 }
                 else
                 {
                     if (data.Trim().StartsWith("Завершено") && text.Trim().StartsWith("Завершено"))
+                    {
+                        try
+                        {
+                            richTextBox1.Text = richTextBox1.Text.Remove(richTextBox1.GetFirstCharIndexFromLine(richTextBox1.Lines.Length - 2), richTextBox1.Lines[richTextBox1.Lines.Length - 2].Length + 1);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    else if (data.Trim().StartsWith("Извлечение файлов") && text.Trim().StartsWith("Извлечение файлов"))
                     {
                         try
                         {
@@ -144,10 +139,6 @@ namespace BootUSB
             }
         }
 
-        /// <summary>
-        /// Проверка наличия диска по его букве, введенной пользователем
-        /// </summary>
-        /// <returns>Результат проверки</returns>
         bool CheckDrive()
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -194,15 +185,68 @@ namespace BootUSB
                     }
                     else
                     {
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        RefreshMainConsole("Этап 2 из 3: Обновление загрузочного кода.");
+                        if (!checkBox1.Checked)
                         {
-                            stage = 2;
-                            RefreshMainConsole("Этап 2 из 3: Обновление загрузочного кода.");
-                            InitProcess(openFileDialog1.FileName, string.Format("/nt60 {0}:", letter));
+                            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                            {
+                                stage = 2;
+                                InitProcess(openFileDialog1.FileName, string.Format("/nt60 {0}:", letter));
+                            }
+                            else
+                            {
+                                RefreshMainConsole("Действия отменены пользователем.");
+                            }
                         }
                         else
                         {
-                            Reset(true);
+                            openFileDialog2.FileName = string.Empty;
+                            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+                            {                                
+                                using (SevenZipExtractor sevenZipExtractor = new SevenZipExtractor(openFileDialog2.FileName))
+                                {
+                                    RefreshMainConsole("Проверка ISO-образа");
+                                    if (sevenZipExtractor.Check())
+                                    {
+                                        FileStream fileStream = null;
+                                        try
+                                        {
+                                            fileStream = new FileStream(Path.Combine(Application.StartupPath, "bootsect.exe"), FileMode.Create);
+                                            sevenZipExtractor.ExtractFile(sevenZipExtractor.ArchiveFileNames.FirstOrDefault(x => x.EndsWith("bootsect.exe")), fileStream);
+                                            fileStream.Close();
+                                            fileStream = null;
+                                            InitProcess(Path.Combine(Application.StartupPath, "bootsect.exe"), string.Format("/nt60 {0}:", letter));
+                                            stage = 2;
+                                        }
+                                        catch (ArgumentOutOfRangeException)
+                                        {
+                                            RefreshMainConsole("Файл 'bootsect.exe' не найден");
+                                            Reset(true);
+                                        }
+                                        catch (Exception exception)
+                                        {
+                                            RefreshMainConsole(exception.Message);
+                                            Reset(true);
+                                        }
+                                        finally
+                                        {
+                                            if (fileStream != null)
+                                            {
+                                                fileStream.Close();
+                                            }
+                                        } 
+                                    }
+                                    else
+                                    {
+                                        RefreshMainConsole("ISO-образ поврежден");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                RefreshMainConsole("Действия отменены пользователем.");
+                                Reset(true);
+                            }
                         }
                     }
                     break;
@@ -213,27 +257,62 @@ namespace BootUSB
                     }
                     else
                     {
-                        if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                        RefreshMainConsole("Этап 3 из 3: Копирование файлов.");
+                        if (!checkBox1.Checked)
                         {
-                            if (!folderBrowserDialog1.SelectedPath.EndsWith("\\"))
+                            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                             {
-                                folderBrowserDialog1.SelectedPath += "\\";
+                                if (!folderBrowserDialog1.SelectedPath.EndsWith("\\"))
+                                {
+                                    folderBrowserDialog1.SelectedPath += "\\";
+                                }
+                                stage = 3;
+                                InitProcess("cmd.exe", string.Format("/c xcopy \"{0}*.*\" {1}:\\ /E /H", folderBrowserDialog1.SelectedPath, letter));
                             }
-                            stage = 3;
-                            RefreshMainConsole("Этап 3 из 3: Копирование файлов.");
-                            InitProcess("cmd.exe", string.Format("/c xcopy \"{0}*.*\" {1}:\\ /E /H", folderBrowserDialog1.SelectedPath, letter));
+                            else
+                            {
+                                RefreshMainConsole("Действия отменены пользователем.");
+                            }
                         }
                         else
                         {
-                            Reset(true);
+                            File.Delete(Path.Combine(Application.StartupPath, "bootsect.exe"));
+                            using (SevenZipExtractor sevenZipExtractor = new SevenZipExtractor(openFileDialog2.FileName))
+                            {
+                                sevenZipExtractor.ExtractionFinished += sevenZipExtractor_ExtractionFinished;
+                                sevenZipExtractor.Extracting += sevenZipExtractor_Extracting;
+                                try
+                                {
+                                    sevenZipExtractor.ExtractArchive(string.Format("{0}:\\", letter));
+                                }
+                                catch (Exception exception)
+                                {
+                                    RefreshMainConsole(exception.Message);
+                                    Reset(true);
+                                }
+                            }
                         }
                     }
                     break;
                 case 3:
-                case 0:
+                    RefreshMainConsole("Готово.");
+                    Reset(true);
+                    break;
+                default:
                     Reset(true);
                     break;
             }
+        }
+
+        void sevenZipExtractor_Extracting(object sender, ProgressEventArgs e)
+        {
+            RefreshMainConsole(string.Format("Извлечение файлов: {0}%", e.PercentDone));
+        }
+
+        private void sevenZipExtractor_ExtractionFinished(object sender, EventArgs e)
+        {
+            stage = 3;
+            process1_Exited(sender, e);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -243,8 +322,6 @@ namespace BootUSB
                 RefreshMainConsole("Действия отменены пользователем.");
             }
         }
-
-
 
         private void button2_Click(object sender, EventArgs e)
         {
