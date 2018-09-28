@@ -13,12 +13,13 @@ using System.Threading;
 namespace BootUSB
 {
     public partial class Form1 : Form
-    {        
+    {
         ProcessStartInfo processStartInfo;
         Process process;
         string text;
         int stage = 0;
         string letter;
+        Thread thread;
 
         public Form1()
         {
@@ -131,10 +132,13 @@ namespace BootUSB
 
                         }
                     }
-                    text = data;
-                    richTextBox1.Text += text + "\n";
-                    richTextBox1.SelectionStart = richTextBox1.TextLength;
-                    richTextBox1.ScrollToCaret();
+                    if (!data.Trim().StartsWith("Поток") && !data.Trim().StartsWith("DISKPART"))
+                    {
+                        text = data;
+                        richTextBox1.Text += text + "\n";
+                        richTextBox1.SelectionStart = richTextBox1.TextLength;
+                        richTextBox1.ScrollToCaret(); 
+                    }
                 }
             }
         }
@@ -202,45 +206,53 @@ namespace BootUSB
                         {
                             openFileDialog2.FileName = string.Empty;
                             if (openFileDialog2.ShowDialog() == DialogResult.OK)
-                            {                                
-                                using (SevenZipExtractor sevenZipExtractor = new SevenZipExtractor(openFileDialog2.FileName))
-                                {
-                                    RefreshMainConsole("Проверка ISO-образа");
-                                    if (sevenZipExtractor.Check())
+                            {
+                                thread = new Thread(() =>
                                     {
-                                        FileStream fileStream = null;
-                                        try
+                                        using (SevenZipExtractor sevenZipExtractor = new SevenZipExtractor(openFileDialog2.FileName))
                                         {
-                                            fileStream = new FileStream(Path.Combine(Application.StartupPath, "bootsect.exe"), FileMode.Create);
-                                            sevenZipExtractor.ExtractFile(sevenZipExtractor.ArchiveFileNames.FirstOrDefault(x => x.EndsWith("bootsect.exe")), fileStream);
-                                            fileStream.Close();
-                                            fileStream = null;
-                                            InitProcess(Path.Combine(Application.StartupPath, "bootsect.exe"), string.Format("/nt60 {0}:", letter));
-                                            stage = 2;
-                                        }
-                                        catch (ArgumentOutOfRangeException)
-                                        {
-                                            RefreshMainConsole("Файл 'bootsect.exe' не найден");
-                                            Reset(true);
-                                        }
-                                        catch (Exception exception)
-                                        {
-                                            RefreshMainConsole(exception.Message);
-                                            Reset(true);
-                                        }
-                                        finally
-                                        {
-                                            if (fileStream != null)
+                                            RefreshMainConsole("Проверка ISO-образа");
+                                            if (sevenZipExtractor.Check())
                                             {
-                                                fileStream.Close();
+                                                FileStream fileStream = null;
+                                                try
+                                                {
+                                                    fileStream = new FileStream(Path.Combine(Application.StartupPath, "bootsect.exe"), FileMode.Create);
+                                                    sevenZipExtractor.ExtractFile(sevenZipExtractor.ArchiveFileNames.FirstOrDefault(x => x.EndsWith("bootsect.exe")), fileStream);
+                                                    fileStream.Close();
+                                                    fileStream = null;
+                                                    stage = 2;
+                                                    InitProcess(Path.Combine(Application.StartupPath, "bootsect.exe"), string.Format("/nt60 {0}:", letter));
+                                                }
+                                                catch (ArgumentOutOfRangeException)
+                                                {
+                                                    RefreshMainConsole("Файл 'bootsect.exe' не найден");
+                                                    Reset(true);
+                                                }
+                                                catch (Exception exception)
+                                                {
+                                                    RefreshMainConsole(exception.Message);
+                                                    Reset(true);
+                                                }
+                                                finally
+                                                {
+                                                    if (fileStream != null)
+                                                    {
+                                                        fileStream.Close();
+                                                    }
+                                                }
                                             }
-                                        } 
-                                    }
-                                    else
+                                            else
+                                            {
+                                                RefreshMainConsole("ISO-образ поврежден");
+                                                Reset(true);
+                                            }
+                                        }
+                                    })
                                     {
-                                        RefreshMainConsole("ISO-образ поврежден");
-                                    }
-                                }
+                                        IsBackground = true
+                                    };
+                                thread.Start();
                             }
                             else
                             {
@@ -277,20 +289,27 @@ namespace BootUSB
                         else
                         {
                             File.Delete(Path.Combine(Application.StartupPath, "bootsect.exe"));
-                            using (SevenZipExtractor sevenZipExtractor = new SevenZipExtractor(openFileDialog2.FileName))
-                            {
-                                sevenZipExtractor.ExtractionFinished += sevenZipExtractor_ExtractionFinished;
-                                sevenZipExtractor.Extracting += sevenZipExtractor_Extracting;
-                                try
+                            thread = new Thread(() =>
                                 {
-                                    sevenZipExtractor.ExtractArchive(string.Format("{0}:\\", letter));
-                                }
-                                catch (Exception exception)
+                                    using (SevenZipExtractor sevenZipExtractor = new SevenZipExtractor(openFileDialog2.FileName))
+                                    {
+                                        sevenZipExtractor.ExtractionFinished += sevenZipExtractor_ExtractionFinished;
+                                        sevenZipExtractor.Extracting += sevenZipExtractor_Extracting;
+                                        try
+                                        {
+                                            sevenZipExtractor.ExtractArchive(string.Format("{0}:\\", letter));
+                                        }
+                                        catch (Exception exception)
+                                        {
+                                            RefreshMainConsole(exception.Message);
+                                            Reset(true);
+                                        }
+                                    }
+                                })
                                 {
-                                    RefreshMainConsole(exception.Message);
-                                    Reset(true);
-                                }
-                            }
+                                    IsBackground = true
+                                };
+                            thread.Start();
                         }
                     }
                     break;
@@ -317,6 +336,15 @@ namespace BootUSB
 
         private void button3_Click(object sender, EventArgs e)
         {
+            if (thread != null)
+            {
+                if (thread.ThreadState != System.Threading.ThreadState.Aborted || thread.ThreadState != System.Threading.ThreadState.Stopped)
+                {
+                    thread.Abort();
+                    RefreshMainConsole("Действия отменены пользователем.");
+                }
+                thread = null;
+            }
             if (KillProcess())
             {
                 RefreshMainConsole("Действия отменены пользователем.");
