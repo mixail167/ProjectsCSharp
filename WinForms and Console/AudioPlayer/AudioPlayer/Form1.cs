@@ -128,9 +128,7 @@ namespace AudioPlayer
 
         private void colorSlider2_Scroll(object sender, ScrollEventArgs e)
         {
-            CommonInterface.Volume = -1;
-            checkBox2.Checked = false;
-            Audio.SetVolumeToStream(Audio.Stream, colorSlider2.Value);
+            CommonInterface.SetVolume();
         }
 
         private void button_Pause_Click(object sender, EventArgs e)
@@ -467,7 +465,7 @@ namespace AudioPlayer
 
         private void pictureBox4_MouseEnter(object sender, EventArgs e)
         {
-            toolTip1.Show(".", pictureBox4, 0, -100, int.MaxValue);
+            toolTip1.Show(".", pictureBox4, 0, -105, int.MaxValue);
         }
 
         private void pictureBox4_MouseLeave(object sender, EventArgs e)
@@ -495,6 +493,43 @@ namespace AudioPlayer
                 default:
                     break;
             }
+        }
+
+        private void Form1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta < 0)
+            {
+                if (colorSlider2.Value >= colorSlider2.MouseWheelBarPartitions)
+                {
+                    colorSlider2.Value -= colorSlider2.MouseWheelBarPartitions;
+                }
+                else
+                {
+                    colorSlider2.Value = colorSlider2.Minimum;
+                }
+            }
+            else
+            {
+                if (colorSlider2.Value <= colorSlider2.Maximum - colorSlider2.MouseWheelBarPartitions)
+                {
+                    colorSlider2.Value += colorSlider2.MouseWheelBarPartitions;
+                }
+                else
+                {
+                    colorSlider2.Value = colorSlider2.Maximum;
+                }
+            }
+            CommonInterface.SetVolume();
+        }
+
+        private void groupBox1_MouseHover(object sender, EventArgs e)
+        {
+            groupBox1.Focus();
+        }
+
+        private void listView1_MouseEnter(object sender, EventArgs e)
+        {
+            listView1.Focus();
         }
     }
 }

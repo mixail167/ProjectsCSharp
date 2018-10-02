@@ -113,6 +113,8 @@
             this.groupBox1.Size = new System.Drawing.Size(684, 160);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
+            this.groupBox1.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
+            this.groupBox1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseWheel);
             // 
             // pictureBox4
             // 
@@ -144,6 +146,7 @@
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(109, 17);
             this.checkBox2.TabIndex = 20;
+            this.checkBox2.TabStop = false;
             this.checkBox2.Text = "Выключить звук";
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
@@ -157,6 +160,7 @@
             this.button_open_folder.Name = "button_open_folder";
             this.button_open_folder.Size = new System.Drawing.Size(32, 32);
             this.button_open_folder.TabIndex = 19;
+            this.button_open_folder.TabStop = false;
             this.button_open_folder.UseVisualStyleBackColor = true;
             this.button_open_folder.Click += new System.EventHandler(this.button_open_folder_Click);
             // 
@@ -169,6 +173,7 @@
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(32, 32);
             this.button7.TabIndex = 18;
+            this.button7.TabStop = false;
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
@@ -181,6 +186,7 @@
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(32, 32);
             this.button6.TabIndex = 17;
+            this.button6.TabStop = false;
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
@@ -193,6 +199,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(32, 32);
             this.button5.TabIndex = 16;
+            this.button5.TabStop = false;
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -205,6 +212,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(32, 32);
             this.button1.TabIndex = 15;
+            this.button1.TabStop = false;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -218,6 +226,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(32, 32);
             this.button2.TabIndex = 14;
+            this.button2.TabStop = false;
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -230,6 +239,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(32, 32);
             this.button3.TabIndex = 13;
+            this.button3.TabStop = false;
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -242,6 +252,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(32, 32);
             this.button4.TabIndex = 12;
+            this.button4.TabStop = false;
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -253,6 +264,7 @@
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(107, 17);
             this.checkBox1.TabIndex = 11;
+            this.checkBox1.TabStop = false;
             this.checkBox1.Text = "Случайный трек";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
@@ -288,6 +300,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(100, 21);
             this.comboBox1.TabIndex = 8;
+            this.comboBox1.TabStop = false;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // button_Open_file
@@ -299,6 +312,7 @@
             this.button_Open_file.Name = "button_Open_file";
             this.button_Open_file.Size = new System.Drawing.Size(32, 32);
             this.button_Open_file.TabIndex = 7;
+            this.button_Open_file.TabStop = false;
             this.button_Open_file.UseVisualStyleBackColor = true;
             this.button_Open_file.Click += new System.EventHandler(this.button_Open_file_Click);
             // 
@@ -311,6 +325,7 @@
             this.button_Pause.Name = "button_Pause";
             this.button_Pause.Size = new System.Drawing.Size(32, 32);
             this.button_Pause.TabIndex = 6;
+            this.button_Pause.TabStop = false;
             this.button_Pause.UseVisualStyleBackColor = true;
             this.button_Pause.Click += new System.EventHandler(this.button_Pause_Click);
             // 
@@ -323,6 +338,7 @@
             this.button_Stop.Name = "button_Stop";
             this.button_Stop.Size = new System.Drawing.Size(32, 32);
             this.button_Stop.TabIndex = 5;
+            this.button_Stop.TabStop = false;
             this.button_Stop.UseVisualStyleBackColor = true;
             this.button_Stop.Click += new System.EventHandler(this.button_Stop_Click);
             // 
@@ -331,6 +347,7 @@
             this.colorSlider2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.colorSlider2.BackColor = System.Drawing.Color.Transparent;
             this.colorSlider2.BorderRoundRectSize = new System.Drawing.Size(8, 8);
+            this.colorSlider2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.colorSlider2.LargeChange = ((uint)(5u));
             this.colorSlider2.Location = new System.Drawing.Point(569, 101);
             this.colorSlider2.Name = "colorSlider2";
@@ -351,6 +368,7 @@
             this.button_Play.Name = "button_Play";
             this.button_Play.Size = new System.Drawing.Size(32, 32);
             this.button_Play.TabIndex = 3;
+            this.button_Play.TabStop = false;
             this.button_Play.UseVisualStyleBackColor = true;
             this.button_Play.Click += new System.EventHandler(this.button_Play_Click);
             // 
@@ -379,8 +397,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.colorSlider1.BackColor = System.Drawing.Color.Transparent;
             this.colorSlider1.BorderRoundRectSize = new System.Drawing.Size(8, 8);
+            this.colorSlider1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.colorSlider1.LargeChange = ((uint)(5u));
             this.colorSlider1.Location = new System.Drawing.Point(12, 43);
+            this.colorSlider1.MouseWheelBarPartitions = 2147483647;
             this.colorSlider1.Name = "colorSlider1";
             this.colorSlider1.Size = new System.Drawing.Size(660, 30);
             this.colorSlider1.SmallChange = ((uint)(1u));
@@ -419,8 +439,10 @@
             this.listView1.Location = new System.Drawing.Point(0, -6);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
+            this.listView1.ShowGroups = false;
             this.listView1.Size = new System.Drawing.Size(684, 250);
             this.listView1.TabIndex = 2;
+            this.listView1.TabStop = false;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.listView1_ItemMouseHover);
@@ -428,6 +450,7 @@
             this.listView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView1_DragEnter);
             this.listView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyUp);
             this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
+            this.listView1.MouseEnter += new System.EventHandler(this.listView1_MouseEnter);
             this.listView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseMove);
             // 
             // FileName
@@ -511,6 +534,7 @@
             this.pictureBox3.Size = new System.Drawing.Size(45, 90);
             this.pictureBox3.TabIndex = 5;
             this.pictureBox3.TabStop = false;
+            this.pictureBox3.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // pictureBox2
             // 
@@ -520,6 +544,7 @@
             this.pictureBox2.Size = new System.Drawing.Size(320, 90);
             this.pictureBox2.TabIndex = 4;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // pictureBox1
             // 
@@ -529,6 +554,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(320, 90);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // toolTip1
             // 
@@ -608,7 +634,7 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Button button_open_folder;
-        private System.Windows.Forms.CheckBox checkBox2;
+        public System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;

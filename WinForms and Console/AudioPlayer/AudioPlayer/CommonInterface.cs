@@ -125,11 +125,11 @@ namespace AudioPlayer
         /// Перерисовка плейлиста
         /// </summary>
         /// <param name="index"></param>
-        public static void RefreshPlayList(int index)
+        public static void RefreshPlayList(int index1)
         {
             foreach (ListViewItem item in Link1.listView1.Items)
             {
-                if (item.Index == index)
+                if (item.Index == index1)
                 {
                     item.BackColor = Color.Yellow;
                 }
@@ -232,7 +232,7 @@ namespace AudioPlayer
                 if (isRadio)
                 {
                     if (!CommonInterface.RadioAddreses.Contains(tag.Path))
-                    {                       
+                    {
                         CommonInterface.RadioAddreses.Add(tag.Path);
                         Link2.listBox1.Items.Add(tag.Path);
                     }
@@ -428,6 +428,13 @@ namespace AudioPlayer
                 }
             }
             ClearForm();
+        }
+
+        internal static void SetVolume()
+        {
+            Volume = -1;
+            Link1.checkBox2.Checked = false;
+            Audio.SetVolumeToStream(Audio.Stream, Link1.colorSlider2.Value);
         }
     }
 }
