@@ -82,5 +82,257 @@ namespace AudioPlayer.Properties {
                 this["Volume2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float Echo {
+            get {
+                return ((float)(this["Echo"]));
+            }
+            set {
+                this["Echo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float Chorus {
+            get {
+                return ((float)(this["Chorus"]));
+            }
+            set {
+                this["Chorus"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ0 {
+            get {
+                return ((float)(this["EQ0"]));
+            }
+            set {
+                this["EQ0"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ1 {
+            get {
+                return ((float)(this["EQ1"]));
+            }
+            set {
+                this["EQ1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ2 {
+            get {
+                return ((float)(this["EQ2"]));
+            }
+            set {
+                this["EQ2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ3 {
+            get {
+                return ((float)(this["EQ3"]));
+            }
+            set {
+                this["EQ3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ4 {
+            get {
+                return ((float)(this["EQ4"]));
+            }
+            set {
+                this["EQ4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ5 {
+            get {
+                return ((float)(this["EQ5"]));
+            }
+            set {
+                this["EQ5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ6 {
+            get {
+                return ((float)(this["EQ6"]));
+            }
+            set {
+                this["EQ6"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ7 {
+            get {
+                return ((float)(this["EQ7"]));
+            }
+            set {
+                this["EQ7"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ8 {
+            get {
+                return ((float)(this["EQ8"]));
+            }
+            set {
+                this["EQ8"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ9 {
+            get {
+                return ((float)(this["EQ9"]));
+            }
+            set {
+                this["EQ9"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ10 {
+            get {
+                return ((float)(this["EQ10"]));
+            }
+            set {
+                this["EQ10"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ11 {
+            get {
+                return ((float)(this["EQ11"]));
+            }
+            set {
+                this["EQ11"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ12 {
+            get {
+                return ((float)(this["EQ12"]));
+            }
+            set {
+                this["EQ12"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ13 {
+            get {
+                return ((float)(this["EQ13"]));
+            }
+            set {
+                this["EQ13"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ14 {
+            get {
+                return ((float)(this["EQ14"]));
+            }
+            set {
+                this["EQ14"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ15 {
+            get {
+                return ((float)(this["EQ15"]));
+            }
+            set {
+                this["EQ15"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ16 {
+            get {
+                return ((float)(this["EQ16"]));
+            }
+            set {
+                this["EQ16"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float EQ17 {
+            get {
+                return ((float)(this["EQ17"]));
+            }
+            set {
+                this["EQ17"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EQMode {
+            get {
+                return ((bool)(this["EQMode"]));
+            }
+            set {
+                this["EQMode"] = value;
+            }
+        }
     }
 }

@@ -83,7 +83,6 @@ namespace AudioPlayer
             CommonInterface.Iterator = 0;
             pictureBox1.Image = null;
             pictureBox2.Image = null;
-            pictureBox3.BackColor = Color.Black;
         }
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
@@ -216,6 +215,16 @@ namespace AudioPlayer
         private void listView1_Leave(object sender, EventArgs e)
         {
             listBox1.SelectedItems.Clear();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (CommonInterface.Link3 != null)
+            {
+                CommonInterface.Link3.Close();
+            }
+            Form3 form3 = new Form3();
+            form3.Show();
         }
     }
 }

@@ -93,6 +93,16 @@ namespace AudioPlayer.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap audio_wave2_100 {
+            get {
+                object obj = ResourceManager.GetObject("audio_wave2-100", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap delete_512 {
             get {
                 object obj = ResourceManager.GetObject("delete-512", resourceCulture);
@@ -156,6 +166,16 @@ namespace AudioPlayer.Properties {
         internal static System.Drawing.Bitmap radio_100 {
             get {
                 object obj = ResourceManager.GetObject("radio-100", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap reset {
+            get {
+                object obj = ResourceManager.GetObject("reset", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

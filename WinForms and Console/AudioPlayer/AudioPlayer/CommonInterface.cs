@@ -46,6 +46,11 @@ namespace AudioPlayer
         public static Form2 Link2;
 
         /// <summary>
+        /// Ссылка на форму эквалайзера
+        /// </summary>
+        public static Form3 Link3;
+
+        /// <summary>
         /// Счётчик обновления визуализации
         /// </summary>
         public static int Iterator;
@@ -117,7 +122,6 @@ namespace AudioPlayer
             Link1.label4.Text = string.Empty;
             Link1.pictureBox1.Image = null;
             Link1.pictureBox2.Image = null;
-            Link1.pictureBox3.BackColor = Color.Black;
             Link1.pictureBox4.Image = null;
         }
 
@@ -155,30 +159,14 @@ namespace AudioPlayer
                     Link2.pictureBox2.Image = Audio.Visualisation.CreateWaveForm(Audio.Stream, Link2.pictureBox2.Width, Link2.pictureBox2.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 3, true, false, true);
                     Iterator = 0;
                 }
-                if (Audio.Visualisation.DetectFrequency(Audio.Stream, 10, 500, true) > 0.3)
-                {
-                    Link2.pictureBox3.BackColor = Color.Red;
-                }
-                else
-                {
-                    Link2.pictureBox3.BackColor = Color.Black;
-                }
             }
             else
             {
                 if (Iterator == 2)
                 {
-                    Link1.pictureBox1.Image = Audio.Visualisation.CreateSpectrumLinePeak(Audio.Stream, Link1.pictureBox1.Width, Link1.pictureBox1.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 2, 1, 1, 10, false, true, true);
-                    Link1.pictureBox2.Image = Audio.Visualisation.CreateWaveForm(Audio.Stream, Link1.pictureBox2.Width, Link1.pictureBox2.Height, Color.Red, Color.Yellow, Color.White, Color.Black, 3, true, false, true);
+                    Link1.pictureBox1.Image = Audio.Visualisation.CreateSpectrumLinePeak(Audio.Stream, Link1.pictureBox1.Width, Link1.pictureBox1.Height, Color.Red, Color.Yellow, Color.Gray, Color.Black, 2, 1, 1, 10, false, true, true);
+                    Link1.pictureBox2.Image = Audio.Visualisation.CreateWaveForm(Audio.Stream, Link1.pictureBox2.Width, Link1.pictureBox2.Height, Color.Red, Color.Yellow, Color.Gray, Color.Black, 3, true, false, true);
                     Iterator = 0;
-                }
-                if (Audio.Visualisation.DetectFrequency(Audio.Stream, 10, 500, true) > 0.3)
-                {
-                    Link1.pictureBox3.BackColor = Color.Red;
-                }
-                else
-                {
-                    Link1.pictureBox3.BackColor = Color.Black;
                 }
             }
         }
@@ -280,24 +268,25 @@ namespace AudioPlayer
         {
             try
             {
-                StreamWriter writer = new StreamWriter(filepath, false, Encoding.UTF8);
-                string output = string.Empty;
-                if (isRadio)
+                using (StreamWriter writer = new StreamWriter(filepath, false, Encoding.UTF8))
                 {
-                    foreach (string item in RadioAddreses)
+                    string output = string.Empty;
+                    if (isRadio)
                     {
-                        output += item + "\n";
+                        foreach (string item in RadioAddreses)
+                        {
+                            output += item + "\n";
+                        }
                     }
-                }
-                else
-                {
-                    foreach (Tag item in Files)
+                    else
                     {
-                        output += item.Path + "\n";
+                        foreach (Tag item in Files)
+                        {
+                            output += item.Path + "\n";
+                        }
                     }
+                    writer.Write(output.TrimEnd('\n'));
                 }
-                writer.Write(output.TrimEnd('\n'));
-                writer.Close();
             }
             catch (Exception)
             {
@@ -435,6 +424,60 @@ namespace AudioPlayer
             Volume = -1;
             Link1.checkBox2.Checked = false;
             Audio.SetVolumeToStream(Audio.Stream, Link1.colorSlider2.Value);
+        }
+
+        public static void SetEffectFromSettings()
+        {
+            Link3.colorSlider4.Value = (int)Properties.Settings.Default.Echo;
+            Link3.colorSlider5.Value = (int)Properties.Settings.Default.Chorus;
+            Link3.colorSlider1.Value = -(int)(Properties.Settings.Default.EQ0 * 10f);
+            Link3.colorSlider2.Value = -(int)(Properties.Settings.Default.EQ1 * 10f);
+            Link3.colorSlider3.Value = -(int)(Properties.Settings.Default.EQ2 * 10f);
+            Link3.colorSlider6.Value = -(int)(Properties.Settings.Default.EQ3 * 10f);
+            Link3.colorSlider7.Value = -(int)(Properties.Settings.Default.EQ4 * 10f);
+            Link3.colorSlider8.Value = -(int)(Properties.Settings.Default.EQ5 * 10f);
+            Link3.colorSlider9.Value = -(int)(Properties.Settings.Default.EQ6 * 10f);
+            Link3.colorSlider10.Value = -(int)(Properties.Settings.Default.EQ7 * 10f);
+            Link3.colorSlider11.Value = -(int)(Properties.Settings.Default.EQ8 * 10f);
+            Link3.colorSlider12.Value = -(int)(Properties.Settings.Default.EQ9 * 10f);
+            Link3.colorSlider13.Value = -(int)(Properties.Settings.Default.EQ10 * 10f);
+            Link3.colorSlider14.Value = -(int)(Properties.Settings.Default.EQ11 * 10f);
+            Link3.colorSlider15.Value = -(int)(Properties.Settings.Default.EQ12 * 10f);
+            Link3.colorSlider16.Value = -(int)(Properties.Settings.Default.EQ13 * 10f);
+            Link3.colorSlider17.Value = -(int)(Properties.Settings.Default.EQ14 * 10f);
+            Link3.colorSlider18.Value = -(int)(Properties.Settings.Default.EQ15 * 10f);
+            Link3.colorSlider19.Value = -(int)(Properties.Settings.Default.EQ16 * 10f);
+            Link3.colorSlider20.Value = -(int)(Properties.Settings.Default.EQ17 * 10f);
+        }
+
+        public static void SetEffect()
+        {
+            if (Link3.checkBox1.Checked)
+            {
+                Audio.SetEffects((float)Link3.colorSlider4.Value,
+                                     (float)Link3.colorSlider5.Value,
+                                    new float[] 
+                            { 
+                                -(float)Link3.colorSlider1.Value / 10f,
+                                -(float)Link3.colorSlider2.Value / 10f,
+                                -(float)Link3.colorSlider3.Value / 10f,
+                                -(float)Link3.colorSlider6.Value / 10f,
+                                -(float)Link3.colorSlider7.Value / 10f,
+                                -(float)Link3.colorSlider8.Value / 10f,
+                                -(float)Link3.colorSlider9.Value / 10f,
+                                -(float)Link3.colorSlider10.Value / 10f,
+                                -(float)Link3.colorSlider11.Value / 10f,
+                                -(float)Link3.colorSlider12.Value / 10f,
+                                -(float)Link3.colorSlider13.Value / 10f,
+                                -(float)Link3.colorSlider14.Value / 10f,
+                                -(float)Link3.colorSlider15.Value / 10f,
+                                -(float)Link3.colorSlider16.Value / 10f,
+                                -(float)Link3.colorSlider17.Value / 10f,
+                                -(float)Link3.colorSlider18.Value / 10f,
+                                -(float)Link3.colorSlider19.Value / 10f,
+                                -(float)Link3.colorSlider20.Value / 10f
+                            });
+            }
         }
     }
 }

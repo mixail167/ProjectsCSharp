@@ -63,6 +63,90 @@ namespace AudioPlayer
         private static string CurrentTrackName = string.Empty;
 
         /// <summary>
+        /// Дескриптор эффекта 'Хорус'
+        /// </summary>
+        private static int FXChorusHandle = 0;
+
+        /// <summary>
+        /// Эффект 'Хорус'
+        /// </summary>
+        private static BASS_DX8_CHORUS Chorus = new BASS_DX8_CHORUS(0f, 25f, 90f, 5f, 1, 0f, BASSFXPhase.BASS_FX_PHASE_NEG_90);
+
+        /// <summary>
+        /// Дескриптор эффекта 'Эхо'
+        /// </summary>
+        private static int FXEchoHandle = 0;
+
+        /// <summary>
+        /// Эффект 'Эхо'
+        /// </summary>
+        private static BASS_DX8_ECHO Echo = new BASS_DX8_ECHO(90f, 50f, 500f, 500f, false);
+
+        /// <summary>
+        /// параметрический эквалайзер (дескрипторы)
+        /// </summary>
+        private static int[] FX = new int[18];
+
+        /// <summary>
+        /// Частоты
+        /// </summary>
+        private static int[] Frequencies = new int[18] { 31, 63, 87, 125, 175, 250, 350, 500, 700, 1000, 1400, 2000, 2800, 4000, 5600, 8000, 11200, 16000 };
+
+        private static int FXVolumeHandle = 0;
+        //private static Un4seen.Bass.BASS_FX_VOLUME_PARAMFX
+
+        /// <summary>
+        /// Установка эффектов
+        /// </summary>
+        /// <param name="echo"></param>
+        /// <param name="chorus"></param>
+        /// <param name="eq"></param>
+        /// <param name="save"></param>
+        public static void SetEffects(float echo = 0f, float chorus = 0f, float[] eq = null, bool save = true)
+        {
+            Echo.fWetDryMix = echo;
+            Bass.BASS_FXSetParameters(FXEchoHandle, Echo);
+            Chorus.fWetDryMix = chorus;
+            Bass.BASS_FXSetParameters(FXChorusHandle, Chorus);
+            BASS_DX8_PARAMEQ parameter = new BASS_DX8_PARAMEQ();
+            parameter.fBandwidth = 2.5f;
+            if (eq == null)
+            {
+                eq = new float[18];
+            }
+            for (int i = 0; i < FX.Length; i++)
+            {
+                parameter.fGain = eq[i];
+                parameter.fCenter = Frequencies[i];
+                Bass.BASS_FXSetParameters(FX[i], parameter);
+            }
+            if (save)
+            {
+                Properties.Settings.Default.Chorus = chorus;
+                Properties.Settings.Default.Echo = echo;
+                Properties.Settings.Default.EQ0 = eq[0];
+                Properties.Settings.Default.EQ1 = eq[1];
+                Properties.Settings.Default.EQ2 = eq[2];
+                Properties.Settings.Default.EQ3 = eq[3];
+                Properties.Settings.Default.EQ4 = eq[4];
+                Properties.Settings.Default.EQ5 = eq[5];
+                Properties.Settings.Default.EQ6 = eq[6];
+                Properties.Settings.Default.EQ7 = eq[7];
+                Properties.Settings.Default.EQ8 = eq[8];
+                Properties.Settings.Default.EQ9 = eq[9];
+                Properties.Settings.Default.EQ10 = eq[10];
+                Properties.Settings.Default.EQ11 = eq[11];
+                Properties.Settings.Default.EQ12 = eq[12];
+                Properties.Settings.Default.EQ13 = eq[13];
+                Properties.Settings.Default.EQ14 = eq[14];
+                Properties.Settings.Default.EQ15 = eq[15];
+                Properties.Settings.Default.EQ16 = eq[16];
+                Properties.Settings.Default.EQ17 = eq[17];
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        /// <summary>
         /// Инициализация bass.dll
         /// </summary>
         /// <param name="hz"></param>
@@ -74,16 +158,16 @@ namespace AudioPlayer
                 InitDefaultDevice = Bass.BASS_Init(-1, hz, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
                 if (InitDefaultDevice)
                 {
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\bass_aac.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\bass_ac3.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\bass_ape.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\bass_mpc.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\bass_tta.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\bassalac.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\bassflac.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\bassopus.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\basswma.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + @"libraries\basswv.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\bass_aac.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\bass_ac3.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\bass_ape.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\bass_mpc.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\bass_tta.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\bassalac.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\bassflac.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\bassopus.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\basswma.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(CommonInterface.AppPath + "libraries\basswv.dll"));
                     Visualisation = new Visuals();
                     Visualisation.MaxFrequencySpectrum = 1100;
                 }
@@ -108,6 +192,7 @@ namespace AudioPlayer
                     Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100f);
                     Bass.BASS_ChannelPlay(Stream, false);
                     CurrentTrackName = filename;
+                    InitEqualizer();
                 }
                 else return false;
             }
@@ -117,6 +202,48 @@ namespace AudioPlayer
             }
             isStoped = false;
             return true;
+        }
+        /// <summary>
+        /// Инициализация эквалайзера
+        /// </summary>
+        private static void InitEqualizer()
+        {
+            FXChorusHandle = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_CHORUS, 1);
+            FXEchoHandle = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_ECHO, 1);
+            for (int i = 0; i < FX.Length; i++)
+            {
+                FX[i] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 1);
+            }
+            if (Properties.Settings.Default.EQMode)
+            {
+                SetEffects(Properties.Settings.Default.Echo,
+                            Properties.Settings.Default.Chorus,
+                            new float[]
+                                {
+                                    Properties.Settings.Default.EQ0,
+                                    Properties.Settings.Default.EQ1,
+                                    Properties.Settings.Default.EQ2,
+                                    Properties.Settings.Default.EQ3,
+                                    Properties.Settings.Default.EQ4,
+                                    Properties.Settings.Default.EQ5,
+                                    Properties.Settings.Default.EQ6,
+                                    Properties.Settings.Default.EQ7,
+                                    Properties.Settings.Default.EQ8,
+                                    Properties.Settings.Default.EQ9,
+                                    Properties.Settings.Default.EQ10,
+                                    Properties.Settings.Default.EQ11,
+                                    Properties.Settings.Default.EQ12,
+                                    Properties.Settings.Default.EQ13,
+                                    Properties.Settings.Default.EQ14,
+                                    Properties.Settings.Default.EQ15,
+                                    Properties.Settings.Default.EQ16,
+                                    Properties.Settings.Default.EQ17
+                                }, false);
+            }
+            else
+            {
+                SetEffects(save: false);
+            }
         }
 
         /// <summary>
@@ -132,6 +259,7 @@ namespace AudioPlayer
                 Volume = volume;
                 Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100f);
                 Bass.BASS_ChannelPlay(Stream, false);
+                InitEqualizer();               
             }
         }
 

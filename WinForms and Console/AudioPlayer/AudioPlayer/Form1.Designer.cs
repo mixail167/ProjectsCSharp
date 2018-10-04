@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button8 = new System.Windows.Forms.Button();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -71,20 +72,19 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button8);
             this.groupBox1.Controls.Add(this.pictureBox4);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.checkBox2);
@@ -116,6 +116,20 @@
             this.groupBox1.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             this.groupBox1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseWheel);
             // 
+            // button8
+            // 
+            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button8.BackgroundImage = global::AudioPlayer.Properties.Resources.audio_wave2_100;
+            this.button8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button8.Location = new System.Drawing.Point(320, 113);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(32, 32);
+            this.button8.TabIndex = 23;
+            this.button8.TabStop = false;
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.button8.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
+            // 
             // pictureBox4
             // 
             this.pictureBox4.BackgroundImage = global::AudioPlayer.Properties.Resources.no_photo;
@@ -137,6 +151,7 @@
             this.label5.Size = new System.Drawing.Size(65, 13);
             this.label5.TabIndex = 21;
             this.label5.Text = "Громкость:";
+            this.label5.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // checkBox2
             // 
@@ -150,6 +165,7 @@
             this.checkBox2.Text = "Выключить звук";
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.checkBox2.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button_open_folder
             // 
@@ -163,6 +179,7 @@
             this.button_open_folder.TabStop = false;
             this.button_open_folder.UseVisualStyleBackColor = true;
             this.button_open_folder.Click += new System.EventHandler(this.button_open_folder_Click);
+            this.button_open_folder.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button7
             // 
@@ -176,6 +193,7 @@
             this.button7.TabStop = false;
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.button7.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button6
             // 
@@ -189,19 +207,21 @@
             this.button6.TabStop = false;
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.button6.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button5.BackgroundImage = global::AudioPlayer.Properties.Resources.radio_100;
             this.button5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button5.Location = new System.Drawing.Point(320, 99);
+            this.button5.Location = new System.Drawing.Point(320, 75);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(32, 32);
             this.button5.TabIndex = 16;
             this.button5.TabStop = false;
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button1
             // 
@@ -215,6 +235,7 @@
             this.button1.TabStop = false;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button2
             // 
@@ -229,6 +250,7 @@
             this.button2.TabStop = false;
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button3
             // 
@@ -242,6 +264,7 @@
             this.button3.TabStop = false;
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button4
             // 
@@ -255,6 +278,7 @@
             this.button4.TabStop = false;
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // checkBox1
             // 
@@ -268,6 +292,7 @@
             this.checkBox1.Text = "Случайный трек";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // label4
             // 
@@ -276,6 +301,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(0, 13);
             this.label4.TabIndex = 10;
+            this.label4.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // label3
             // 
@@ -286,6 +312,7 @@
             this.label3.Size = new System.Drawing.Size(44, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "Повтор";
+            this.label3.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // comboBox1
             // 
@@ -302,6 +329,7 @@
             this.comboBox1.TabIndex = 8;
             this.comboBox1.TabStop = false;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBox1.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button_Open_file
             // 
@@ -315,6 +343,7 @@
             this.button_Open_file.TabStop = false;
             this.button_Open_file.UseVisualStyleBackColor = true;
             this.button_Open_file.Click += new System.EventHandler(this.button_Open_file_Click);
+            this.button_Open_file.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button_Pause
             // 
@@ -328,6 +357,7 @@
             this.button_Pause.TabStop = false;
             this.button_Pause.UseVisualStyleBackColor = true;
             this.button_Pause.Click += new System.EventHandler(this.button_Pause_Click);
+            this.button_Pause.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button_Stop
             // 
@@ -341,6 +371,7 @@
             this.button_Stop.TabStop = false;
             this.button_Stop.UseVisualStyleBackColor = true;
             this.button_Stop.Click += new System.EventHandler(this.button_Stop_Click);
+            this.button_Stop.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // colorSlider2
             // 
@@ -358,6 +389,7 @@
             this.colorSlider2.ThumbRoundRectSize = new System.Drawing.Size(8, 8);
             this.colorSlider2.Value = 100;
             this.colorSlider2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.colorSlider2_Scroll);
+            this.colorSlider2.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // button_Play
             // 
@@ -371,6 +403,7 @@
             this.button_Play.TabStop = false;
             this.button_Play.UseVisualStyleBackColor = true;
             this.button_Play.Click += new System.EventHandler(this.button_Play_Click);
+            this.button_Play.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // label2
             // 
@@ -381,6 +414,7 @@
             this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "00:00:00";
+            this.label2.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // label1
             // 
@@ -390,6 +424,7 @@
             this.label1.Size = new System.Drawing.Size(49, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "00:00:00";
+            this.label1.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
             // 
             // colorSlider1
             // 
@@ -526,22 +561,19 @@
             this.saveFileDialog1.Filter = "Playlist (*.m3u)|*.m3u";
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
             // 
-            // pictureBox3
+            // toolTip1
             // 
-            this.pictureBox3.BackColor = System.Drawing.Color.Black;
-            this.pictureBox3.Location = new System.Drawing.Point(320, 398);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(45, 90);
-            this.pictureBox3.TabIndex = 5;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
+            this.toolTip1.OwnerDraw = true;
+            this.toolTip1.ShowAlways = true;
+            this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
+            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
             // pictureBox2
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.Black;
-            this.pictureBox2.Location = new System.Drawing.Point(364, 398);
+            this.pictureBox2.Location = new System.Drawing.Point(344, 398);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(320, 90);
+            this.pictureBox2.Size = new System.Drawing.Size(340, 90);
             this.pictureBox2.TabIndex = 4;
             this.pictureBox2.TabStop = false;
             this.pictureBox2.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
@@ -551,24 +583,16 @@
             this.pictureBox1.BackColor = System.Drawing.Color.Black;
             this.pictureBox1.Location = new System.Drawing.Point(0, 398);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(320, 90);
+            this.pictureBox1.Size = new System.Drawing.Size(340, 90);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseHover += new System.EventHandler(this.groupBox1_MouseHover);
-            // 
-            // toolTip1
-            // 
-            this.toolTip1.OwnerDraw = true;
-            this.toolTip1.ShowAlways = true;
-            this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
-            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 487);
-            this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.listView1);
@@ -587,7 +611,6 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -629,7 +652,6 @@
         public System.Windows.Forms.Timer timer1;
         public System.Windows.Forms.PictureBox pictureBox1;
         public System.Windows.Forms.PictureBox pictureBox2;
-        public System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
@@ -641,6 +663,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         public System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button button8;
     }
 }
 

@@ -118,43 +118,49 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="end-1001" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\end-1001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="stop_100" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\stop-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="opened_folder_512" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\opened_folder-512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="delete-512" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\delete-512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_60618" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\60618.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="rewind-1001" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\rewind-1001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="radio-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\radio-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="264423" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\264423.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="end-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\end-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="rewind-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\rewind-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="stop_100" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\stop-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rewind-1001" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rewind-1001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pause_100" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pause-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="264423" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\264423.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="no_photo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\no-photo.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rewind-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rewind-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="audio_wave2-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\audio_wave2-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="260938" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\260938.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="opened_folder_512" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\opened_folder-512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="_60618" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\60618.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="no_photo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\no-photo.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="radio-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\radio-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="end-1001" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\end-1001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="reset" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\reset.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

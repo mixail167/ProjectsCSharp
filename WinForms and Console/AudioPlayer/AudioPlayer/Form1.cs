@@ -2,14 +2,15 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace AudioPlayer
 {
     public partial class Form1 : Form
     {
-        ListViewHitTestInfo listViewHitTestInfo;
-        ToolTip toolTip;
+        private ListViewHitTestInfo listViewHitTestInfo;
+        private ToolTip toolTip;
 
         public Form1()
         {
@@ -54,6 +55,7 @@ namespace AudioPlayer
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
+            listView1.BeginUpdate();
             foreach (string item in openFileDialog1.FileNames)
             {
                 if (item.EndsWith(".m3u"))
@@ -65,6 +67,7 @@ namespace AudioPlayer
                     CommonInterface.AddTrackOrURL(item);
                 }
             }
+            listView1.EndUpdate();
         }
 
         private void button_Play_Click(object sender, EventArgs e)
@@ -336,7 +339,9 @@ namespace AudioPlayer
         {
             if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                listView1.BeginUpdate();
                 CommonInterface.GetFilesFromFolder(folderBrowserDialog1.SelectedPath);
+                listView1.EndUpdate();
             }
         }
 
@@ -353,6 +358,7 @@ namespace AudioPlayer
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                listView1.BeginUpdate();
                 foreach (string filePath in files)
                 {
                     if (Directory.Exists(filePath))
@@ -364,6 +370,7 @@ namespace AudioPlayer
                         CommonInterface.CheckExtension(new FileInfo(filePath));
                     }
                 }
+                listView1.EndUpdate();
             }
         }
 
@@ -529,7 +536,19 @@ namespace AudioPlayer
 
         private void listView1_MouseEnter(object sender, EventArgs e)
         {
-            listView1.Focus();
+            if (listView1.Items.Count != 0)
+            {
+                listView1.Focus();
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (CommonInterface.Link3 == null)
+            {
+                Form3 form3 = new Form3();
+                form3.Show();
+            }
         }
     }
 }
