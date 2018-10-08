@@ -16,6 +16,7 @@ namespace AudioPlayer
             checkBox2.Checked = soundOff;
             CommonInterface.Volume = Properties.Settings.Default.Volume2;
             Audio.Volume = colorSlider1.Value;
+            listBox1.Items.AddRange(CommonInterface.RadioAddreses.ToArray());
         }
 
         public Form2()
@@ -198,6 +199,10 @@ namespace AudioPlayer
             {
                 button1_Click(this, new EventArgs());
             }
+            else if (e.ClickedItem.Equals(toolStripMenuItem3))
+            {
+                CommonInterface.GetDataFromClipboard(true);
+            }
             else
             {
                 button4_Click(this, new EventArgs());
@@ -206,9 +211,17 @@ namespace AudioPlayer
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            if (listBox1.Items.Count == 0 || listBox1.SelectedIndex == -1)
+            if (listBox1.SelectedIndex == -1)
             {
-                e.Cancel = true;
+                toolStripMenuItem1.Visible = false;
+                toolStripMenuItem2.Visible = false;
+                toolStripMenuItem3.Visible = true;
+            }
+            else
+            {
+                toolStripMenuItem1.Visible = true;
+                toolStripMenuItem2.Visible = true;
+                toolStripMenuItem3.Visible = false;
             }
         }
 
@@ -225,6 +238,18 @@ namespace AudioPlayer
             }
             Form3 form3 = new Form3();
             form3.Show();
+        }
+
+        private void listBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                CommonInterface.GetDataFromClipboard(true);
+            }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                button4_Click(sender, new EventArgs());
+            }
         }
     }
 }

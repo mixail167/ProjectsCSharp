@@ -34,7 +34,14 @@ namespace BootUSB
             text = string.Empty;
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
-            SevenZipExtractor.SetLibraryPath(Path.Combine(Application.StartupPath, "7z.dll"));
+            if (Environment.Is64BitOperatingSystem)
+            {
+                SevenZipExtractor.SetLibraryPath(Path.Combine(Application.StartupPath, "7z_x64.dll"));
+            }
+            else
+            {
+                SevenZipExtractor.SetLibraryPath(Path.Combine(Application.StartupPath, "7z_x32.dll"));
+            }
         }
 
         bool KillProcess()
@@ -137,7 +144,7 @@ namespace BootUSB
                         text = data;
                         richTextBox1.Text += text + "\n";
                         richTextBox1.SelectionStart = richTextBox1.TextLength;
-                        richTextBox1.ScrollToCaret(); 
+                        richTextBox1.ScrollToCaret();
                     }
                 }
             }
@@ -417,6 +424,7 @@ namespace BootUSB
             {
                 textBox1.Text = string.Empty;
             }
+            else textBox1.Text = textBox1.Text.ToUpper();
         }
     }
 }

@@ -68,6 +68,7 @@ namespace AudioPlayer
             Properties.Settings.Default.EQ15 = -(float)colorSlider18.Value / 10f;
             Properties.Settings.Default.EQ16 = -(float)colorSlider19.Value / 10f;
             Properties.Settings.Default.EQ17 = -(float)colorSlider20.Value / 10f;
+            Properties.Settings.Default.VolumeFX = 4f - (float)colorSlider21.Value / 100f;
             Properties.Settings.Default.Save();
             CommonInterface.Link3 = null;
         }
@@ -97,11 +98,11 @@ namespace AudioPlayer
                 (float)colorSlider19.Value,
                 (float)colorSlider20.Value,
             };
-            for (int i = 0, j = 0; i < points.Length; i+=2, j++)
-			{
-                points[i] = new PointF(j * 26, (values[j]+150f)/3f);
-                points[i + 1] = new PointF(j * 26 + 26, (values[j]+150f)/3f);
-			}
+            for (int i = 0, j = 0; i < points.Length; i += 2, j++)
+            {
+                points[i] = new PointF(j * 26, (values[j] + 150f) / 3f);
+                points[i + 1] = new PointF(j * 26 + 26, (values[j] + 150f) / 3f);
+            }
             e.Graphics.DrawCurve(Pens.Black, points, 0f);
         }
     }

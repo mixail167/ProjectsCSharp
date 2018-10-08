@@ -92,7 +92,7 @@ namespace AudioPlayer
             colorSlider1.Value = Audio.GetPosOfStream(Audio.Stream);
             if (Audio.ToNextTrack())
             {
-                CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);                  
             }
             else if (Audio.Stream == 0)
                 CommonInterface.ClearForm();
@@ -180,7 +180,7 @@ namespace AudioPlayer
                 {
                     if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);                  
                         return;
                     }
                     else
@@ -201,7 +201,7 @@ namespace AudioPlayer
                     CommonInterface.CurrentTrackNumber = CommonInterface.Files.Count - 1;
                     if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);                   
                         return;
                     }
                     else
@@ -225,7 +225,7 @@ namespace AudioPlayer
                         CommonInterface.CurrentTrackNumber--;
                         if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                         {
-                            CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                            CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);                   
                             return;
                         }
                         else
@@ -235,7 +235,7 @@ namespace AudioPlayer
                     }
                     if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);                  
                     }
                 }
                 else if (Audio.Random)
@@ -257,7 +257,7 @@ namespace AudioPlayer
                         CommonInterface.CurrentTrackNumber++;
                         if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                         {
-                            CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                            CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);                   
                             return;
                         }
                         else
@@ -268,7 +268,7 @@ namespace AudioPlayer
                     }
                     if (Audio.Play(CommonInterface.Files[CommonInterface.CurrentTrackNumber].Path, Audio.Volume))
                     {
-                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);
+                        CommonInterface.RefreshForm(CommonInterface.CurrentTrackNumber);                   
                     }
                 }
                 else if (Audio.Random)
@@ -350,6 +350,10 @@ namespace AudioPlayer
             if (e.KeyCode == Keys.Delete)
             {
                 button6_Click(this, new EventArgs());
+            }
+            else if (e.Control && e.KeyCode == Keys.V)
+            {
+                CommonInterface.GetDataFromClipboard();
             }
         }
 
@@ -442,6 +446,10 @@ namespace AudioPlayer
             {
                 CommonInterface.Play(false);
             }
+            else if (e.ClickedItem.Equals(toolStripMenuItem3))
+            {
+                CommonInterface.GetDataFromClipboard();
+            }
             else
             {
                 button6_Click(this, new EventArgs());
@@ -452,7 +460,15 @@ namespace AudioPlayer
         {
             if (listView1.SelectedItems.Count == 0)
             {
-                e.Cancel = true;
+                toolStripMenuItem1.Visible = false;
+                toolStripMenuItem2.Visible = false;
+                toolStripMenuItem3.Visible = true;
+            }
+            else
+            {
+                toolStripMenuItem1.Visible = true;
+                toolStripMenuItem2.Visible = true;
+                toolStripMenuItem3.Visible = false;
             }
         }
 
@@ -548,6 +564,10 @@ namespace AudioPlayer
             {
                 Form3 form3 = new Form3();
                 form3.Show();
+            }
+            else
+            {
+                CommonInterface.Link3.groupBox1.Focus();
             }
         }
     }

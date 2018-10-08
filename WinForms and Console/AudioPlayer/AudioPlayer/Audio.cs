@@ -83,7 +83,7 @@ namespace AudioPlayer
         private static BASS_DX8_ECHO Echo = new BASS_DX8_ECHO(90f, 50f, 500f, 500f, false);
 
         /// <summary>
-        /// параметрический эквалайзер (дескрипторы)
+        /// Параметрический эквалайзер (дескрипторы)
         /// </summary>
         private static int[] FX = new int[18];
 
@@ -92,8 +92,15 @@ namespace AudioPlayer
         /// </summary>
         private static int[] Frequencies = new int[18] { 31, 63, 87, 125, 175, 250, 350, 500, 700, 1000, 1400, 2000, 2800, 4000, 5600, 8000, 11200, 16000 };
 
+        /// <summary>
+        /// Дескриптор эффекта 'Предусиление'
+        /// </summary>
         private static int FXVolumeHandle = 0;
-        //private static Un4seen.Bass.BASS_FX_VOLUME_PARAMFX
+
+        /// <summary>
+        /// Эффект 'Предусиление'
+        /// </summary>
+        private static BASS_FX_VOLUME_PARAM VolumeFX = new BASS_FX_VOLUME_PARAM();
 
         /// <summary>
         /// Установка эффектов
@@ -102,12 +109,15 @@ namespace AudioPlayer
         /// <param name="chorus"></param>
         /// <param name="eq"></param>
         /// <param name="save"></param>
-        public static void SetEffects(float echo = 0f, float chorus = 0f, float[] eq = null, bool save = true)
+        public static void SetEffects(float echo = 0f, float chorus = 0f, float volume = 1f, float[] eq = null, bool save = true)
         {
             Echo.fWetDryMix = echo;
             Bass.BASS_FXSetParameters(FXEchoHandle, Echo);
             Chorus.fWetDryMix = chorus;
             Bass.BASS_FXSetParameters(FXChorusHandle, Chorus);
+            VolumeFX.fTarget = volume;
+            VolumeFX.lCurve = 1;
+            Bass.BASS_FXSetParameters(FXVolumeHandle, VolumeFX);
             BASS_DX8_PARAMEQ parameter = new BASS_DX8_PARAMEQ();
             parameter.fBandwidth = 2.5f;
             if (eq == null)
@@ -124,6 +134,7 @@ namespace AudioPlayer
             {
                 Properties.Settings.Default.Chorus = chorus;
                 Properties.Settings.Default.Echo = echo;
+                Properties.Settings.Default.VolumeFX = volume;
                 Properties.Settings.Default.EQ0 = eq[0];
                 Properties.Settings.Default.EQ1 = eq[1];
                 Properties.Settings.Default.EQ2 = eq[2];
@@ -192,7 +203,7 @@ namespace AudioPlayer
                     Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100f);
                     Bass.BASS_ChannelPlay(Stream, false);
                     CurrentTrackName = filename;
-                    InitEqualizer();
+                    InitEqualizer(); 
                 }
                 else return false;
             }
@@ -210,6 +221,7 @@ namespace AudioPlayer
         {
             FXChorusHandle = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_CHORUS, 1);
             FXEchoHandle = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_ECHO, 1);
+            FXVolumeHandle = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_VOLUME, 1);
             for (int i = 0; i < FX.Length; i++)
             {
                 FX[i] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 1);
@@ -217,7 +229,8 @@ namespace AudioPlayer
             if (Properties.Settings.Default.EQMode)
             {
                 SetEffects(Properties.Settings.Default.Echo,
-                            Properties.Settings.Default.Chorus,
+                            Properties.Settings.Default.Chorus, 
+                            Properties.Settings.Default.VolumeFX,
                             new float[]
                                 {
                                     Properties.Settings.Default.EQ0,

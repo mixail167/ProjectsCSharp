@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -107,6 +108,7 @@ namespace AudioPlayer
             Iterator = 0;
             RefreshPlayList(index);
             Link1.timer1.Enabled = true;
+            Link1.listView1.EnsureVisible(index);
         }
 
         /// <summary>
@@ -448,6 +450,7 @@ namespace AudioPlayer
             Link3.colorSlider18.Value = -(int)(Properties.Settings.Default.EQ15 * 10f);
             Link3.colorSlider19.Value = -(int)(Properties.Settings.Default.EQ16 * 10f);
             Link3.colorSlider20.Value = -(int)(Properties.Settings.Default.EQ17 * 10f);
+            Link3.colorSlider21.Value = (int)((4f - Properties.Settings.Default.VolumeFX) * 100);
         }
 
         public static void SetEffect()
@@ -456,6 +459,7 @@ namespace AudioPlayer
             {
                 Audio.SetEffects((float)Link3.colorSlider4.Value,
                                      (float)Link3.colorSlider5.Value,
+                                     4f - (float)Link3.colorSlider21.Value / 100f,
                                     new float[] 
                             { 
                                 -(float)Link3.colorSlider1.Value / 10f,
@@ -477,6 +481,45 @@ namespace AudioPlayer
                                 -(float)Link3.colorSlider19.Value / 10f,
                                 -(float)Link3.colorSlider20.Value / 10f
                             });
+            }
+        }
+
+        public static void GetDataFromClipboard(bool isRadio = false)
+        {
+            if (Clipboard.ContainsFileDropList())
+            {
+                StringCollection files = Clipboard.GetFileDropList();
+                if (isRadio)
+                {
+                    Link2.listBox1.BeginUpdate();
+                }
+                else
+                {
+                    Link1.listView1.BeginUpdate();
+                }
+                foreach (string filePath in files)
+                {
+                    if (Directory.Exists(filePath))
+                    {
+                        CommonInterface.GetFilesFromFolder(filePath, isRadio);
+                    }
+                    else
+                    {
+                        CommonInterface.CheckExtension(new FileInfo(filePath), isRadio);
+                    }
+                }
+                if (isRadio)
+                {
+                    Link2.listBox1.EndUpdate();
+                }
+                else
+                {
+                    Link1.listView1.EndUpdate();
+                }
+            }
+            else if (isRadio && Clipboard.ContainsText())
+            {
+                AddTrackOrURL(Clipboard.GetText(), isRadio);
             }
         }
     }

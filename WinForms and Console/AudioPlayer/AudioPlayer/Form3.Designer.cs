@@ -80,6 +80,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,7 +92,7 @@
             this.colorSlider4.BackColor = System.Drawing.Color.Transparent;
             this.colorSlider4.BorderRoundRectSize = new System.Drawing.Size(8, 8);
             this.colorSlider4.LargeChange = ((uint)(5u));
-            this.colorSlider4.Location = new System.Drawing.Point(50, 313);
+            this.colorSlider4.Location = new System.Drawing.Point(214, 289);
             this.colorSlider4.Name = "colorSlider4";
             this.colorSlider4.Size = new System.Drawing.Size(100, 20);
             this.colorSlider4.SmallChange = ((uint)(1u));
@@ -479,6 +483,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label30);
+            this.groupBox1.Controls.Add(this.label29);
+            this.groupBox1.Controls.Add(this.label28);
+            this.groupBox1.Controls.Add(this.label27);
             this.groupBox1.Controls.Add(this.colorSlider21);
             this.groupBox1.Controls.Add(this.label24);
             this.groupBox1.Controls.Add(this.label25);
@@ -532,7 +540,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(544, 342);
+            this.groupBox1.Size = new System.Drawing.Size(569, 312);
             this.groupBox1.TabIndex = 39;
             this.groupBox1.TabStop = false;
             // 
@@ -541,8 +549,8 @@
             this.colorSlider21.BackColor = System.Drawing.Color.Transparent;
             this.colorSlider21.BorderRoundRectSize = new System.Drawing.Size(8, 8);
             this.colorSlider21.LargeChange = ((uint)(5u));
-            this.colorSlider21.Location = new System.Drawing.Point(507, 157);
-            this.colorSlider21.Maximum = 200;
+            this.colorSlider21.Location = new System.Drawing.Point(524, 157);
+            this.colorSlider21.Maximum = 400;
             this.colorSlider21.Name = "colorSlider21";
             this.colorSlider21.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.colorSlider21.Size = new System.Drawing.Size(20, 100);
@@ -552,6 +560,7 @@
             this.colorSlider21.Text = "colorSlider21";
             this.colorSlider21.ThumbRoundRectSize = new System.Drawing.Size(8, 8);
             this.colorSlider21.Value = 100;
+            this.colorSlider21.Scroll += new System.Windows.Forms.ScrollEventHandler(this.colorSlider1_Scroll);
             // 
             // label24
             // 
@@ -602,7 +611,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(5, 313);
+            this.label23.Location = new System.Drawing.Point(169, 289);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(32, 13);
             this.label23.TabIndex = 61;
@@ -810,18 +819,54 @@
             // 
             this.button1.BackgroundImage = global::AudioPlayer.Properties.Resources.reset;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(474, 278);
+            this.button1.Location = new System.Drawing.Point(507, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(58, 58);
             this.button1.TabIndex = 5;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(504, 141);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(61, 13);
+            this.label27.TabIndex = 67;
+            this.label27.Text = "Preamplifier";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(544, 157);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(13, 13);
+            this.label28.TabIndex = 68;
+            this.label28.Text = "4";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(544, 244);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(13, 13);
+            this.label29.TabIndex = 69;
+            this.label29.Text = "0";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(544, 201);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(13, 13);
+            this.label30.TabIndex = 70;
+            this.label30.Text = "2";
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(544, 342);
+            this.ClientSize = new System.Drawing.Size(569, 312);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -888,6 +933,10 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label26;
-        private MB.Controls.ColorSlider colorSlider21;
+        public MB.Controls.ColorSlider colorSlider21;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
     }
 }

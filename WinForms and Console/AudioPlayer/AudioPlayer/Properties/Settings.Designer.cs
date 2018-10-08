@@ -334,5 +334,17 @@ namespace AudioPlayer.Properties {
                 this["EQMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public float VolumeFX {
+            get {
+                return ((float)(this["VolumeFX"]));
+            }
+            set {
+                this["VolumeFX"] = value;
+            }
+        }
     }
 }
