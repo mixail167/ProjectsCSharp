@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -15,11 +11,11 @@ namespace ChatServer
 {
     public partial class Form1 : Form
     {
-        TcpListener tcpListener;
-        List<Client> clients;
-        Thread listenThread;
-        bool run;
-        const string regExp = @"(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}";
+        private TcpListener tcpListener;
+        private List<Client> clients;
+        private Thread listenThread;
+        private bool run;
+        private const string regExp = @"(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}";
 
         public Form1()
         {
@@ -28,7 +24,7 @@ namespace ChatServer
             GetAddresses();
         }
 
-        void GetAddresses()
+        private void GetAddresses()
         {
             bool found = false;
             button1.Enabled = found;
@@ -70,7 +66,7 @@ namespace ChatServer
             }
         }
 
-        void EnableComponents(bool flag, string text)
+        private void EnableComponents(bool flag, string text)
         {
             button2.Enabled = flag;
             comboBox1.Enabled = flag;
@@ -78,14 +74,14 @@ namespace ChatServer
             button1.Text = text;
         }
 
-        void Disconnect()
+        private void Disconnect()
         {
             DisconnectServer();
             RefreshTextBox("Стоп.");
             EnableComponents(true, "Старт");
         }
 
-        void Connect()
+        private void Connect()
         {
             try
             {
@@ -110,7 +106,7 @@ namespace ChatServer
             }
         }
 
-        void RefreshTextBox(string text)
+        private void RefreshTextBox(string text)
         {
             if (richTextBox1.InvokeRequired)
             {
@@ -131,7 +127,7 @@ namespace ChatServer
             }
         }
 
-        void Listen(object obj)
+        private void Listen(object obj)
         {
             try
             {
@@ -157,7 +153,7 @@ namespace ChatServer
             }
         }
 
-        void DisconnectServer()
+        private void DisconnectServer()
         {
             try
             {
@@ -174,7 +170,7 @@ namespace ChatServer
             }
         }
 
-        internal void BroadcastMessage(string message, Guid id)
+        private void BroadcastMessage(string message, Guid id)
         {
             byte[] data = Encoding.Unicode.GetBytes(message);
             foreach (Client item in clients)
@@ -193,7 +189,7 @@ namespace ChatServer
             }
         }
 
-        void Process(object obj)
+        private void Process(object obj)
         {
             Client client = (Client)obj;
             string message = GetMessage(client);
@@ -229,7 +225,7 @@ namespace ChatServer
                         message = GetMessage(client);
                         if (message.Equals(string.Empty))
                             throw new Exception();
-                        message = String.Format("{0}: {1}", client.User, message);
+                        message = String.Format("[message]{0}: {1}", client.User, message.Replace("[message]", ""));
                         BroadcastMessage(message, client.ID);
                     }
                     catch

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Media;
 using System.Net.Sockets;
 using System.Text;
@@ -73,7 +69,7 @@ namespace ChatClient
             }
         }
 
-        void RefreshTextBox(string text)
+        private void RefreshTextBox(string text)
         {
             if (richTextBox1.InvokeRequired)
             {
@@ -83,7 +79,6 @@ namespace ChatClient
             {
                 try
                 {
-                    soundPlayer.Play();
                     if (text.StartsWith("[users]") && text.EndsWith("[/users]"))
                     {
                         string[] users_string = text.Replace("[users]", "").Replace("[/users]", "").Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -97,45 +92,53 @@ namespace ChatClient
                             }
                             catch (Exception)
                             {
-                                
+
                             }
                         }
                     }
                     else if (text.StartsWith("[adduser]") && text.EndsWith("[/adduser]"))
                     {
+                        text = text.Replace("[adduser]", "").Replace("[/adduser]", "");
                         try
                         {
-                            User user = new User(text.Replace("[adduser]", "").Replace("[/adduser]", ""));
+                            User user = new User(text);
                             users.Add(user);
                             listBox1.Items.Add(user.Name);
+                            Notify(string.Format("{0} вошел в чат", user.Name));
                         }
                         catch (Exception)
                         {
-                            
+
                         }
                     }
                     else if (text.StartsWith("[deluser]") && text.EndsWith("[/deluser]"))
                     {
                         text = text.Replace("[deluser]", "").Replace("[/deluser]", "");
-                        for (int i = 0; i < users.Count; i++ )
+                        for (int i = 0; i < users.Count; i++)
                         {
                             try
                             {
-                                if (users[i].ID  == Guid.Parse(text)) 
+                                if (users[i].ID == Guid.Parse(text))
                                 {
                                     listBox1.Items.RemoveAt(i);
+                                    Notify(string.Format("{0} покинул чат", users[i].Name));
                                     users.RemoveAt(i);
                                     break;
                                 }
                             }
                             catch (Exception)
                             {
-                                
+
                             }
                         }
                     }
                     else
                     {
+                        if (text.StartsWith("[message]") && text.EndsWith("[/message]"))
+                        {
+                            text = text.Replace("[message]", "").Replace("[/message]", "");
+                            Notify(text);
+                        }
                         richTextBox1.Text += "[" + DateTime.Now.ToLongTimeString() + "] " + text + "\r\n";
                         richTextBox1.SelectionStart = richTextBox1.TextLength;
                         richTextBox1.ScrollToCaret();
@@ -148,7 +151,21 @@ namespace ChatClient
             }
         }
 
-        void EnableComponents(bool flag, string text)
+        private void Notify(string text)
+        {
+            soundPlayer.Play();
+            foreach (Form item in Application.OpenForms)
+            {
+                if (item is Form2)
+                {
+                    item.Close();
+                }
+            }
+            Form2 form2 = new Form2(text);
+            form2.Show();
+        }
+
+        private void EnableComponents(bool flag, string text)
         {
             if (this.InvokeRequired)
             {
@@ -164,7 +181,7 @@ namespace ChatClient
             }
         }
 
-        void Disconnect()
+        private void Disconnect()
         {
             receiveThread.Abort();
             CloseConnection();
@@ -173,7 +190,7 @@ namespace ChatClient
             users.Clear();
         }
 
-        void Connect()
+        private void Connect()
         {
             Regex regex = new Regex(regExp);
             if (regex.IsMatch(textBox1.Text))
@@ -257,6 +274,13 @@ namespace ChatClient
             {
                 Disconnect();
             }
+            foreach (Form item in Application.OpenForms)
+            {
+                if (item is Form2)
+                {
+                    item.Close();
+                }
+            }
         }
 
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
@@ -270,13 +294,13 @@ namespace ChatClient
 
         private void SendMessage(string message)
         {
-            byte[] data = Encoding.Unicode.GetBytes(message);
+            byte[] data = Encoding.Unicode.GetBytes(string.Format("[{0}]{1}[/{0}]", "message", message));
             networkStream.Write(data, 0, data.Length);
             RefreshTextBox("Ваше сообщение: " + message);
             textBox2.Text = string.Empty;
         }
 
-        void CloseConnection()
+        private void CloseConnection()
         {
             if (networkStream != null)
                 networkStream.Close();

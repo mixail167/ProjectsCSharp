@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -15,7 +16,12 @@ namespace ChatServer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            OneInstanceApp.Run(new Form1(), StartupNextInstanceHandler);
+        }
+
+        private static void StartupNextInstanceHandler(object sender, StartupNextInstanceEventArgs e)
+        {
+            e.BringToForeground = true;
         }
     }
 }

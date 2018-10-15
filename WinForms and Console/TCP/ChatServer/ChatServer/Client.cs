@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 
 namespace ChatServer
 {
     public class Client
     {
-        Guid id;
-        NetworkStream networkStream;
-        string user;
-        TcpClient client;
+        private Guid id;
+        private NetworkStream networkStream;
+        private string user;
+        private TcpClient client;
 
         public Client(TcpClient client)
         {
