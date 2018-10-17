@@ -68,6 +68,7 @@
             // 
             // textBox2
             // 
+            this.textBox2.HideSelection = false;
             this.textBox2.Location = new System.Drawing.Point(12, 290);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";

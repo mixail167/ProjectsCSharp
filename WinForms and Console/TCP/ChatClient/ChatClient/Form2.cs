@@ -23,5 +23,34 @@ namespace ChatClient
         {
             Close();
         }
+
+        private void Form2_MouseClick(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                foreach (Form item in Application.OpenForms)
+                {
+                    if (item is Form1)
+                    {
+                        if (item.WindowState != FormWindowState.Normal)
+                        {
+                            item.WindowState = FormWindowState.Normal;
+                        }
+                        if (!item.Focused)
+                        {
+                            item.Focus();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                Close();
+            }
+        }
     }
 }

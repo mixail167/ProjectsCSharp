@@ -13,8 +13,7 @@ namespace ChatClient
 
         public static void Run(Form form, StartupNextInstanceEventHandler startupHandler)
         {
-            OneInstanceApp oneInstanceApp =
-                new OneInstanceApp();
+            OneInstanceApp oneInstanceApp = new OneInstanceApp();
             oneInstanceApp.MainForm = form;
             oneInstanceApp.StartupNextInstance += startupHandler;
             oneInstanceApp.Run(Environment.GetCommandLineArgs());

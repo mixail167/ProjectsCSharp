@@ -45,6 +45,7 @@
             this.label1.Size = new System.Drawing.Size(222, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "lable1";
+            this.label1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form2_MouseClick);
             // 
             // timer1
             // 
@@ -59,6 +60,7 @@
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "Чат";
+            this.label2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form2_MouseClick);
             // 
             // pictureBox1
             // 
@@ -70,6 +72,7 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form2_MouseClick);
             // 
             // button1
             // 
@@ -98,6 +101,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TopMost = true;
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form2_MouseClick);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

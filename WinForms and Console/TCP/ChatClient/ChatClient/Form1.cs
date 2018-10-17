@@ -185,19 +185,28 @@ namespace ChatClient
         private void Notification(string text)
         {
             soundPlayer.Play();
-            foreach (Form item in Application.OpenForms)
+            try
             {
-                if (item is Form2)
+                foreach (Form item in Application.OpenForms)
                 {
-                    item.Close();
+                    if (item is Form2)
+                    {
+                        item.Close();
+                    }
                 }
+            }
+            catch
+            {
+
             }
             IntPtr handle = GetForegroundWindow();
             Form2 form2 = new Form2(text);
-            form2.Show();
+            form2.Visible = true;
             if (this.Handle == handle && !this.Focused)
             {
                 this.Focus();
+                if (!string.IsNullOrEmpty(textBox2.Text))
+                    textBox2.Select(textBox2.Text.Length, 0);
             }
         }
 
@@ -205,7 +214,7 @@ namespace ChatClient
         {
             if (this.InvokeRequired)
             {
-                this.BeginInvoke(new Action<bool, string>(EnableComponents), new object[] { flag, text });
+                this.Invoke(new Action<bool, string>(EnableComponents), new object[] { flag, text });
             }
             else
             {
