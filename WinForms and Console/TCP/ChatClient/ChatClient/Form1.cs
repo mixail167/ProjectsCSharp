@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.Media;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -12,14 +14,17 @@ namespace ChatClient
 {
     public partial class Form1 : Form
     {
-        bool run;
-        const string regExp = @"(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}";
-        TcpClient client;
-        NetworkStream networkStream;
-        Thread receiveThread;
-        string user;
-        SoundPlayer soundPlayer;
-        List<User> users;
+        private bool run;
+        private const string regExp = @"(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}";
+        private TcpClient client;
+        private NetworkStream networkStream;
+        private Thread receiveThread;
+        private string user;
+        private SoundPlayer soundPlayer;
+        private List<User> users;
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
         public Form1()
         {
@@ -73,7 +78,7 @@ namespace ChatClient
         {
             if (richTextBox1.InvokeRequired)
             {
-                richTextBox1.BeginInvoke(new Action<string>(RefreshTextBox), new object[] { text });
+                richTextBox1.Invoke(new Action<string>(RefreshTextBox), new object[] { text });
             }
             else
             {
@@ -104,7 +109,9 @@ namespace ChatClient
                             User user = new User(text);
                             users.Add(user);
                             listBox1.Items.Add(user.Name);
-                            Notify(string.Format("{0} вошел в чат", user.Name));
+                            text = string.Format("{0} вошел в чат", user.Name);
+                            Notification(text);
+                            AppendText(text, Color.Black);
                         }
                         catch (Exception)
                         {
@@ -121,7 +128,9 @@ namespace ChatClient
                                 if (users[i].ID == Guid.Parse(text))
                                 {
                                     listBox1.Items.RemoveAt(i);
-                                    Notify(string.Format("{0} покинул чат", users[i].Name));
+                                    text = string.Format("{0} покинул чат", users[i].Name);
+                                    Notification(text);
+                                    AppendText(text, Color.Black);
                                     users.RemoveAt(i);
                                     break;
                                 }
@@ -134,14 +143,23 @@ namespace ChatClient
                     }
                     else
                     {
+                        Color color;
                         if (text.StartsWith("[message]") && text.EndsWith("[/message]"))
                         {
                             text = text.Replace("[message]", "").Replace("[/message]", "");
-                            Notify(text);
+                            Notification(text);
+                            color = Color.Red;
                         }
-                        richTextBox1.Text += "[" + DateTime.Now.ToLongTimeString() + "] " + text + "\r\n";
-                        richTextBox1.SelectionStart = richTextBox1.TextLength;
-                        richTextBox1.ScrollToCaret();
+                        else if (text.StartsWith("[usermessage]") && text.EndsWith("[/usermessage]"))
+                        {
+                            text = string.Format("Вы: {0}", text.Replace("[usermessage]", "").Replace("[/usermessage]", ""));
+                            color = Color.Blue;
+                        }
+                        else
+                        {
+                            color = Color.Black;
+                        }
+                        AppendText(text, color);
                     }
                 }
                 catch
@@ -151,7 +169,20 @@ namespace ChatClient
             }
         }
 
-        private void Notify(string text)
+        private void AppendText(string text, Color color)
+        {
+            text = "[" + DateTime.Now.ToLongTimeString() + "] " + text + "\r\n";
+            int length = richTextBox1.TextLength;
+            richTextBox1.AppendText(text);
+            richTextBox1.SelectionStart = length;
+            richTextBox1.SelectionLength = text.Length;
+            richTextBox1.SelectionColor = color;
+            richTextBox1.SelectionCharOffset = 5;
+            richTextBox1.SelectionStart = richTextBox1.TextLength;
+            richTextBox1.ScrollToCaret();
+        }
+
+        private void Notification(string text)
         {
             soundPlayer.Play();
             foreach (Form item in Application.OpenForms)
@@ -161,8 +192,13 @@ namespace ChatClient
                     item.Close();
                 }
             }
+            IntPtr handle = GetForegroundWindow();
             Form2 form2 = new Form2(text);
             form2.Show();
+            if (this.Handle == handle && !this.Focused)
+            {
+                this.Focus();
+            }
         }
 
         private void EnableComponents(bool flag, string text)
@@ -274,12 +310,19 @@ namespace ChatClient
             {
                 Disconnect();
             }
-            foreach (Form item in Application.OpenForms)
+            try
             {
-                if (item is Form2)
+                foreach (Form item in Application.OpenForms)
                 {
-                    item.Close();
+                    if (item is Form2)
+                    {
+                        item.Close();
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                
             }
         }
 
@@ -296,7 +339,7 @@ namespace ChatClient
         {
             byte[] data = Encoding.Unicode.GetBytes(string.Format("[{0}]{1}[/{0}]", "message", message));
             networkStream.Write(data, 0, data.Length);
-            RefreshTextBox("Ваше сообщение: " + message);
+            RefreshTextBox(string.Format("[{0}]{1}[/{0}]", "usermessage", message));
             textBox2.Text = string.Empty;
         }
 

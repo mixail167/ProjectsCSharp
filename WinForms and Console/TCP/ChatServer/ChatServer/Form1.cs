@@ -181,7 +181,7 @@ namespace ChatServer
                     {
                         item.NetworkStream.Write(data, 0, data.Length);
                     }
-                    catch (ObjectDisposedException exception)
+                    catch (Exception exception)
                     {
                         RefreshTextBox(exception.Message);
                     }
