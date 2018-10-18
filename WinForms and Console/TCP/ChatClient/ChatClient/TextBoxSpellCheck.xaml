@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="ChatClient.TextBoxSpellCheck"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=system"
+             mc:Ignorable="d">
+    <Grid>
+        <TextBox x:Name="textBox2" SpellCheck.IsEnabled="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto">
+            <SpellCheck.CustomDictionaries>
+                <sys:Uri>pack://application:,,,/Resources/Russian.lex</sys:Uri>
+            </SpellCheck.CustomDictionaries>
+        </TextBox>
+    </Grid>
+</UserControl>

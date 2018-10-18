@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using WPF = System.Windows.Input;
 
 namespace ChatClient
 {
@@ -22,6 +23,7 @@ namespace ChatClient
         private string user;
         private SoundPlayer soundPlayer;
         private List<User> users;
+        private TextBoxSpellCheck textBoxSpellCheck;
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
@@ -43,6 +45,18 @@ namespace ChatClient
 
             }
             users = new List<User>();
+            textBoxSpellCheck = new TextBoxSpellCheck();
+            textBoxSpellCheck.textBox2.KeyUp += textBox2_KeyUp;
+            elementHost1.Child = textBoxSpellCheck;
+        }
+
+        private void textBox2_KeyUp(object sender, WPF.KeyEventArgs e)
+        {
+            if (run && e.Key == WPF.Key.Enter)
+            {
+                button2_Click(this, new EventArgs());
+                e.Handled = true;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -59,7 +73,7 @@ namespace ChatClient
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string text = textBox2.Text.Trim('\n').Trim();
+            string text = textBoxSpellCheck.textBox2.Text.Trim('\n').Trim();
             if (text != string.Empty)
             {
                 SendMessage(text);
@@ -205,8 +219,8 @@ namespace ChatClient
             if (this.Handle == handle && !this.Focused)
             {
                 this.Focus();
-                if (!string.IsNullOrEmpty(textBox2.Text))
-                    textBox2.Select(textBox2.Text.Length, 0);
+                if (!string.IsNullOrEmpty(textBoxSpellCheck.textBox2.Text))
+                    textBoxSpellCheck.textBox2.Select(textBoxSpellCheck.textBox2.Text.Length, 0);
             }
         }
 
@@ -349,7 +363,7 @@ namespace ChatClient
             byte[] data = Encoding.Unicode.GetBytes(string.Format("[{0}]{1}[/{0}]", "message", message));
             networkStream.Write(data, 0, data.Length);
             RefreshTextBox(string.Format("[{0}]{1}[/{0}]", "usermessage", message));
-            textBox2.Text = string.Empty;
+            textBoxSpellCheck.textBox2.Text = string.Empty;
         }
 
         private void CloseConnection()
