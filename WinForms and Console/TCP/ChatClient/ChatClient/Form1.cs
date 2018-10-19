@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using WPF = System.Windows.Input;
 
@@ -52,11 +53,16 @@ namespace ChatClient
 
         private void textBox2_KeyUp(object sender, WPF.KeyEventArgs e)
         {
-            if (run && e.Key == WPF.Key.Enter)
+            if (run && e.Key == WPF.Key.Enter && e.KeyboardDevice.Modifiers == WPF.ModifierKeys.Control)
             {
-                button2_Click(this, new EventArgs());
+                string text = new TextRange(textBoxSpellCheck.textBox2.Document.ContentStart, textBoxSpellCheck.textBox2.Document.ContentEnd).Text.Trim('\n').Trim();
+                if (text != string.Empty)
+                {
+                    SendMessage(text);
+                }
                 e.Handled = true;
             }
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -73,11 +79,12 @@ namespace ChatClient
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string text = textBoxSpellCheck.textBox2.Text.Trim('\n').Trim();
+            string text = new TextRange(textBoxSpellCheck.textBox2.Document.ContentStart, textBoxSpellCheck.textBox2.Document.ContentEnd).Text.Trim('\n').Trim();
             if (text != string.Empty)
             {
                 SendMessage(text);
             }
+            textBoxSpellCheck.textBox2.Focus();
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -219,8 +226,9 @@ namespace ChatClient
             if (this.Handle == handle && !this.Focused)
             {
                 this.Focus();
-                if (!string.IsNullOrEmpty(textBoxSpellCheck.textBox2.Text))
-                    textBoxSpellCheck.textBox2.Select(textBoxSpellCheck.textBox2.Text.Length, 0);
+                text = new TextRange(textBoxSpellCheck.textBox2.Document.ContentStart, textBoxSpellCheck.textBox2.Document.ContentEnd).Text;
+                if (!string.IsNullOrEmpty(text))
+                    textBoxSpellCheck.textBox2.CaretPosition = textBoxSpellCheck.textBox2.Document.ContentEnd;
             }
         }
 
@@ -345,16 +353,7 @@ namespace ChatClient
             }
             catch (Exception)
             {
-                
-            }
-        }
 
-        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (run && e.KeyChar == 13)
-            {
-                button2_Click(this, new EventArgs());
-                e.Handled = true;
             }
         }
 
@@ -363,7 +362,7 @@ namespace ChatClient
             byte[] data = Encoding.Unicode.GetBytes(string.Format("[{0}]{1}[/{0}]", "message", message));
             networkStream.Write(data, 0, data.Length);
             RefreshTextBox(string.Format("[{0}]{1}[/{0}]", "usermessage", message));
-            textBoxSpellCheck.textBox2.Text = string.Empty;
+            textBoxSpellCheck.textBox2.Document.Blocks.Clear();
         }
 
         private void CloseConnection()
