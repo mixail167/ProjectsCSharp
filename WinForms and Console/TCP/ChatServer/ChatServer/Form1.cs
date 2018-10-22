@@ -86,7 +86,10 @@ namespace ChatServer
             try
             {
                 IPAddress ipAddress = IPAddress.Parse(comboBox1.Items[comboBox1.SelectedIndex].ToString());
-                listenThread = new Thread(Listen);
+                listenThread = new Thread(Listen)
+                {
+                    IsBackground = true
+                };
                 listenThread.Start(ipAddress);
                 RefreshTextBox("Старт.");
                 EnableComponents(false, "Стоп");
@@ -140,7 +143,10 @@ namespace ChatServer
                     {
                         Client client = new Client(tcpListener.AcceptTcpClient());
                         clients.Add(client);
-                        Thread clientThread = new Thread(Process);
+                        Thread clientThread = new Thread(Process)
+                        {
+                            IsBackground = true
+                        };
                         clientThread.Start(client);
                     }
                     else Thread.Sleep(2000);

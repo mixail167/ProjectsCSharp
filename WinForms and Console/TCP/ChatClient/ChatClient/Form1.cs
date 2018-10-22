@@ -314,7 +314,7 @@ namespace ChatClient
                     {
                         RefreshTextBox(stringBuilder.ToString());
                     }
-                    else new Exception("Потеряно соединение с сервером.");
+                    else throw new Exception("Потеряно соединение с сервером.");
                 }
                 catch (Exception exception)
                 {
