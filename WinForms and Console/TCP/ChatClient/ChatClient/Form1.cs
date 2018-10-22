@@ -262,17 +262,18 @@ namespace ChatClient
             Regex regex = new Regex(regExp);
             if (regex.IsMatch(textBox1.Text))
             {
-
                 client = new TcpClient();
                 try
                 {
                     if (client.ConnectAsync(textBox1.Text, 8888).Wait(5000))
                     {
-
                         networkStream = client.GetStream();
                         byte[] data = Encoding.Unicode.GetBytes(user);
                         networkStream.Write(data, 0, data.Length);
-                        receiveThread = new Thread(new ThreadStart(ReceiveMessage));
+                        receiveThread = new Thread(new ThreadStart(ReceiveMessage))
+                        {
+                            IsBackground = true
+                        };
                         receiveThread.Start();
                         RefreshTextBox("Подключение выполнено.");
                         EnableComponents(false, "Отключение");
@@ -313,24 +314,17 @@ namespace ChatClient
                     {
                         RefreshTextBox(stringBuilder.ToString());
                     }
-                    else
-                    {
-                        RefreshTextBox("Потеряно соединение с сервером.");
-                        CloseConnection();
-                        EnableComponents(true, "Подключение");
-                        break;
-                    }
-
+                    else new Exception("Потеряно соединение с сервером.");
                 }
                 catch (Exception exception)
                 {
-                    if (!exception.Message.StartsWith("Поток находился в процессе прерывания"))
+                    if (exception.HResult != -2146233040)
                     {
                         RefreshTextBox(exception.Message);
                         CloseConnection();
                         EnableComponents(true, "Подключение");
-                        break;
                     }
+                    break;
                 }
             }
         }
