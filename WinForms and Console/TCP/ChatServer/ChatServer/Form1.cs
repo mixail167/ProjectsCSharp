@@ -204,16 +204,16 @@ namespace ChatServer
                 client.User = message;
                 message = string.Format("[{0}]{2} {1}[/{0}]", "adduser", client.User, client.ID.ToString());
                 BroadcastMessage(message, client.ID);
-                RefreshTextBox(string.Format("{0} вошел в чат.", client.User));
+                RefreshTextBox(string.Format("{0} присоединился к чату.", client.User));
                 StringBuilder stringBuilder = new StringBuilder("[users]");
                 if (clients.Count > 1)
                 {
                     List<string> list = new List<string>();
-                    for (int i = 0; i < clients.Count; i++)
+                    foreach (Client item in clients)
                     {
-                        if (client.ID != clients[i].ID)
+                        if (client.ID != item.ID)
                         {
-                            list.Add(clients[i].ID + " " + clients[i].User);
+                            list.Add(item.ID + " " + item.User);
                         }
                     }
                     stringBuilder.Append(string.Join(";", list));

@@ -130,7 +130,7 @@ namespace ChatClient
                             User user = new User(text);
                             users.Add(user);
                             listBox1.Items.Add(user.Name);
-                            text = string.Format("{0} вошел в чат", user.Name);
+                            text = string.Format("{0} присоединился к чату", user.Name);
                             Notification(text);
                             AppendText(text, Color.Black);
                         }
