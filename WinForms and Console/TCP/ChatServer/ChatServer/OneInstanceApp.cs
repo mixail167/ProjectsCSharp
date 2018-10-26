@@ -11,12 +11,12 @@ namespace ChatServer
             base.IsSingleInstance = true;
         }
 
-        public static void Run(Form form, StartupNextInstanceEventHandler startupHandler)
+        public static void Run(Form form)
         {
             OneInstanceApp oneInstanceApp =
                 new OneInstanceApp();
             oneInstanceApp.MainForm = form;
-            oneInstanceApp.StartupNextInstance += startupHandler;
+            oneInstanceApp.StartupNextInstance += StartupNextInstanceHandler;
             try
             {
                 oneInstanceApp.Run(Environment.GetCommandLineArgs());
@@ -25,6 +25,11 @@ namespace ChatServer
             {
                 
             }
+        }
+
+        private static void StartupNextInstanceHandler(object sender, StartupNextInstanceEventArgs e)
+        {
+            ((sender as OneInstanceApp).MainForm as Form1).ModifyStateForm(true);
         }
     }
 }

@@ -11,12 +11,17 @@ namespace ChatClient
             base.IsSingleInstance = true;
         }
 
-        public static void Run(Form form, StartupNextInstanceEventHandler startupHandler)
+        public static void Run(Form form)
         {
             OneInstanceApp oneInstanceApp = new OneInstanceApp();
             oneInstanceApp.MainForm = form;
-            oneInstanceApp.StartupNextInstance += startupHandler;
+            oneInstanceApp.StartupNextInstance += StartupNextInstanceHandler;
             oneInstanceApp.Run(Environment.GetCommandLineArgs());
+        }
+
+        private static void StartupNextInstanceHandler(object sender, StartupNextInstanceEventArgs e)
+        {
+            ((sender as OneInstanceApp).MainForm as Form1).ModifyStateForm(true);
         }
     }
 }

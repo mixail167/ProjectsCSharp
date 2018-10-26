@@ -14,12 +14,7 @@ namespace ChatClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            OneInstanceApp.Run(new Form1(), StartupNextInstanceHandler);
-        }
-
-        private static void StartupNextInstanceHandler(object sender, StartupNextInstanceEventArgs e)
-        {
-            e.BringToForeground = true;
+            OneInstanceApp.Run(new Form1());
         }
     }
 }

@@ -306,7 +306,7 @@ namespace ChatServer
             ModifyStateForm(true);
         }
 
-        private void ModifyStateForm(bool value)
+        public void ModifyStateForm(bool value)
         {
             WindowState = (value) ? FormWindowState.Normal : FormWindowState.Minimized;
             notifyIcon1.Visible = !value;
