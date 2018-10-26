@@ -6,12 +6,15 @@ namespace ChatClient
 {
     public partial class Form2 : Form
     {
-        public Form2(string text)
+        Form1 link;
+
+        public Form2(string text, Form1 link)
         {
             InitializeComponent();
             label1.Text = text;
             Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - Width - 5, Screen.PrimaryScreen.WorkingArea.Height - Height - 5);
             timer1.Enabled = true;
+            this.link = link;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -28,19 +31,17 @@ namespace ChatClient
         {
             try
             {
-                foreach (Form item in Application.OpenForms)
+                if (link.notifyIcon1.Visible)
                 {
-                    if (item is Form1)
-                    {
-                        if (item.WindowState != FormWindowState.Normal)
-                        {
-                            item.WindowState = FormWindowState.Normal;
-                        }
-                        if (!item.Focused)
-                        {
-                            item.Focus();
-                        }
-                    }
+                    link.ModifyStateForm(true);
+                }
+                if (link.WindowState != FormWindowState.Normal)
+                {
+                    link.WindowState = FormWindowState.Normal;
+                }
+                if (!link.Focused)
+                {
+                    link.Focus();
                 }
             }
             catch

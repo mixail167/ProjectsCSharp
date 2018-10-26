@@ -16,11 +16,13 @@ namespace ChatServer
         private Thread listenThread;
         private bool run;
         private const string regExp = @"(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}";
+        private bool close;
 
         public Form1()
         {
             InitializeComponent();
             run = false;
+            close = false;
             GetAddresses();
         }
 
@@ -103,9 +105,10 @@ namespace ChatServer
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (run)
+            if (!close)
             {
-                Disconnect();
+                e.Cancel = true;
+                ModifyStateForm(false);
             }
         }
 
@@ -279,6 +282,35 @@ namespace ChatServer
                 RefreshTextBox(exception.Message);
             }
             return stringBuilder.ToString();
+        }
+
+        private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Equals(contextMenuStrip1.Items[0]))
+            {
+                ModifyStateForm(true);
+            }
+            else
+            {
+                if (run)
+                {
+                    Disconnect();
+                }
+                close = true;
+                Close();
+            }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ModifyStateForm(true);
+        }
+
+        private void ModifyStateForm(bool value)
+        {
+            WindowState = (value) ? FormWindowState.Normal : FormWindowState.Minimized;
+            notifyIcon1.Visible = !value;
+            this.ShowInTaskbar = value;
         }
     }
 }

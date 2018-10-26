@@ -25,6 +25,7 @@ namespace ChatClient
         private SoundPlayer soundPlayer;
         private List<User> users;
         private TextBoxSpellCheck textBoxSpellCheck;
+        private bool close;
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
@@ -35,6 +36,7 @@ namespace ChatClient
             soundPlayer = new SoundPlayer(Properties.Resources.zvuk_soobshcheniya_v_kontakte);
             soundPlayer.Load();
             run = false;
+            close = false;
             user = Environment.UserName;
             RefreshTextBox(string.Format("Ваше имя: {0}.", user));
             try
@@ -221,7 +223,7 @@ namespace ChatClient
 
             }
             IntPtr handle = GetForegroundWindow();
-            Form2 form2 = new Form2(text);
+            Form2 form2 = new Form2(text, this);
             form2.Visible = true;
             if (this.Handle == handle && !this.Focused)
             {
@@ -331,24 +333,11 @@ namespace ChatClient
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (run)
+            if (!close)
             {
-                Disconnect();
-            }
-            try
-            {
-                foreach (Form item in Application.OpenForms)
-                {
-                    if (item is Form2)
-                    {
-                        item.Close();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
-            }
+                e.Cancel = true;
+                ModifyStateForm(false);
+            }          
         }
 
         private void SendMessage(string message)
@@ -365,6 +354,49 @@ namespace ChatClient
                 networkStream.Close();
             if (client != null)
                 client.Close();
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ModifyStateForm(true);
+        }
+
+        public void ModifyStateForm(bool value)
+        {
+            WindowState = (value) ? FormWindowState.Normal : FormWindowState.Minimized;
+            notifyIcon1.Visible = !value;
+            this.ShowInTaskbar = value;
+        }
+
+        private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Equals(contextMenuStrip1.Items[0]))
+            {
+                ModifyStateForm(true);
+            }
+            else
+            {
+                if (run)
+                {
+                    Disconnect();
+                }
+                try
+                {
+                    foreach (Form item in Application.OpenForms)
+                    {
+                        if (item is Form2)
+                        {
+                            item.Close();
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+                close = true;
+                this.Close();
+            }
         }
     }
 }

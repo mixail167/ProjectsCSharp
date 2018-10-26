@@ -17,7 +17,14 @@ namespace ChatServer
                 new OneInstanceApp();
             oneInstanceApp.MainForm = form;
             oneInstanceApp.StartupNextInstance += startupHandler;
-            oneInstanceApp.Run(Environment.GetCommandLineArgs());
+            try
+            {
+                oneInstanceApp.Run(Environment.GetCommandLineArgs());
+            }
+            catch (ObjectDisposedException)
+            {
+                
+            }
         }
     }
 }
