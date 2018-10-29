@@ -47,6 +47,7 @@ namespace ChatClient
             {
 
             }
+            pictureBox1.Image = (Properties.Settings.Default.Sound) ? null : Properties.Resources.cancel2;
             users = new List<User>();
             textBoxSpellCheck = new TextBoxSpellCheck();
             textBoxSpellCheck.textBox2.KeyUp += textBox2_KeyUp;
@@ -207,7 +208,10 @@ namespace ChatClient
 
         private void Notification(string text)
         {
-            soundPlayer.Play();
+            if (Properties.Settings.Default.Sound)
+            {
+                soundPlayer.Play();
+            }
             try
             {
                 foreach (Form item in Application.OpenForms)
@@ -337,7 +341,7 @@ namespace ChatClient
             {
                 e.Cancel = true;
                 ModifyStateForm(false);
-            }          
+            }
         }
 
         private void SendMessage(string message)
@@ -397,6 +401,21 @@ namespace ChatClient
                 close = true;
                 this.Close();
             }
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Properties.Settings.Default.Sound)
+            {
+                soundPlayer.Stop();
+                pictureBox1.Image = Properties.Resources.cancel2;
+            }
+            else
+            {
+                pictureBox1.Image = null;
+            }
+            Properties.Settings.Default.Sound = !Properties.Settings.Default.Sound;
+            Properties.Settings.Default.Save();
         }
     }
 }

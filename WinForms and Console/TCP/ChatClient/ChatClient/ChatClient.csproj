@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\sound.png" />
     <None Include="Resources\cancel2.png" />
     <None Include="Resources\label.png" />
   </ItemGroup>
