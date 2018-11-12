@@ -12,9 +12,9 @@
                     <RadioButton x:Name="HardRadioButton" Content="{DynamicResource HardLevel}" Margin="0,5,0,5" Checked="HardRadioButton_Checked"/>
                 </StackPanel>
                 <StackPanel Margin="5,0,0,0">
-                    <Label Content="hhjsdgf"/>
-                    <Label Content="hhjsdgf"/>
-                    <Label Content="hhjsdgf"/>
+                    <Label Content="{DynamicResource EasyLevelText}"/>
+                    <Label Content="{DynamicResource MiddleLevelText}"/>
+                    <Label Content="{DynamicResource HardLevelText}"/>
                 </StackPanel>
             </StackPanel>
             <CheckBox x:Name="SoundCheckBox" Content="{DynamicResource Sound}" Margin="5,10,0,0" Checked="SoundCheckBox_Checked" Unchecked="SoundCheckBox_Unchecked"/>

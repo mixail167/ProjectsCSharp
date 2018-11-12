@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MineSweeper.Windows
 {
@@ -36,14 +27,17 @@ namespace MineSweeper.Windows
                 case 1:
                     Properties.Settings.Default.MiddleLevelCountGames = 0;
                     Properties.Settings.Default.MiddleLevelWinGames = 0;
+                    Properties.Settings.Default.MiddleLevelBestTime = new TimeSpan();
                     break;
                 case 2:
                     Properties.Settings.Default.HardLevelCountGames = 0;
                     Properties.Settings.Default.HardLevelWinGames = 0;
+                    Properties.Settings.Default.HardLevelBestTime = new TimeSpan();
                     break;
                 default:
                     Properties.Settings.Default.EasyLevelCountGames = 0;
                     Properties.Settings.Default.EasyLevelWinGames = 0;
+                    Properties.Settings.Default.EasyLevelBestTime = new TimeSpan();
                     break;
             }
             Properties.Settings.Default.Save();
@@ -57,11 +51,12 @@ namespace MineSweeper.Windows
                 case 1:
                     CountGames.Content = Properties.Settings.Default.MiddleLevelCountGames;
                     WinGames.Content = Properties.Settings.Default.MiddleLevelWinGames;
+                    BestTime.Content = Properties.Settings.Default.MiddleLevelBestTime.ToString(@"hh\:mm\:ss");
                     try
                     {
                         if (Properties.Settings.Default.MiddleLevelCountGames == 0)
                             throw new DivideByZeroException();
-                        PercentWin.Content = string.Format("{0:#.##}%", Properties.Settings.Default.MiddleLevelWinGames * 1.0f / Properties.Settings.Default.MiddleLevelCountGames);
+                        PercentWin.Content = string.Format("{0:f2}%", Properties.Settings.Default.MiddleLevelWinGames * 1.0f / Properties.Settings.Default.MiddleLevelCountGames);
 
                     }
                     catch (DivideByZeroException)
@@ -72,11 +67,12 @@ namespace MineSweeper.Windows
                 case 2:
                     CountGames.Content = Properties.Settings.Default.HardLevelCountGames;
                     WinGames.Content = Properties.Settings.Default.HardLevelWinGames;
+                    BestTime.Content = Properties.Settings.Default.EasyLevelBestTime.ToString(@"hh\:mm\:ss");
                     try
                     {
                         if (Properties.Settings.Default.HardLevelCountGames == 0)
                             throw new DivideByZeroException();
-                        PercentWin.Content = string.Format("{0:#.##}%", Properties.Settings.Default.HardLevelWinGames * 1.0f / Properties.Settings.Default.HardLevelCountGames);
+                        PercentWin.Content = string.Format("{0:f2}%", Properties.Settings.Default.HardLevelWinGames * 1.0f / Properties.Settings.Default.HardLevelCountGames);
 
                     }
                     catch (DivideByZeroException)
@@ -87,11 +83,12 @@ namespace MineSweeper.Windows
                 default:
                     CountGames.Content = Properties.Settings.Default.EasyLevelCountGames;
                     WinGames.Content = Properties.Settings.Default.EasyLevelWinGames;
+                    BestTime.Content = Properties.Settings.Default.EasyLevelBestTime.ToString(@"hh\:mm\:ss");
                     try
                     {
                         if (Properties.Settings.Default.EasyLevelCountGames == 0)
                             throw new DivideByZeroException();
-                        PercentWin.Content = string.Format("{0:#.##}%", Properties.Settings.Default.EasyLevelWinGames * 1.0f / Properties.Settings.Default.EasyLevelCountGames);
+                        PercentWin.Content = string.Format("{0:f2}%", Properties.Settings.Default.EasyLevelWinGames * 1.0f / Properties.Settings.Default.EasyLevelCountGames);
 
                     }
                     catch (DivideByZeroException)

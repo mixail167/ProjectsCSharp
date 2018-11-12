@@ -57,11 +57,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Cell.cs" />
+    <Compile Include="Classes\Images.cs" />
     <Compile Include="Classes\WAVPlayer.cs" />
     <Compile Include="Properties\Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\EndGameWindow.xaml.cs">
+      <DependentUpon>EndGameWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ParametersWindow.xaml.cs">
       <DependentUpon>ParametersWindow.xaml</DependentUpon>
@@ -78,6 +83,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\EndGameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -154,6 +163,54 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cellExtStateEmpty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cellExtStateFlag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cellExtStateQuestion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\numberEight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\numberOne.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\numberTwo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\numberThree.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\numberFour.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\numberFive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\numberSix.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\numberSeven.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\mine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\opencell.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\small_blast.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\small_blast.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\win.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

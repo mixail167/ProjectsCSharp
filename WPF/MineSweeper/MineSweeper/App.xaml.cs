@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace MineSweeper
 {
@@ -15,7 +12,7 @@ namespace MineSweeper
     {
         public App()
         {
-            Set(MineSweeper.Properties.Settings.Default.DefaultLanguage);
+
         }
 
         public static void Set(CultureInfo cultureInfo)

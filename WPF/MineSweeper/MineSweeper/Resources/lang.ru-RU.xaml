@@ -10,13 +10,14 @@
     <v:String x:Key="Exit">Выход</v:String>
 
     <v:String x:Key="RecordsWindowTitle">Рекорды</v:String>
-    <v:String x:Key="Level">Уровень сложности</v:String>
+    <v:String x:Key="Level">Уровень сложности:</v:String>
     <v:String x:Key="EasyLevel">Легкий</v:String>
     <v:String x:Key="MiddleLevel">Средний</v:String>
     <v:String x:Key="HardLevel">Тяжелый</v:String>
     <v:String x:Key="CountGames">Сыграно игр:</v:String>
     <v:String x:Key="WinGames">Выйграно игр:</v:String>
     <v:String x:Key="PercentWin">Процент выйгрыша:</v:String>
+    <v:String x:Key="BestTime">Лучшее время:</v:String>
     <v:String x:Key="ClearStatistics">Обнулить статистику</v:String>
 
     <v:String x:Key="ParametersWindowTitle">Параметры</v:String>
@@ -24,5 +25,13 @@
     <v:String x:Key="Language">Язык интерфейса</v:String>
     <v:String x:Key="Russian">Русский</v:String>
     <v:String x:Key="English">Английский</v:String>
+    <v:String x:Key="EasyLevelText">9x9 10 мин</v:String>
+    <v:String x:Key="MiddleLevelText">16x16 40 мин</v:String>
+    <v:String x:Key="HardLevelText">16x30 99 мин</v:String>
 
+    <v:String x:Key="EndGameWindowTitle">Конец игры</v:String>
+    <v:String x:Key="Time">Время:</v:String>
+    <v:String x:Key="Win">Вы выйграли!</v:String>
+    <v:String x:Key="Lost">Вы проиграли!</v:String>
+    <v:String x:Key="Restart">Перезапустить игру</v:String>
 </ResourceDictionary>

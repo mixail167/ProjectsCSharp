@@ -1,7 +1,6 @@
 ﻿using MineSweeper.Classes;
 using System.ComponentModel;
 using System.Globalization;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -29,7 +28,7 @@ namespace MineSweeper.Windows
                     HardRadioButton.IsChecked = true;
                     break;
             }
-            SoundCheckBox.IsChecked = WAVPlayer.sound;
+            SoundCheckBox.IsChecked = WAVPlayer.Sound;
             if (Properties.Settings.Default.DefaultLanguage.Equals(CultureInfo.GetCultureInfo("en-US")))
             {
                 LanguageComboBox.SelectedIndex = 0;
@@ -57,19 +56,19 @@ namespace MineSweeper.Windows
 
         private void SoundCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            WAVPlayer.sound = true;
+            WAVPlayer.Sound = true;
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Properties.Settings.Default.Level = (int)level;
-            Properties.Settings.Default.Sound = WAVPlayer.sound;
+            Properties.Settings.Default.Sound = WAVPlayer.Sound;
             Properties.Settings.Default.Save();
         }
 
         private void SoundCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            WAVPlayer.sound = false;
+            WAVPlayer.Sound = false;
         }
 
         private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -83,6 +82,11 @@ namespace MineSweeper.Windows
                     App.Set(CultureInfo.GetCultureInfo("ru-RU"));
                     break;
             }
+        }
+
+        public Level GetLevel()
+        {
+            return level;
         }
     }
 }

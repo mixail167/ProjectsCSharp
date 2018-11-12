@@ -1,0 +1,35 @@
+﻿<Window x:Class="MineSweeper.Windows.EndGameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource EndGameWindowTitle}" Height="300" Width="320" ResizeMode="NoResize" Icon="/MineSweeper;component/Resources/bombIcon.png" Closing="Window_Closing">
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock x:Name="TitleText" HorizontalAlignment="Center" Margin="0,5" TextWrapping="Wrap" Text="{DynamicResource Lost}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10,10,10,0">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Label Content="{DynamicResource Level}" Width="130" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{DynamicResource Time}" Width="130" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{DynamicResource BestTime}" Width="130" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{DynamicResource CountGames}" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{DynamicResource WinGames}" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{DynamicResource PercentWin}" Width="130" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                </StackPanel>
+                <StackPanel>
+                    <Label x:Name="LevelText" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="Time" Content="00:00:00" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="BestTime" Content="00:00:00" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="CountGames" Content="0" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="WinGames" Content="0" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="PercentWin" Content="0" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,0">
+                <Button x:Name="NewGameButton" Click="NewGameButton_Click" Content="{DynamicResource NewGame}" Margin="10,0" Padding="5"/>
+                <Button x:Name="RestartGameButton" Click="RestartGameButton_Click" Content="{DynamicResource Restart}" Margin="10,0" Padding="5"/>
+                <Button x:Name="ExitButton" Click="ExitButton_Click" Content="{DynamicResource Exit}" Margin="10,0" Padding="5"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

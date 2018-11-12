@@ -130,5 +130,41 @@ namespace MineSweeper.Properties {
                 this["Sound"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        public global::System.TimeSpan EasyLevelBestTime {
+            get {
+                return ((global::System.TimeSpan)(this["EasyLevelBestTime"]));
+            }
+            set {
+                this["EasyLevelBestTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        public global::System.TimeSpan MiddleLevelBestTime {
+            get {
+                return ((global::System.TimeSpan)(this["MiddleLevelBestTime"]));
+            }
+            set {
+                this["MiddleLevelBestTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        public global::System.TimeSpan HardLevelBestTime {
+            get {
+                return ((global::System.TimeSpan)(this["HardLevelBestTime"]));
+            }
+            set {
+                this["HardLevelBestTime"] = value;
+            }
+        }
     }
 }
