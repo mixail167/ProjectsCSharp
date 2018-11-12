@@ -58,11 +58,8 @@ namespace ChatClient
         {
             if (run && e.Key == WPF.Key.Enter && e.KeyboardDevice.Modifiers == WPF.ModifierKeys.Control)
             {
-                string text = new TextRange(textBoxSpellCheck.textBox2.Document.ContentStart, textBoxSpellCheck.textBox2.Document.ContentEnd).Text.Trim('\n').Trim();
-                if (text != string.Empty)
-                {
-                    SendMessage(text);
-                }
+                SendMessage(textBoxSpellCheck.textBox2.Text);
+                textBoxSpellCheck.textBox2.Text = string.Empty;
                 e.Handled = true;
             }
 
@@ -82,11 +79,8 @@ namespace ChatClient
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string text = new TextRange(textBoxSpellCheck.textBox2.Document.ContentStart, textBoxSpellCheck.textBox2.Document.ContentEnd).Text.Trim('\n').Trim();
-            if (text != string.Empty)
-            {
-                SendMessage(text);
-            }
+            SendMessage(textBoxSpellCheck.textBox2.Text);
+            textBoxSpellCheck.textBox2.Text = string.Empty;
             textBoxSpellCheck.textBox2.Focus();
         }
 
@@ -232,9 +226,8 @@ namespace ChatClient
             if (this.Handle == handle && !this.Focused)
             {
                 this.Focus();
-                text = new TextRange(textBoxSpellCheck.textBox2.Document.ContentStart, textBoxSpellCheck.textBox2.Document.ContentEnd).Text;
-                if (!string.IsNullOrEmpty(text))
-                    textBoxSpellCheck.textBox2.CaretPosition = textBoxSpellCheck.textBox2.Document.ContentEnd;
+                if (!string.IsNullOrEmpty(textBoxSpellCheck.textBox2.Text))
+                    textBoxSpellCheck.textBox2.CaretIndex = textBoxSpellCheck.textBox2.Text.Length;
             }
         }
 
@@ -346,10 +339,13 @@ namespace ChatClient
 
         private void SendMessage(string message)
         {
-            byte[] data = Encoding.Unicode.GetBytes(string.Format("[{0}]{1}[/{0}]", "message", message));
-            networkStream.Write(data, 0, data.Length);
-            RefreshTextBox(string.Format("[{0}]{1}[/{0}]", "usermessage", message));
-            textBoxSpellCheck.textBox2.Document.Blocks.Clear();
+            message = message.Trim('\n', ' ');
+            if (message != string.Empty)
+            {
+                byte[] data = Encoding.Unicode.GetBytes(string.Format("[{0}]{1}[/{0}]", "message", message));
+                networkStream.Write(data, 0, data.Length);
+                RefreshTextBox(string.Format("[{0}]{1}[/{0}]", "usermessage", message));
+            }
         }
 
         private void CloseConnection()

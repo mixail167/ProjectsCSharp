@@ -6,15 +6,10 @@
              xmlns:sys="clr-namespace:System;assembly=system"
              mc:Ignorable="d">
     <Grid>
-        <RichTextBox x:Name="textBox2" VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" Padding="0">
-            <RichTextBox.Resources>
-                <Style TargetType="{x:Type Paragraph}">
-                    <Setter Property="Margin" Value="0"/>
-                </Style>
-            </RichTextBox.Resources>
+        <TextBox x:Name="textBox2" VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" AcceptsReturn="True">
             <SpellCheck.CustomDictionaries>
                 <sys:Uri>pack://application:,,,/Resources/Russian.lex</sys:Uri>
             </SpellCheck.CustomDictionaries>
-        </RichTextBox>
+        </TextBox>
     </Grid>
 </UserControl>
