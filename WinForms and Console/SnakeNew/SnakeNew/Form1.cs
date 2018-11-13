@@ -423,8 +423,8 @@ namespace SnakeNew
                     EnableComponents(true);
                     break;
             }
-=======
->>>>>>> develop
+        }
+
         private void рекордыToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string text = string.Empty;
