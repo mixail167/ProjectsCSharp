@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using YoutubeExtractor;
@@ -20,6 +21,7 @@ namespace YouTubeDownloaderApp
             textBox1.Text = string.Empty;
             progressBar1.Value = 0;
             label3.Text = "0%";
+            textBox1.Enabled = true;
             progressBar1.Update();
         }
 
@@ -34,39 +36,36 @@ namespace YouTubeDownloaderApp
             {
                 try
                 {
-                    string url = textBox1.Text.Replace("https://", "http // ");
-                    try
-                    {
-                        url = url.Remove(url.IndexOf("&"));
-                    }
-                    catch
-                    {
 
-                    }
-                    IEnumerable<VideoInfo> videos = DownloadUrlResolver.GetDownloadUrls(url);
-                    VideoInfo video = videos.First(p => p.VideoType == VideoType.Mp4 && p.Resolution == Convert.ToInt32(comboBox1.Text));
-                    if (video != null)
+                    if (Regex.IsMatch(textBox1.Text, "^([0-9a-zA-Z]){11}"))
                     {
-                        if (video.RequiresDecryption)
+                        string url = string.Concat(label1.Text, textBox1.Text);
+                        IEnumerable<VideoInfo> videos = DownloadUrlResolver.GetDownloadUrls(url, true);
+                        VideoInfo video = videos.First(p => p.VideoType == VideoType.Mp4 && p.Resolution == Convert.ToInt32(comboBox1.Text));
+                        if (video != null)
                         {
-                            DownloadUrlResolver.DecryptDownloadUrl(video);
-                        }
-                        saveFileDialog1.FileName = video.Title;
-                        saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
-                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
-                            Properties.Settings.Default.Save();
-                            downloader = new VideoDownloader(video, saveFileDialog1.FileName);
-                            downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
-                            downloader.DownloadFinished += downloader_DownloadFinished;
-                            thread = new Thread(() => { downloader.Execute(); })
+                            saveFileDialog1.FileName = video.Title;
+                            saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
+                            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                             {
-                                IsBackground = true
-                            };
-                            thread.Start();
-                            button1.Text = "&Cancel";
+                                Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
+                                Properties.Settings.Default.Save();
+                                downloader = new VideoDownloader(video, saveFileDialog1.FileName);
+                                downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
+                                downloader.DownloadFinished += downloader_DownloadFinished;
+                                thread = new Thread(() => { downloader.Execute(); })
+                                {
+                                    IsBackground = true
+                                };
+                                thread.Start();
+                                button1.Text = "&Cancel";
+                                textBox1.Enabled = false;
+                            }
                         }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Неверный адрес!");
                     }
                 }
                 catch (Exception exception)
@@ -82,7 +81,7 @@ namespace YouTubeDownloaderApp
 
                 }
                 downloader.DownloadProgressChanged -= downloader_DownloadProgressChanged;
-                downloader.DownloadFinished -= downloader_DownloadFinished;                
+                downloader.DownloadFinished -= downloader_DownloadFinished;
                 ResetForm();
                 try
                 {
