@@ -12,15 +12,11 @@ namespace YouTubeDownloaderMass
     {
         static void Main(string[] args)
         {
-            if (Regex.IsMatch(@"D:\j\У\", @"^([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$"))
-            {
-
-            }
             if (args.Length > 0)
             {
                 foreach (string fileName in args)
                 {
-                    if (File.Exists(fileName) && Path.GetExtension(fileName).Equals(".txt"))
+                    if (File.Exists(fileName) && Path.GetExtension(fileName).Equals(".csv"))
                     {
                         try
                         {
@@ -33,23 +29,42 @@ namespace YouTubeDownloaderMass
                             foreach (string line in lines)
                             {
                                 string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                                if (parts.Length == 3 && Regex.IsMatch(parts[0], "^([0-9a-zA-Z]){11}"))
+                                if (parts.Length == 3 && Regex.IsMatch(parts[0], "^([0-9a-zA-Z]){11}") && Regex.IsMatch(parts[1], "^(144|360|480|720|1080)$") &&
+                                    (Regex.IsMatch(parts[2], @"^([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$")))
                                 {
-                                    try
+                                    for (int i = 0; i < 5; i++)
                                     {
-                                        int resolution = Convert.ToInt32(parts[1]);
-                                        VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", parts[0]), true).FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution == resolution);
-                                        if (video != null)
+                                        try
                                         {
-                                            VideoDownloader downloader = new VideoDownloader(video, Path.Combine(parts[2], video.Title + video.VideoExtension));
-                                            downloader.DownloadStarted += downloader_DownloadStarted;
-                                            downloader.DownloadFinished += downloader_DownloadFinished;
-                                            downloader.Execute();
+                                            int resolution = Convert.ToInt32(parts[1]);
+                                            VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", parts[0]), false)
+                                                                .OrderByDescending(p => p.Resolution)
+                                                                .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution <= resolution && p.AudioType != AudioType.Unknown);
+                                            if (video != null)
+                                            {
+                                                if (video.RequiresDecryption)
+                                                {
+                                                    DownloadUrlResolver.DecryptDownloadUrl(video);
+                                                }
+                                                VideoDownloader downloader = new VideoDownloader(video, Path.Combine(parts[2], video.Title + video.VideoExtension));
+                                                downloader.DownloadStarted += downloader_DownloadStarted;
+                                                downloader.DownloadFinished += downloader_DownloadFinished;
+                                                if (!Directory.Exists(parts[2]))
+                                                {
+                                                    Directory.CreateDirectory(parts[2]);
+                                                }
+                                                downloader.Execute();
+                                            }
+                                            break;
                                         }
-                                    }
-                                    catch (Exception exception)
-                                    {
-                                        Console.WriteLine(exception.Message);
+                                        catch (Exception exception)
+                                        {
+                                            if (!(exception is YoutubeParseException))
+                                            {
+                                                Console.WriteLine(exception.Message);
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             }

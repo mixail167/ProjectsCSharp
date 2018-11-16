@@ -34,43 +34,59 @@ namespace YouTubeDownloaderApp
         {
             if (thread == null)
             {
-                try
-                {
 
-                    if (Regex.IsMatch(textBox1.Text, "^([0-9a-zA-Z]){11}"))
+
+                if (Regex.IsMatch(textBox1.Text, "^([0-9a-zA-Z]){11}"))
+                {
+                    try
                     {
-                        string url = string.Concat(label1.Text, textBox1.Text);
-                        IEnumerable<VideoInfo> videos = DownloadUrlResolver.GetDownloadUrls(url, true);
-                        VideoInfo video = videos.First(p => p.VideoType == VideoType.Mp4 && p.Resolution == Convert.ToInt32(comboBox1.Text));
-                        if (video != null)
+                        for (int i = 0; i < 5; i++)
                         {
-                            saveFileDialog1.FileName = video.Title;
-                            saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
-                            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                            VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", textBox1.Text), false)
+                                                            .OrderByDescending(p => p.Resolution)
+                                                            .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution <= Convert.ToInt32(comboBox1.Text) && p.AudioType != AudioType.Unknown);
+                            if (video != null)
                             {
-                                Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
-                                Properties.Settings.Default.Save();
-                                downloader = new VideoDownloader(video, saveFileDialog1.FileName);
-                                downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
-                                downloader.DownloadFinished += downloader_DownloadFinished;
-                                thread = new Thread(() => { downloader.Execute(); })
+                                saveFileDialog1.FileName = video.Title;
+                                saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
+                                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                                 {
-                                    IsBackground = true
-                                };
-                                thread.Start();
-                                button1.Text = "&Cancel";
-                                textBox1.Enabled = false;
+                                    Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
+                                    Properties.Settings.Default.Save();
+                                    if (video.RequiresDecryption)
+                                    {
+                                        DownloadUrlResolver.DecryptDownloadUrl(video);
+                                    }
+                                    downloader = new VideoDownloader(video, saveFileDialog1.FileName);
+                                    downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
+                                    downloader.DownloadFinished += downloader_DownloadFinished;
+                                    thread = new Thread(() => { downloader.Execute(); })
+                                    {
+                                        IsBackground = true
+                                    };
+                                    thread.Start();
+                                    button1.Text = "&Cancel";
+                                    textBox1.Enabled = false;
+                                }
                             }
+                            else
+                            {
+                                MessageBox.Show("Видео не найдено!");
+                            }
+                            break;
                         }
                     }
-                    else
+                    catch (Exception exception)
                     {
-                        MessageBox.Show("Неверный адрес!");
+                        if (!(exception is YoutubeParseException))
+                        {
+                            MessageBox.Show(exception.Message);
+                        }
                     }
                 }
-                catch (Exception exception)
+                else
                 {
-                    MessageBox.Show(exception.Message);
+                    MessageBox.Show("Неверный адрес!");
                 }
             }
             else
