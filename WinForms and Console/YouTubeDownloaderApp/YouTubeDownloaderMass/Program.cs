@@ -29,7 +29,7 @@ namespace YouTubeDownloaderMass
                             foreach (string line in lines)
                             {
                                 string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                                if (parts.Length == 3 && Regex.IsMatch(parts[0], "^([0-9a-zA-Z]){11}") && Regex.IsMatch(parts[1], "^(144|360|480|720|1080)$") &&
+                                if (parts.Length == 3 && Regex.IsMatch(parts[0], "^([_0-9a-zA-Z]){11}") && Regex.IsMatch(parts[1], "^(144|360|480|720|1080)$") &&
                                     (Regex.IsMatch(parts[2], @"^([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$")))
                                 {
                                     for (int i = 0; i < 5; i++)
@@ -54,6 +54,10 @@ namespace YouTubeDownloaderMass
                                                     Directory.CreateDirectory(parts[2]);
                                                 }
                                                 downloader.Execute();
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Video not found");
                                             }
                                             break;
                                         }

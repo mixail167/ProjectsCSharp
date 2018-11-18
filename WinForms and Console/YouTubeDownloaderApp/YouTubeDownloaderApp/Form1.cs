@@ -36,7 +36,7 @@ namespace YouTubeDownloaderApp
             {
 
 
-                if (Regex.IsMatch(textBox1.Text, "^([0-9a-zA-Z]){11}"))
+                if (Regex.IsMatch(textBox1.Text, "^([_0-9a-zA-Z]){11}"))
                 {
                     try
                     {
@@ -71,7 +71,7 @@ namespace YouTubeDownloaderApp
                             }
                             else
                             {
-                                MessageBox.Show("Видео не найдено!");
+                                MessageBox.Show("Video not found");
                             }
                             break;
                         }
