@@ -12,6 +12,7 @@ namespace YouTubeDownloaderMass
     {
         static void Main(string[] args)
         {
+            const string pattern = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/watch\?v=([_0-9a-zA-Z]){11}(&([-=_0-9a-zA-Z&])*)?;(144|360|480|720|1080);([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$";
             if (args.Length > 0)
             {
                 foreach (string fileName in args)
@@ -28,10 +29,10 @@ namespace YouTubeDownloaderMass
                             string[] lines = text.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                             foreach (string line in lines)
                             {
-                                string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                                if (parts.Length == 3 && Regex.IsMatch(parts[0], "^([_0-9a-zA-Z]){11}") && Regex.IsMatch(parts[1], "^(144|360|480|720|1080)$") &&
-                                    (Regex.IsMatch(parts[2], @"^([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$")))
+                                if (Regex.IsMatch(line, pattern))
                                 {
+                                    string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                                    parts[0] = parts[0].Substring(parts[0].IndexOf('=') + 1, 11);
                                     for (int i = 0; i < 5; i++)
                                     {
                                         try
