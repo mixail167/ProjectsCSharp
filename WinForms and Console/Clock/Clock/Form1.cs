@@ -53,15 +53,15 @@ namespace Clock
                                            (int)numericUpDown1.Value,
                                            (int)numericUpDown4.Value,
                                            (int)numericUpDown5.Value,
-                                           0);
+                                           0).AddYears(2000).AddHours(-2);
                 SYSTEMTIME st = new SYSTEMTIME();
                 st.Day = (short)dt.Day;
                 st.Month = (short)dt.Month;
-                st.Year = (short)(dt.Year + 2000);
-                st.Hour = (short)(dt.Hour - 2);
+                st.Year = (short)(dt.Year);
+                st.Hour = (short)(dt.Hour);
                 st.Minute = (short)dt.Minute;
                 st.Second = (short)dt.Second;
-                st.Milliseconds = 0;
+                st.Milliseconds = (short)dt.Millisecond;
                 if (!SetSystemTime(ref st))
                 {
                     MessageBox.Show("Дата и время не установлены!");
