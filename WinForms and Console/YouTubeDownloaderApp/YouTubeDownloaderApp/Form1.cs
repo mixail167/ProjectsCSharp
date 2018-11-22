@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -13,6 +13,9 @@ namespace YouTubeDownloaderApp
     {
         Thread thread;
         VideoDownloader downloader;
+
+        [DllImport("wininet.dll")]
+        private extern static bool InternetGetConnectedState(out int description, int reservedValue);
 
         private void ResetForm()
         {
@@ -34,59 +37,70 @@ namespace YouTubeDownloaderApp
         {
             if (thread == null)
             {
-
-
-                if (Regex.IsMatch(textBox1.Text, "^([_0-9a-zA-Z]){11}"))
+                if (Regex.IsMatch(textBox1.Text, "^([-_0-9a-zA-Z]){11}"))
                 {
-                    try
+                    int description;
+                    if (InternetGetConnectedState(out description, 0))
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", textBox1.Text), false)
-                                                            .OrderByDescending(p => p.Resolution)
-                                                            .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution <= Convert.ToInt32(comboBox1.Text) && p.AudioType != AudioType.Unknown);
-                            if (video != null)
+                            try
                             {
-                                saveFileDialog1.FileName = video.Title;
-                                saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
-                                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                                VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", textBox1.Text), false)
+                                                                .OrderByDescending(p => p.Resolution)
+                                                                .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution <= Convert.ToInt32(comboBox1.Text) && p.AudioType != AudioType.Unknown);
+                                if (video != null)
                                 {
-                                    Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
-                                    Properties.Settings.Default.Save();
-                                    if (video.RequiresDecryption)
+                                    saveFileDialog1.FileName = video.Title;
+                                    saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
+                                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                                     {
-                                        DownloadUrlResolver.DecryptDownloadUrl(video);
+                                        Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
+                                        Properties.Settings.Default.Save();
+                                        if (video.RequiresDecryption)
+                                        {
+                                            DownloadUrlResolver.DecryptDownloadUrl(video);
+                                        }
+                                        downloader = new VideoDownloader(video, saveFileDialog1.FileName);
+                                        downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
+                                        downloader.DownloadFinished += downloader_DownloadFinished;
+                                        thread = new Thread(() => { downloader.Execute(); })
+                                        {
+                                            IsBackground = true
+                                        };
+                                        thread.Start();
+                                        button1.Text = "&Cancel";
+                                        textBox1.Enabled = false;
                                     }
-                                    downloader = new VideoDownloader(video, saveFileDialog1.FileName);
-                                    downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
-                                    downloader.DownloadFinished += downloader_DownloadFinished;
-                                    thread = new Thread(() => { downloader.Execute(); })
-                                    {
-                                        IsBackground = true
-                                    };
-                                    thread.Start();
-                                    button1.Text = "&Cancel";
-                                    textBox1.Enabled = false;
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Video not found");
+                                }
+                                break;
+                            }
+                            catch (YoutubeParseException)
+                            {
+                                if (i == 4)
+                                {
+                                    MessageBox.Show("Video not found");
                                 }
                             }
-                            else
+                            catch (Exception exception)
                             {
-                                MessageBox.Show("Video not found");
+                                MessageBox.Show(exception.Message);
+                                break;
                             }
-                            break;
                         }
                     }
-                    catch (Exception exception)
+                    else
                     {
-                        if (!(exception is YoutubeParseException))
-                        {
-                            MessageBox.Show(exception.Message);
-                        }
+                        MessageBox.Show("There is no Internet connection.");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Неверный адрес!");
+                    MessageBox.Show("Incorrect URL!");
                 }
             }
             else
