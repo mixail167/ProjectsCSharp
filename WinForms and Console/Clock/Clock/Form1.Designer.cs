@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -38,16 +39,18 @@
             this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(12, 12);
+            this.numericUpDown1.Location = new System.Drawing.Point(3, 3);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             31,
             0,
@@ -70,7 +73,7 @@
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(73, 12);
+            this.numericUpDown2.Location = new System.Drawing.Point(58, 3);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             12,
             0,
@@ -94,7 +97,8 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(57, 14);
+            this.label1.Location = new System.Drawing.Point(45, 7);
+            this.label1.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(10, 13);
             this.label1.TabIndex = 2;
@@ -103,7 +107,8 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(117, 14);
+            this.label2.Location = new System.Drawing.Point(99, 7);
+            this.label2.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(22, 13);
             this.label2.TabIndex = 3;
@@ -111,7 +116,7 @@
             // 
             // numericUpDown3
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(145, 12);
+            this.numericUpDown3.Location = new System.Drawing.Point(124, 3);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             99,
             0,
@@ -129,7 +134,8 @@
             // 
             // numericUpDown4
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(214, 12);
+            this.numericUpDown4.Location = new System.Drawing.Point(185, 3);
+            this.numericUpDown4.Margin = new System.Windows.Forms.Padding(20, 3, 3, 3);
             this.numericUpDown4.Maximum = new decimal(new int[] {
             23,
             0,
@@ -143,7 +149,8 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(259, 14);
+            this.label3.Location = new System.Drawing.Point(227, 7);
+            this.label3.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(10, 13);
             this.label3.TabIndex = 6;
@@ -151,7 +158,7 @@
             // 
             // numericUpDown5
             // 
-            this.numericUpDown5.Location = new System.Drawing.Point(275, 12);
+            this.numericUpDown5.Location = new System.Drawing.Point(240, 3);
             this.numericUpDown5.Maximum = new decimal(new int[] {
             59,
             0,
@@ -164,7 +171,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(232, 48);
+            this.button1.Location = new System.Drawing.Point(212, 46);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(82, 25);
             this.button1.TabIndex = 5;
@@ -174,7 +181,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 48);
+            this.button2.Location = new System.Drawing.Point(12, 46);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(188, 25);
             this.button2.TabIndex = 8;
@@ -182,22 +189,31 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.numericUpDown1);
+            this.flowLayoutPanel1.Controls.Add(this.label1);
+            this.flowLayoutPanel1.Controls.Add(this.numericUpDown2);
+            this.flowLayoutPanel1.Controls.Add(this.label2);
+            this.flowLayoutPanel1.Controls.Add(this.numericUpDown3);
+            this.flowLayoutPanel1.Controls.Add(this.numericUpDown4);
+            this.flowLayoutPanel1.Controls.Add(this.label3);
+            this.flowLayoutPanel1.Controls.Add(this.numericUpDown5);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 12);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(282, 28);
+            this.flowLayoutPanel1.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(321, 79);
+            this.ClientSize = new System.Drawing.Size(304, 82);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.numericUpDown5);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.numericUpDown4);
-            this.Controls.Add(this.numericUpDown3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.numericUpDown2);
-            this.Controls.Add(this.numericUpDown1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -207,8 +223,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -224,6 +241,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown5;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
 
