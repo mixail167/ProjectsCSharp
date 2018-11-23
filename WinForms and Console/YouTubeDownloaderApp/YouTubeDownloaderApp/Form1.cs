@@ -46,9 +46,11 @@ namespace YouTubeDownloaderApp
                         {
                             try
                             {
-                                VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", textBox1.Text), false)
+                                VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", textBox1.Text))
                                                                 .OrderByDescending(p => p.Resolution)
-                                                                .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution <= Convert.ToInt32(comboBox1.Text) && p.AudioType != AudioType.Unknown);
+                                                                .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && 
+                                                                                    p.Resolution <= Convert.ToInt32(comboBox1.Text) && 
+                                                                                    p.AudioType != AudioType.Unknown);
                                 if (video != null)
                                 {
                                     saveFileDialog1.FileName = video.Title;
@@ -57,10 +59,6 @@ namespace YouTubeDownloaderApp
                                     {
                                         Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
                                         Properties.Settings.Default.Save();
-                                        if (video.RequiresDecryption)
-                                        {
-                                            DownloadUrlResolver.DecryptDownloadUrl(video);
-                                        }
                                         downloader = new VideoDownloader(video, saveFileDialog1.FileName);
                                         downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
                                         downloader.DownloadFinished += downloader_DownloadFinished;

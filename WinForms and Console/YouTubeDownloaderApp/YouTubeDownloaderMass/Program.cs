@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using YoutubeExtractor;
@@ -12,6 +13,8 @@ namespace YouTubeDownloaderMass
     {
         [DllImport("wininet.dll")]
         private extern static bool InternetGetConnectedState(out int description, int reservedValue);
+
+        static bool errorIndicator = false;
 
         static void Main(string[] args)
         {
@@ -27,7 +30,7 @@ namespace YouTubeDownloaderMass
                         {
                             if (Path.GetExtension(fileName).Equals(".csv"))
                             {
-                                Console.WriteLine("Чтение файла {0}.", fileName);
+                                Message(string.Format("Чтение файла {0}.", fileName));
                                 try
                                 {
                                     using (StreamReader streamReader = new StreamReader(fileName))
@@ -37,17 +40,17 @@ namespace YouTubeDownloaderMass
                                 }
                                 catch (Exception exception)
                                 {
-                                    Console.WriteLine("Файл {0}: {1}.", fileName, exception.Message);
+                                    Message(string.Format("Файл {0}: {1}.", fileName, exception.Message), true);
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Файл {0} должен иметь расширение '.csv'.", fileName);
+                                Message(string.Format("Файл {0} должен иметь расширение '.csv'.", fileName), true);
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Файл {0} не существует.", fileName);
+                            Message(string.Format("Файл {0} не существует.", fileName), true);
                         }
                     }
                     if (list.Count != 0)
@@ -60,7 +63,7 @@ namespace YouTubeDownloaderMass
                         {
                             if (!Regex.IsMatch(list[i], pattern))
                             {
-                                Console.WriteLine("Строка {0} имеет недопустимый формат.", list[i]);
+                                Message(string.Format("Строка {0} имеет недопустимый формат.", list[i]), true);
                                 list.RemoveAt(i);
                                 i--;
                             }
@@ -73,22 +76,24 @@ namespace YouTubeDownloaderMass
                                 string[] parts = item.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                                 parts[0] = parts[0].Substring(parts[0].IndexOf('=') + 1, 11);
                                 string url = string.Concat("https://www.youtube.com/watch?v=", parts[0]);
-                                Console.WriteLine("Поиск видео по URL {0}.", url);
+                                Message(string.Format("Поиск видео по URL {0}.", url));
                                 int resolution = Convert.ToInt32(parts[1]);
                                 for (int i = 0; i < 5; i++)
                                 {
                                     try
                                     {
-                                        VideoInfo video = DownloadUrlResolver.GetDownloadUrls(url, false)
+                                        VideoInfo video = DownloadUrlResolver.GetDownloadUrls(url)
                                                                                   .OrderByDescending(p => p.Resolution)
-                                                                                  .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution <= resolution && p.AudioType != AudioType.Unknown);
+                                                                                  .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && 
+                                                                                                    p.Resolution <= resolution && 
+                                                                                                    p.AudioType != AudioType.Unknown);
                                         if (video != null)
                                         {
                                             videoList.Add(new Tuple<VideoInfo, string>(video, parts[2]));
                                         }
                                         else
                                         {
-                                            Console.WriteLine("Видео по URL {0} не найдено.", url);
+                                            Message(string.Format("Видео по URL {0} не найдено.", url), true);
                                         }
                                         break;
                                     }
@@ -96,12 +101,12 @@ namespace YouTubeDownloaderMass
                                     {
                                         if (i == 4)
                                         {
-                                            Console.WriteLine("Видео по URL {0} не найдено.", url);
+                                            Message(string.Format("Видео по URL {0} не найдено.", url), true);
                                         }
                                     }
                                     catch (Exception exception)
                                     {
-                                        Console.WriteLine("URL: {0}: {1}", url, exception.Message);
+                                        Message(string.Format("URL: {0}: {1}", url, exception.Message), true);
                                         break;
                                     }
                                 }
@@ -109,15 +114,11 @@ namespace YouTubeDownloaderMass
                             list.Clear();
                             if (videoList.Count != 0)
                             {
-                                char[] invalidChars = Path.GetInvalidFileNameChars();            
+                                char[] invalidChars = Path.GetInvalidFileNameChars();
                                 for (int i = 0; i < videoList.Count; i++)
                                 {
                                     try
                                     {
-                                        if (videoList[i].Item1.RequiresDecryption)
-                                        {
-                                            DownloadUrlResolver.DecryptDownloadUrl(videoList[i].Item1);
-                                        }
                                         string title = videoList[i].Item1.Title;
                                         foreach (char item in invalidChars)
                                         {
@@ -135,54 +136,83 @@ namespace YouTubeDownloaderMass
                                         }
                                         downloader.Execute();
                                     }
+                                    catch (WebException exception)
+                                    {
+                                        if (exception.Status == WebExceptionStatus.ProtocolError)
+                                        {
+                                            HttpWebResponse response = exception.Response as HttpWebResponse;
+                                            switch (response.StatusCode)
+                                            {
+                                                case HttpStatusCode.Forbidden:
+                                                    Message(string.Format("Видео {0}: Доступ запрещен.", videoList[i].Item1.Title), true);
+                                                    break;
+                                                default:
+                                                    Message(string.Format("Видео {0}: Неизвестная ошибка.", videoList[i].Item1.Title), true);
+                                                    break;
+                                            }
+                                        }
+                                    }
                                     catch (Exception exception)
                                     {
-                                        Console.WriteLine("Видео {0}: {1}", videoList[i].Item1.Title, exception.Message);
+                                        Message(string.Format("Видео {0}: {1}", videoList[i].Item1.Title, exception.Message), true);
                                     }
                                 }
+                                videoList.Clear();
                             }
                             else
                             {
-                                Pause("Нет данных для загрузки видео.");
+                                Message("Нет данных для загрузки видео.", true);
                             }
                         }
                         else
                         {
-                            Pause("Нет данных для поиска видео.");
+                            Message("Нет данных для поиска видео.", true);
                         }
                     }
                     else
                     {
-                        Pause("Нет данных для обработки.");
+                        Message("Нет данных для обработки.", true);
                     }
                 }
                 else
                 {
-                    Pause("Отсутствует параметр 'Путь к файлу'.");
+                    Message("Отсутствует параметр 'Путь к файлу'.", true);
                 }
             }
             else
             {
-                Pause("Отсутствует соединение с сетью Интернет.");
+                Message("Отсутствует соединение с сетью Интернет.", true);
             }
+            if (errorIndicator)
+            {
+                Message("Операция завершена с ошибками.");
+            }
+            else
+            {
+                Message("Операция успешно завершена.");
+            }
+            Console.ReadKey();
         }
 
         private static void downloader_DownloadStarted(object sender, EventArgs e)
         {
             VideoDownloader downloader = sender as VideoDownloader;
-            Console.WriteLine("Загрузка видео {0}.", downloader.Video.Title);
+            Message(string.Format("Загрузка видео {0}.", downloader.Video.Title));
         }
 
         static void downloader_DownloadFinished(object sender, EventArgs e)
         {
             VideoDownloader downloader = sender as VideoDownloader;
-            Console.WriteLine("Видео загружено в {0}.", downloader.SavePath);
+            Message(string.Format("Видео загружено в {0}.", downloader.SavePath));
         }
 
-        private static void Pause(string message)
+        private static void Message(string message, bool error = false)
         {
             Console.WriteLine(message);
-            Console.ReadKey();
+            if (!errorIndicator && error)
+            {
+                errorIndicator = error;
+            }
         }
     }
 }
