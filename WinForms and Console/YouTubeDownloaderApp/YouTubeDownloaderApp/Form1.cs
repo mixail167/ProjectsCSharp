@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -42,53 +43,60 @@ namespace YouTubeDownloaderApp
                     int description;
                     if (InternetGetConnectedState(out description, 0))
                     {
-                        for (int i = 0; i < 5; i++)
+                        if ((new Ping()).Send("www.youtube.com").Status == IPStatus.Success)
                         {
-                            try
+                            for (int i = 0; i < 5; i++)
                             {
-                                VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", textBox1.Text))
-                                                                .OrderByDescending(p => p.Resolution)
-                                                                .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && 
-                                                                                    p.Resolution <= Convert.ToInt32(comboBox1.Text) && 
-                                                                                    p.AudioType != AudioType.Unknown);
-                                if (video != null)
+                                try
                                 {
-                                    saveFileDialog1.FileName = video.Title;
-                                    saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
-                                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                                    VideoInfo video = DownloadUrlResolver.GetDownloadUrls(string.Concat("https://www.youtube.com/watch?v=", textBox1.Text))
+                                                                    .OrderByDescending(p => p.Resolution)
+                                                                    .FirstOrDefault(p => p.VideoType == VideoType.Mp4 &&
+                                                                                        p.Resolution <= Convert.ToInt32(comboBox1.Text) &&
+                                                                                        p.AudioType != AudioType.Unknown);
+                                    if (video != null)
                                     {
-                                        Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
-                                        Properties.Settings.Default.Save();
-                                        downloader = new VideoDownloader(video, saveFileDialog1.FileName);
-                                        downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
-                                        downloader.DownloadFinished += downloader_DownloadFinished;
-                                        thread = new Thread(() => { downloader.Execute(); })
+                                        saveFileDialog1.FileName = video.Title;
+                                        saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
+                                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                                         {
-                                            IsBackground = true
-                                        };
-                                        thread.Start();
-                                        button1.Text = "&Cancel";
-                                        textBox1.Enabled = false;
+                                            Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
+                                            Properties.Settings.Default.Save();
+                                            downloader = new VideoDownloader(video, saveFileDialog1.FileName);
+                                            downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
+                                            downloader.DownloadFinished += downloader_DownloadFinished;
+                                            thread = new Thread(() => { downloader.Execute(); })
+                                            {
+                                                IsBackground = true
+                                            };
+                                            thread.Start();
+                                            button1.Text = "&Cancel";
+                                            textBox1.Enabled = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Video not found");
+                                    }
+                                    break;
+                                }
+                                catch (YoutubeParseException)
+                                {
+                                    if (i == 4)
+                                    {
+                                        MessageBox.Show("Video not found");
                                     }
                                 }
-                                else
+                                catch (Exception exception)
                                 {
-                                    MessageBox.Show("Video not found");
-                                }
-                                break;
-                            }
-                            catch (YoutubeParseException)
-                            {
-                                if (i == 4)
-                                {
-                                    MessageBox.Show("Video not found");
+                                    MessageBox.Show(exception.Message);
+                                    break;
                                 }
                             }
-                            catch (Exception exception)
-                            {
-                                MessageBox.Show(exception.Message);
-                                break;
-                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(@"URL https://www.youtube.com not available.");
                         }
                     }
                     else
