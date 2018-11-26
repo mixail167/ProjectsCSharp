@@ -101,33 +101,46 @@ namespace Clock
 
         public DateTime GetNetworkTime()
         {
+            DateTime dt = new DateTime();
             try
             {
                 const string ntpServer = "pool.ntp.org";
                 byte[] ntpData = new byte[48];
                 ntpData[0] = 0x1B;
                 IPAddress[] addresses = Dns.GetHostEntry(ntpServer).AddressList;
-                IPEndPoint ipEndPoint = new IPEndPoint(addresses[0], 123);
-                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+                foreach (IPAddress item in addresses)
                 {
-                    socket.Connect(ipEndPoint);
-                    socket.ReceiveTimeout = 3000;
-                    socket.Send(ntpData);
-                    socket.Receive(ntpData);
+                    try
+                    {
+                        IPEndPoint ipEndPoint = new IPEndPoint(item, 123);
+                        using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+                        {
+                            socket.Connect(ipEndPoint);
+                            socket.ReceiveTimeout = 3000;
+                            socket.Send(ntpData);
+                            socket.Receive(ntpData);
+                        }
+                        const byte serverReplyTime = 40;
+                        ulong intPart = BitConverter.ToUInt32(ntpData, serverReplyTime);
+                        ulong fractPart = BitConverter.ToUInt32(ntpData, serverReplyTime + 4);
+                        intPart = SwapEndianness(intPart);
+                        fractPart = SwapEndianness(fractPart);
+                        ulong milliseconds = (intPart * 1000) + ((fractPart * 1000) / 0x100000000L);
+                        DateTime networkDateTime = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds((long)milliseconds);
+                        dt = networkDateTime.ToLocalTime();
+                        break;
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
                 }
-                const byte serverReplyTime = 40;
-                ulong intPart = BitConverter.ToUInt32(ntpData, serverReplyTime);
-                ulong fractPart = BitConverter.ToUInt32(ntpData, serverReplyTime + 4);
-                intPart = SwapEndianness(intPart);
-                fractPart = SwapEndianness(fractPart);
-                ulong milliseconds = (intPart * 1000) + ((fractPart * 1000) / 0x100000000L);
-                DateTime networkDateTime = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds((long)milliseconds);
-                return networkDateTime.ToLocalTime();
             }
             catch (Exception)
             {
-                return new DateTime();
+                
             }
+            return dt;
         }
 
         static uint SwapEndianness(ulong x)
