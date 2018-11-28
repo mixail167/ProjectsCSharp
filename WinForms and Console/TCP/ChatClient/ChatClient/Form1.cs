@@ -317,7 +317,7 @@ namespace ChatClient
                 }
                 catch (Exception exception)
                 {
-                    if (exception.HResult != -2146233040)
+                    if (!(exception is ThreadAbortException))
                     {
                         RefreshTextBox(exception.Message);
                         CloseConnection();

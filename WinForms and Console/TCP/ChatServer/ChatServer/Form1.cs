@@ -152,13 +152,16 @@ namespace ChatServer
                         };
                         clientThread.Start(client);
                     }
-                    else Thread.Sleep(2000);
+                    else Thread.Sleep(1000);
                 }
             }
             catch (Exception exception)
             {
-                RefreshTextBox(exception.Message);
-                DisconnectServer();
+                if (!(exception is ThreadAbortException))
+                {
+                    RefreshTextBox(exception.Message);
+                    DisconnectServer();
+                }
             }
         }
 
@@ -269,9 +272,12 @@ namespace ChatServer
                             bytes = client.NetworkStream.Read(data, 0, data.Length);
                             stringBuilder.Append(Encoding.Unicode.GetString(data, 0, bytes));
                         }
-                        catch (ObjectDisposedException exception)
+                        catch (Exception exception)
                         {
-                            RefreshTextBox(exception.Message);
+                            if (!(exception is ObjectDisposedException))
+                            {
+                                RefreshTextBox(exception.Message);
+                            }
                         }
                     }
                 }
@@ -279,7 +285,10 @@ namespace ChatServer
             }
             catch (Exception exception)
             {
-                RefreshTextBox(exception.Message);
+                if (!(exception is ObjectDisposedException))
+                {
+                    RefreshTextBox(exception.Message);
+                }
             }
             return stringBuilder.ToString();
         }
