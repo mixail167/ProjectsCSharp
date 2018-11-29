@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Drawing = System.Drawing;
 using System.Windows;
 using System.Diagnostics;
+using System.Text;
 
 namespace Algorithms
 {
@@ -59,6 +60,7 @@ namespace Algorithms
             graphics = Drawing.Graphics.FromImage(bitmap);
             rombMesh = Romb.CreateRombMesh(0, 200, 20, 10, 10, 2.5);
             objects = new List<Sprait>();
+            comboBox1.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -1510,9 +1512,71 @@ namespace Algorithms
             if (coordinate.X != -1)
             {
                 Drawing.PointF pilot = rombMesh[coordinate.X, coordinate.Y].CenterPoint;
-                objects.Add(new Sprait(Properties.Resources.Tree, new Drawing.PointF(pilot.X - Properties.Resources.Tree.Width / 2, pilot.Y- Properties.Resources.Tree.Height)));
-                objects = objects.ToArray().OrderBy(x => x.Point.Y).ThenBy(x=>x.Point.X).ToList();
+                objects.Add(new Sprait(Properties.Resources.Tree, new Drawing.PointF(pilot.X - Properties.Resources.Tree.Width / 2, pilot.Y - Properties.Resources.Tree.Height)));
+                objects = objects.ToArray().OrderBy(x => x.Point.Y).ThenBy(x => x.Point.X).ToList();
                 panel3.Invalidate();
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (richTextBox2.Text.Length > 0)
+            {
+                int key = Convert.ToInt32(numericUpDown9.Value);
+                byte[] text;
+                switch (comboBox1.SelectedIndex)
+                {
+                    case 0:
+                        text = Encoding.ASCII.GetBytes(richTextBox2.Text);
+                        break;
+                    case 1:
+                        text = Encoding.Unicode.GetBytes(richTextBox2.Text);
+                        break;
+                    case 2:
+                        text = Encoding.BigEndianUnicode.GetBytes(richTextBox2.Text);
+                        break;
+                    case 3:
+                        text = Encoding.UTF7.GetBytes(richTextBox2.Text);
+                        break;
+                    case 4:                        
+                        text = Encoding.UTF8.GetBytes(richTextBox2.Text);
+                        break;
+                    case 5:
+                        text = Encoding.UTF32.GetBytes(richTextBox2.Text);
+                        break;
+                    default:
+                        text = Encoding.Default.GetBytes(richTextBox2.Text);
+                        break;
+                }
+                byte[] text2 = new byte[text.Length];
+                for (int i = 0; i < text2.Length; i++)
+                {
+                    text2[i] = (byte)(text[i] ^ key);
+                }
+                switch (comboBox1.SelectedIndex)
+                {
+                    case 0:
+                        richTextBox3.Text = Encoding.ASCII.GetString(text2);
+                        break;
+                    case 1:
+                        richTextBox3.Text = Encoding.Unicode.GetString(text2);
+                        break;
+                    case 2:
+                        richTextBox3.Text = Encoding.BigEndianUnicode.GetString(text2);
+                        break;
+                    case 3:
+                        richTextBox3.Text = Encoding.UTF7.GetString(text2);
+                        break;
+                    case 4:
+                        richTextBox3.Text = Encoding.UTF8.GetString(text2);
+                        break;
+                    case 5:
+                        richTextBox3.Text = Encoding.UTF32.GetString(text2);
+                        break;
+                    default:
+                        richTextBox3.Text = Encoding.Default.GetString(text2);
+                        break;
+                }
             }
         }
     }
