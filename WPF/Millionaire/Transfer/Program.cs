@@ -1,4 +1,5 @@
 ﻿using System;
+using Crypt;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -38,7 +39,7 @@ namespace Transfer
                         temp[0] = string.Join<Level>("%", level1.ToArray());
                         temp[1] = string.Join<Level>("%", level2.ToArray());
                         temp[2] = string.Join<Level>("%", level3.ToArray());
-                        byte[] bytes = EncryptStringToBytesAes(string.Join(";", temp), Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
+                        byte[] bytes = AesCrypt.EncryptStringToBytes(string.Join(";", temp), Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
                         fileStream.Write(bytes, 0, bytes.Length);
                     }
                     SetAttributes("data.bin");
@@ -46,7 +47,7 @@ namespace Transfer
                     DelAttributes("records.bin");
                     using (FileStream fileStream = File.Create("records.bin"))
                     {
-                        byte[] bytes = EncryptStringToBytesAes(string.Join<Record>("%", records.ToArray()), Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
+                        byte[] bytes = AesCrypt.EncryptStringToBytes(string.Join<Record>("%", records.ToArray()), Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
                         fileStream.Write(bytes, 0, bytes.Length);
                     }
                     SetAttributes("records.bin");
@@ -141,51 +142,6 @@ namespace Transfer
                 list.Add(record);
             }
             reader.Close();
-        }
-
-        static byte[] EncryptStringToBytesAes(string plainText, byte[] Key, byte[] IV)
-        {
-            byte[] encrypted;
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-                using (var msEncrypt = new MemoryStream())
-                {
-                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (var swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            swEncrypt.Write(plainText);
-                        }
-                        encrypted = msEncrypt.ToArray();
-                    }
-                }
-            }
-            return encrypted;
-        }
-
-        static string DecryptStringFromBytesAes(byte[] cipherText, byte[] Key, byte[] IV)
-        {
-            string plaintext;
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-                using (var msDecrypt = new MemoryStream(cipherText))
-                {
-                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (var srDecrypt = new StreamReader(csDecrypt))
-                        {
-                            plaintext = srDecrypt.ReadToEnd();
-                        }
-                    }
-                }
-            }
-            return plaintext;
-        }
+        }       
     }
 }

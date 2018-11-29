@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypt;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Millionaire
                     byte[] buffer = new byte[fileStream.Length];
                     if (fileStream.Read(buffer, 0, buffer.Length) > 0)
                     {
-                        return Crypt.DecryptStringFromBytesAES(buffer, Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
+                        return AesCrypt.DecryptStringFromBytes(buffer, Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
                     }
                     else throw new Exception();
                 }
@@ -118,7 +119,7 @@ namespace Millionaire
                             if (fileAttributes.HasFlag(FileAttributes.ReadOnly))
                                 File.SetAttributes("records.bin", fileAttributes & ~FileAttributes.ReadOnly);
                         }
-                        byte[] bytes = Crypt.EncryptStringToBytesAES(string.Join<Record>("%", records.ToArray()), Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
+                        byte[] bytes = AesCrypt.EncryptStringToBytes(string.Join<Record>("%", records.ToArray()), Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
                         using (FileStream fileStream = File.Create("records.bin"))
                         {
                             fileStream.Write(bytes, 0, bytes.Length);

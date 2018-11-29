@@ -1,4 +1,5 @@
-﻿using Millionaire.Classes;
+﻿using Crypt;
+using Millionaire.Classes;
 using Millionaire.Windows;
 using System;
 using System.Collections.Generic;
@@ -84,7 +85,7 @@ namespace Millionaire
                     byte[] buffer = new byte[fileStream.Length];
                     if (fileStream.Read(buffer, 0, buffer.Length) > 0)
                     {
-                        return Crypt.DecryptStringFromBytesAES(buffer, Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
+                        return AesCrypt.DecryptStringFromBytes(buffer, Encoding.ASCII.GetBytes("zxcvqwerasdfqazx"), Encoding.ASCII.GetBytes("qazxcvbnmlpoiuyt"));
                     }
                     else throw new Exception("Ошибка чтения данных.");
                 }
