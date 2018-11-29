@@ -16,9 +16,11 @@ namespace YouTubeDownloaderMass
         private extern static bool InternetGetConnectedState(out int description, int reservedValue);
 
         static bool errorIndicator = false;
+        static bool first = true;
 
         static void Main(string[] args)
         {
+            Console.Title = "YouTubeDownloader. Массовая загрузка видео";
             if (args.Length > 0)
             {
                 int description;
@@ -31,7 +33,7 @@ namespace YouTubeDownloaderMass
                         {
                             if (File.Exists(fileName))
                             {
-                                if (Path.GetExtension(fileName).Equals(".csv"))
+                                if (Path.GetExtension(fileName).Equals(".ydl"))
                                 {
                                     Message(string.Format("Чтение файла {0}.", fileName));
                                     try
@@ -48,7 +50,7 @@ namespace YouTubeDownloaderMass
                                 }
                                 else
                                 {
-                                    Message(string.Format("Файл {0} должен иметь расширение '.csv'.", fileName), true);
+                                    Message(string.Format("Файл {0} должен иметь расширение '.ydl'.", fileName), true);
                                 }
                             }
                             else
@@ -61,7 +63,7 @@ namespace YouTubeDownloaderMass
                             Console.WriteLine("Обработка содержимого файлов.");
                             string allText = string.Join("\n", list);
                             list = allText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                            const string pattern = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/watch\?v=([-_0-9a-zA-Z]){11}(&([-=_0-9a-zA-Z&])*)?;(144|360|480|720|1080);([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$";
+                            const string pattern = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/watch\?v=([-_0-9a-zA-Z]){11}(&([-=_0-9a-zA-Z&])*)?\|(144|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$";
                             for (int i = 0; i < list.Count; i++)
                             {
                                 if (!Regex.IsMatch(list[i], pattern))
@@ -76,7 +78,7 @@ namespace YouTubeDownloaderMass
                                 List<Tuple<VideoInfo, string>> videoList = new List<Tuple<VideoInfo, string>>();
                                 foreach (string item in list)
                                 {
-                                    string[] parts = item.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                                    string[] parts = item.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                                     parts[0] = parts[0].Substring(parts[0].IndexOf('=') + 1, 11);
                                     string url = string.Concat("https://www.youtube.com/watch?v=", parts[0]);
                                     Message(string.Format("Поиск видео по URL {0}.", url));
@@ -133,6 +135,7 @@ namespace YouTubeDownloaderMass
                                             VideoDownloader downloader = new VideoDownloader(videoList[i].Item1, Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension));
                                             downloader.DownloadStarted += downloader_DownloadStarted;
                                             downloader.DownloadFinished += downloader_DownloadFinished;
+                                            downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
                                             if (!Directory.Exists(videoList[i].Item2))
                                             {
                                                 Directory.CreateDirectory(videoList[i].Item2);
@@ -143,8 +146,7 @@ namespace YouTubeDownloaderMass
                                         {
                                             if (exception.Status == WebExceptionStatus.ProtocolError)
                                             {
-                                                HttpWebResponse response = exception.Response as HttpWebResponse;
-                                                switch (response.StatusCode)
+                                                switch ((exception.Response as HttpWebResponse).StatusCode)
                                                 {
                                                     case HttpStatusCode.Forbidden:
                                                         Message(string.Format("Видео {0}: Доступ запрещен.", videoList[i].Item1.Title), true);
@@ -158,6 +160,10 @@ namespace YouTubeDownloaderMass
                                         catch (Exception exception)
                                         {
                                             Message(string.Format("Видео {0}: {1}", videoList[i].Item1.Title, exception.Message), true);
+                                        }
+                                        finally
+                                        {
+                                            first = true;
                                         }
                                     }
                                     videoList.Clear();
@@ -202,6 +208,20 @@ namespace YouTubeDownloaderMass
             Console.ReadKey();
         }
 
+        static void downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
+        {
+            if (first)
+            {
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
+                first = false;
+            }
+            else
+            {
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+            }
+            Message(string.Format("Прогресс загрузки: {0}%.", Convert.ToInt16(e.ProgressPercentage)));
+        }
+
         private static void downloader_DownloadStarted(object sender, EventArgs e)
         {
             VideoDownloader downloader = sender as VideoDownloader;
@@ -211,6 +231,7 @@ namespace YouTubeDownloaderMass
         static void downloader_DownloadFinished(object sender, EventArgs e)
         {
             VideoDownloader downloader = sender as VideoDownloader;
+            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
             Message(string.Format("Видео загружено в {0}.", downloader.SavePath));
         }
 
