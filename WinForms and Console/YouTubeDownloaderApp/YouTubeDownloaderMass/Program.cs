@@ -69,8 +69,16 @@ namespace YouTubeDownloaderMass
                                 if (!Regex.IsMatch(list[i], pattern))
                                 {
                                     Message(string.Format("Строка {0} имеет недопустимый формат.", list[i]), true);
-                                    list.RemoveAt(i);
-                                    i--;
+                                    list = RemoveItem(list, i, out i);
+                                }
+                                else
+                                {
+                                    char driverName = list[i][list[i].LastIndexOf('|') + 1];
+                                    if (DriveInfo.GetDrives().FirstOrDefault(p => p.Name.StartsWith(driverName.ToString(), true, null)) == null)
+                                    {
+                                        Message(string.Format("Строка {0}: Диск {1} не существует.", list[i], driverName), true);
+                                        list = RemoveItem(list, i, out i);
+                                    }
                                 }
                             }
                             if (list.Count != 0)
@@ -242,6 +250,13 @@ namespace YouTubeDownloaderMass
             {
                 errorIndicator = error;
             }
+        }
+
+        private static List<string> RemoveItem(List<string> list, int index, out int outIndex)
+        {
+            list.RemoveAt(index);
+            outIndex = index - 1;
+            return list;
         }
     }
 }

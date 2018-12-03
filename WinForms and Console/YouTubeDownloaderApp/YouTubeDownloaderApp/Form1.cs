@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -85,6 +86,21 @@ namespace YouTubeDownloaderApp
                                     if (i == 4)
                                     {
                                         MessageBox.Show("Video not found");
+                                    }
+                                }
+                                catch (WebException exception)
+                                {
+                                    if (exception.Status == WebExceptionStatus.ProtocolError)
+                                    {
+                                        switch ((exception.Response as HttpWebResponse).StatusCode)
+                                        {
+                                            case HttpStatusCode.Forbidden:
+                                                MessageBox.Show("Access denied");
+                                                break;
+                                            default:
+                                                MessageBox.Show("Unknown error");
+                                                break;
+                                        }
                                     }
                                 }
                                 catch (Exception exception)
