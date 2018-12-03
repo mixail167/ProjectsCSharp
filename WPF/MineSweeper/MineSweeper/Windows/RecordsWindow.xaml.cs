@@ -67,7 +67,7 @@ namespace MineSweeper.Windows
                 case 2:
                     CountGames.Content = Properties.Settings.Default.HardLevelCountGames;
                     WinGames.Content = Properties.Settings.Default.HardLevelWinGames;
-                    BestTime.Content = Properties.Settings.Default.EasyLevelBestTime.ToString(@"hh\:mm\:ss");
+                    BestTime.Content = Properties.Settings.Default.HardLevelBestTime.ToString(@"hh\:mm\:ss");
                     try
                     {
                         if (Properties.Settings.Default.HardLevelCountGames == 0)
