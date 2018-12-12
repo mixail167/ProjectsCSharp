@@ -5,13 +5,13 @@ using Google.Apis.Drive.v2.Data;
 using Google.Apis.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
-using IO = System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Windows.Forms;
 using System.Threading.Tasks;
-using System.ComponentModel;
+using System.Windows.Forms;
+using IO = System.IO;
 
 namespace ServiceAccount
 {
@@ -33,7 +33,7 @@ namespace ServiceAccount
                     ApplicationName = ConfigurationManager.AppSettings["appName"]
                 });
             }
-            catch /*(Exception ex)*/
+            catch
             {
 
             }
@@ -128,7 +128,7 @@ namespace ServiceAccount
                 request.Fields = fields;
                 return await request.ExecuteAsync();
             }
-            catch /*(Exception ex)*/
+            catch
             {
                 return null;
             }
@@ -142,16 +142,10 @@ namespace ServiceAccount
                 request.Fields = fields;
                 return await request.ExecuteAsync();
             }
-            catch /*(Exception ex)*/
+            catch
             {
                 return null;
             }
-        }
-
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            InitTree(service);
         }
 
         private async void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -176,7 +170,7 @@ namespace ServiceAccount
         {
             try
             {
-                return await service.Files.Delete(id).ExecuteAsync(); ;
+                return await service.Files.Delete(id).ExecuteAsync();
             }
             catch
             {
@@ -185,27 +179,29 @@ namespace ServiceAccount
         }
 
         private async void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            treeView1.SelectedNode = e.Node;
-            string id = treeView1.SelectedNode.Tag.ToString();
-            listView1.Items.Clear();
-            FileList fileList = await GetFileList(service, "items(id, title, description, createdDate, modifiedDate, lastModifyingUserName, mimeType, fullFileExtension, fileSize)", string.Format("'{0}' in parents and mimeType != 'application/vnd.google-apps.folder'", id));
-            if (fileList != null && fileList.Items.Count > 0)
+        {            
+            if (treeView1.SelectedNode == null || !treeView1.SelectedNode.Equals(e.Node))
             {
-                foreach (File item in fileList.Items)
+                treeView1.SelectedNode = e.Node;
+                listView1.Items.Clear();
+                FileList fileList = await GetFileList(service, "items(id, title, description, createdDate, modifiedDate, lastModifyingUserName, mimeType, fullFileExtension, fileSize)", string.Format("'{0}' in parents and mimeType != 'application/vnd.google-apps.folder'", treeView1.SelectedNode.Tag.ToString()));
+                if (fileList != null && fileList.Items.Count > 0)
                 {
-                    listView1.Items.Add(new ListViewItem(new string[]
+                    foreach (File item in fileList.Items)
                     {
-                        item.Title,
-                        item.Description,
-                        item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString() : "",
-                        item.ModifiedDate.HasValue ? item.ModifiedDate.Value.ToString() : "",
-                        item.LastModifyingUserName,
-                        item.MimeType,
-                        item.FullFileExtension,
-                        item.FileSize.HasValue ? item.FileSize.Value.ToString() : ""
-                    }) { Tag = item });
-                }
+                        listView1.Items.Add(new ListViewItem(new string[]
+                        {
+                            item.Title,
+                            item.Description,
+                            item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString() : "",
+                            item.ModifiedDate.HasValue ? item.ModifiedDate.Value.ToString() : "",
+                            item.LastModifyingUserName,
+                            item.MimeType,
+                            item.FullFileExtension,
+                            item.FileSize.HasValue ? item.FileSize.Value.ToString() : ""
+                        }) { Tag = item });
+                    }
+                } 
             }
         }
 
@@ -311,23 +307,38 @@ namespace ServiceAccount
             toolStripMenuItem1.Visible = !groupBox1.Visible;
         }
 
-        private void contextMenuStrip2_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private async void contextMenuStrip2_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (listView1.SelectedItems.Count > 1 && folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            if (e.ClickedItem == toolStripMenuItem3)
             {
-                List<File> fileList = new List<File>(listView1.SelectedItems.Count);
-                foreach (ListViewItem item in listView1.SelectedItems)
+
+                if (listView1.SelectedItems.Count > 1 && folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    fileList.Add(item.Tag as File);
+                    List<File> fileList = new List<File>(listView1.SelectedItems.Count);
+                    foreach (ListViewItem item in listView1.SelectedItems)
+                    {
+                        fileList.Add(item.Tag as File);
+                    }
+                    Downloading(service, fileList, folderBrowserDialog1.SelectedPath, true);
                 }
-                Downloading(service, fileList, folderBrowserDialog1.SelectedPath, true);
+                else
+                {
+                    File file = listView1.SelectedItems[0].Tag as File;
+                    saveFileDialog1.Tag = file;
+                    saveFileDialog1.FileName = file.Title;
+                    saveFileDialog1.ShowDialog();
+                } 
             }
             else
             {
-                File file = listView1.SelectedItems[0].Tag as File;
-                saveFileDialog1.Tag = file;
-                saveFileDialog1.FileName = file.Title;
-                saveFileDialog1.ShowDialog();
+                foreach (ListViewItem item in listView1.SelectedItems)
+                {
+                    string response = await Delete(service, (item.Tag as File).Id);
+                    if (response != null && response == string.Empty)
+                    {
+                        listView1.Items.Remove(item);
+                    }
+                }
             }
         }
 
@@ -338,14 +349,25 @@ namespace ServiceAccount
 
         private void contextMenuStrip2_Opening(object sender, CancelEventArgs e)
         {
-            if (listView1.SelectedItems.Count > 1)
+            switch (listView1.SelectedItems.Count)
             {
-                toolStripMenuItem3.Text = "Скачать выделенные файлы";
+                case 0:
+                    e.Cancel = true;
+                    break;
+                case 1:
+                    toolStripMenuItem3.Text = "Скачать файл";
+                    toolStripMenuItem4.Text = "Удалить файл";
+                    break;
+                default:
+                    toolStripMenuItem3.Text = "Скачать выделенные файлы";
+                    toolStripMenuItem4.Text = "Удалить выделенные файлы";
+                    break;
             }
-            else
-            {
-                toolStripMenuItem3.Text = "Скачать файл";
-            }
+        }
+
+        private void contextMenuStrip3_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            InitTree(service);
         }
     }
 }
