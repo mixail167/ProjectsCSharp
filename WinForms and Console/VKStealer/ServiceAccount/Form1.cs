@@ -179,7 +179,7 @@ namespace ServiceAccount
         }
 
         private async void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {            
+        {
             if (treeView1.SelectedNode == null || !treeView1.SelectedNode.Equals(e.Node))
             {
                 treeView1.SelectedNode = e.Node;
@@ -201,13 +201,13 @@ namespace ServiceAccount
                             item.FileSize.HasValue ? item.FileSize.Value.ToString() : ""
                         }) { Tag = item });
                     }
-                } 
+                }
             }
         }
 
         private async void DownloadFolder(DriveService service, string id, string folderName)
         {
-            FileList fileList = await GetFileList(service, "items(id, title, fileSize)", string.Format("'{0}' in parents and mimeType != 'application/vnd.google-apps.folder'", id));
+            FileList fileList = await GetFileList(service, "items(id, title, fileSize, mimeType)", string.Format("'{0}' in parents and mimeType != 'application/vnd.google-apps.folder'", id));
             if (fileList != null && fileList.Items.Count > 0 && folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 Downloading(service, fileList.Items, folderBrowserDialog1.SelectedPath, folderName);
@@ -222,11 +222,42 @@ namespace ServiceAccount
             foreach (File item in fileList)
             {
                 label1.Text = string.Format("Загрузка файла: {0}", item.Title);
-                progressBar1.Maximum = (int)(item.FileSize / 1000);
                 IO.MemoryStream stream = new IO.MemoryStream();
                 FilesResource.GetRequest request = service.Files.Get(item.Id);
-                request.MediaDownloader.ChunkSize = progressBar1.Maximum;
-                request.MediaDownloader.ProgressChanged += MediaDownloader_ProgressChanged;
+                if (item.FileSize > int.MaxValue)
+                {
+                    progressBar1.Maximum = (int)(item.FileSize * int.MaxValue / long.MaxValue);
+                }
+                else
+                {
+                    progressBar1.Maximum = (int)(item.FileSize);
+                }
+                if (progressBar1.Maximum >= 100)
+                {
+                    request.MediaDownloader.ChunkSize = progressBar1.Maximum / 100;
+                }
+                else
+                {
+                    request.MediaDownloader.ChunkSize = 1;
+                }
+                request.MediaDownloader.ProgressChanged += ((progress) =>
+                {
+                    progressBar1.Invoke(new MethodInvoker(() =>
+                    {
+                        if (progress.Status == DownloadStatus.Downloading)
+                        {
+                            if (item.FileSize > int.MaxValue)
+                            {
+                                progressBar1.Value = (int)(progress.BytesDownloaded * int.MaxValue / long.MaxValue);
+                            }
+                            else
+                            {
+                                progressBar1.Value = (int)progress.BytesDownloaded;
+                            }
+                            progressBar1.Refresh();
+                        }
+                    }));
+                });
                 IDownloadProgress downloadProgress = await request.DownloadAsync(stream);
                 if (downloadProgress.Status == DownloadStatus.Completed && folderName != null)
                 {
@@ -235,7 +266,7 @@ namespace ServiceAccount
                     {
                         IO.Directory.CreateDirectory(fullPath);
                     }
-                    fullPath = IO.Path.Combine(fullPath, item.Title);
+                    fullPath = IO.Path.Combine(fullPath, string.Concat(item.Title, GetExtension(item.MimeType, item.FullFileExtension)));
                     using (IO.FileStream fileStream = new IO.FileStream(fullPath, IO.FileMode.Create, IO.FileAccess.Write))
                     {
                         stream.WriteTo(fileStream);
@@ -250,6 +281,26 @@ namespace ServiceAccount
             groupBox1.Visible = false;
         }
 
+        private string GetExtension(string mimeType, string fullFileExtension)
+        {
+            string extension = string.Empty;
+            if (fullFileExtension == null || fullFileExtension == string.Empty)
+            {
+                if (mimeType != null)
+                {
+                    switch (mimeType)
+                    {
+                        case "application/pdf":
+                            extension = ".pdf";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            return extension;
+        }
+
         private async void Downloading(DriveService service, IList<File> fileList, string path, bool isFolder = false)
         {
             progressBar2.Maximum = fileList.Count;
@@ -257,19 +308,50 @@ namespace ServiceAccount
             groupBox1.Visible = true;
             foreach (File item in fileList)
             {
-                label1.Text = string.Format("Загрузка файла: {0}", item.Title);
-                progressBar1.Maximum = (int)(item.FileSize / 1000);
+                label1.Text = string.Format("Загрузка файла: {0}", item.Title);                
                 IO.MemoryStream stream = new IO.MemoryStream();
                 FilesResource.GetRequest request = service.Files.Get(item.Id);
-                request.MediaDownloader.ChunkSize = progressBar1.Maximum;
-                request.MediaDownloader.ProgressChanged += MediaDownloader_ProgressChanged;
+                if (item.FileSize > int.MaxValue)
+                {
+                    progressBar1.Maximum = (int)(item.FileSize * int.MaxValue / long.MaxValue);
+                }
+                else
+                {
+                    progressBar1.Maximum = (int)(item.FileSize);
+                }
+                if (progressBar1.Maximum >= 100)
+                {
+                    request.MediaDownloader.ChunkSize = progressBar1.Maximum/100;
+                }
+                else
+                {
+                    request.MediaDownloader.ChunkSize = 1;
+                }
+                request.MediaDownloader.ProgressChanged += ((progress) =>
+                {
+                    progressBar1.Invoke(new MethodInvoker(() =>
+                    {
+                        if (progress.Status == DownloadStatus.Downloading)
+                        {
+                            if (item.FileSize > int.MaxValue)
+                            {
+                                progressBar1.Value = (int)(progress.BytesDownloaded * int.MaxValue / long.MaxValue);
+                            }
+                            else
+                            {
+                                progressBar1.Value = (int)progress.BytesDownloaded;
+                            }
+                            progressBar1.Refresh();
+                        }
+                    }));
+                });
                 IDownloadProgress downloadProgress = await request.DownloadAsync(stream);
                 if (downloadProgress.Status == DownloadStatus.Completed)
                 {
                     string fullPath = null;
                     if (isFolder)
                     {
-                        fullPath = IO.Path.Combine(path, item.Title);
+                        fullPath = IO.Path.Combine(path, string.Concat(item.Title, GetExtension(item.MimeType, item.FullFileExtension)));
                     }
                     else
                     {
@@ -289,29 +371,15 @@ namespace ServiceAccount
             groupBox1.Visible = false;
         }
 
-        private void MediaDownloader_ProgressChanged(IDownloadProgress progress)
-        {
-            if (progressBar1.InvokeRequired)
-            {
-                progressBar1.Invoke(new Action<IDownloadProgress>(MediaDownloader_ProgressChanged), progress);
-            }
-            else if (progress.Status == DownloadStatus.Downloading)
-            {
-                progressBar1.Value = (int)(progress.BytesDownloaded / 1000);
-                progressBar1.Refresh();
-            }
-        }
-
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             toolStripMenuItem1.Visible = !groupBox1.Visible;
         }
 
-        private async void contextMenuStrip2_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void contextMenuStrip2_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem == toolStripMenuItem3)
             {
-
                 if (listView1.SelectedItems.Count > 1 && folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
                     List<File> fileList = new List<File>(listView1.SelectedItems.Count);
@@ -327,17 +395,22 @@ namespace ServiceAccount
                     saveFileDialog1.Tag = file;
                     saveFileDialog1.FileName = file.Title;
                     saveFileDialog1.ShowDialog();
-                } 
+                }
             }
             else
             {
-                foreach (ListViewItem item in listView1.SelectedItems)
+                DeleteItems();
+            }
+        }
+
+        private async void DeleteItems()
+        {
+            foreach (ListViewItem item in listView1.SelectedItems)
+            {
+                string response = await Delete(service, (item.Tag as File).Id);
+                if (response != null && response == string.Empty)
                 {
-                    string response = await Delete(service, (item.Tag as File).Id);
-                    if (response != null && response == string.Empty)
-                    {
-                        listView1.Items.Remove(item);
-                    }
+                    listView1.Items.Remove(item);
                 }
             }
         }
@@ -368,6 +441,21 @@ namespace ServiceAccount
         private void contextMenuStrip3_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             InitTree(service);
+        }
+
+        private void listView1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                DeleteItems();
+            }
+            else if (e.KeyCode == Keys.A && e.Control)
+            {
+                foreach (ListViewItem item in listView1.Items)
+                {
+                    item.Selected = true;
+                }
+            }
         }
     }
 }
