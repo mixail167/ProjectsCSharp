@@ -7,6 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloaderApp", "You
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloaderMass", "YouTubeDownloaderMass\YouTubeDownloaderMass.csproj", "{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeParser", "YoutubeParser\YoutubeParser.csproj", "{A761A454-C473-4844-84F8-A6EBC97FE9C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{6ABC67D0-2449-488C-AC52-AAD92DFA67C3}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeExtractor", "YoutubeExtractor\YoutubeExtractor.csproj", "{ECDC127F-8DEF-4F99-8300-72C13597339D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +30,14 @@ Global
 		{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A761A454-C473-4844-84F8-A6EBC97FE9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A761A454-C473-4844-84F8-A6EBC97FE9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A761A454-C473-4844-84F8-A6EBC97FE9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A761A454-C473-4844-84F8-A6EBC97FE9C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECDC127F-8DEF-4F99-8300-72C13597339D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDC127F-8DEF-4F99-8300-72C13597339D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECDC127F-8DEF-4F99-8300-72C13597339D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECDC127F-8DEF-4F99-8300-72C13597339D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
