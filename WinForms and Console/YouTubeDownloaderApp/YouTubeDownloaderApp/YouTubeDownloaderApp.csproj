@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{429ED5B3-DE70-484B-9C77-8219A90E16C0}</ProjectGuid>
+    <ProjectGuid>{365FD0BF-66B2-4907-A99C-31E801FD277C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>YouTubeDownloaderApp</RootNamespace>
@@ -35,10 +35,6 @@
     <ApplicationIcon>187210.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -72,7 +68,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="app.config" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -88,7 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YoutubeExtractor\YoutubeExtractor.csproj">
-      <Project>{ecdc127f-8def-4f99-8300-72c13597339d}</Project>
+      <Project>{47b9760f-25ca-4c0b-9a41-61e083a66efa}</Project>
       <Name>YoutubeExtractor</Name>
     </ProjectReference>
   </ItemGroup>

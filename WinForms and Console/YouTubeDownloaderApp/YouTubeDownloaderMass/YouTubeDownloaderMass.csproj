@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}</ProjectGuid>
+    <ProjectGuid>{9FBA9E99-8643-484E-9B48-95BA87EC878A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>YouTubeDownloaderMass</RootNamespace>
@@ -32,9 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Fizzler">
+      <HintPath>..\packages\Fizzler.Tools.1.1.0\tools\Fizzler.dll</HintPath>
+    </Reference>
+    <Reference Include="Fizzler.Systems.HtmlAgilityPack">
+      <HintPath>..\packages\Fizzler.Tools.1.1.0\tools\Fizzler.Systems.HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\Fizzler.Tools.1.1.0\tools\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Mannex">
+      <HintPath>..\packages\Fizzler.Tools.1.1.0\tools\Mannex.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,18 +51,21 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xNet, Version=3.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\xNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
+    <Content Include="xNet.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YoutubeExtractor\YoutubeExtractor.csproj">
-      <Project>{ecdc127f-8def-4f99-8300-72c13597339d}</Project>
+      <Project>{47b9760f-25ca-4c0b-9a41-61e083a66efa}</Project>
       <Name>YoutubeExtractor</Name>
     </ProjectReference>
   </ItemGroup>

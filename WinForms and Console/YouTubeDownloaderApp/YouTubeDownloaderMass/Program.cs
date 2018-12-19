@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Fizzler.Systems.HtmlAgilityPack;
+using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +8,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using xNet;
 using YoutubeExtractor;
 
 namespace YouTubeDownloaderMass
@@ -61,30 +64,70 @@ namespace YouTubeDownloaderMass
                         if (list.Count != 0)
                         {
                             Console.WriteLine("Обработка содержимого файлов.");
+                            List<string> list2 = new List<string>();
                             string allText = string.Join("\n", list);
                             list = allText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                             const string pattern = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/watch\?v=([-_0-9a-zA-Z]){11}(&([-=_0-9a-zA-Z&])*)?\|(144|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$";
+                            const string pattern2 = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/playlist\?list=([-_0-9a-zA-Z]){34}(&([-=_0-9a-zA-Z&])*)?\|(144|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$";
                             for (int i = 0; i < list.Count; i++)
                             {
                                 if (!Regex.IsMatch(list[i], pattern))
                                 {
-                                    Message(string.Format("Строка {0} имеет недопустимый формат.", list[i]), true);
-                                    list = RemoveItem(list, i, out i);
+                                    if (!Regex.IsMatch(list[i], pattern2))
+                                    {
+                                        Message(string.Format("Строка {0} имеет недопустимый формат.", list[i]), true);
+                                    }
+                                    else
+                                    {
+                                        string url = list[i].Substring(0, list[i].IndexOf("=") + 35);
+                                        HttpRequest request = new HttpRequest();
+                                        string response = request.Get(url).ToString();
+                                        if (response != null && response != string.Empty)
+                                        {
+                                            HtmlDocument document = new HtmlDocument();
+                                            document.LoadHtml(response);
+                                            IEnumerable<HtmlNode> htmlNodes = document.DocumentNode.QuerySelectorAll("a.pl-video-title-link.yt-uix-tile-link.yt-uix-sessionlink.spf-link");
+                                            if (htmlNodes != null && htmlNodes.Count() > 0)
+                                            {
+                                                foreach (HtmlNode item in htmlNodes)
+                                                {
+                                                    string href = item.GetAttributeValue("href", null).Replace("amp;", "");
+                                                    if (href != null && href != string.Empty)
+                                                    {
+                                                        list2.Add(string.Concat("https://www.youtube.com", href, list[i].Substring(list[i].IndexOf("|"))));
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Message(string.Format("Видео в плейлисте {0} не найдено.", list[i]), true);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Message(string.Format("Ответ от {0} не был получен.", url), true);
+                                        }
+                                    }
                                 }
                                 else
                                 {
-                                    char driverName = list[i][list[i].LastIndexOf('|') + 1];
-                                    if (DriveInfo.GetDrives().FirstOrDefault(p => p.Name.StartsWith(driverName.ToString(), true, null)) == null)
-                                    {
-                                        Message(string.Format("Строка {0}: Диск {1} не существует.", list[i], driverName), true);
-                                        list = RemoveItem(list, i, out i);
-                                    }
+                                    list2.Add(list[i]);
                                 }
                             }
-                            if (list.Count != 0)
+                            list.Clear();
+                            for (int i = 0; i < list2.Count; i++)
+                            {
+                                char driverName = list2[i][list2[i].LastIndexOf('|') + 1];
+                                if (DriveInfo.GetDrives().FirstOrDefault(p => p.Name.StartsWith(driverName.ToString(), true, null)) == null)
+                                {
+                                    Message(string.Format("Строка {0}: Диск {1} не существует.", list2[i], driverName), true);
+                                    list2 = RemoveItem(list2, i, out i);
+                                }
+                            }
+                            if (list2.Count != 0)
                             {
                                 List<Tuple<VideoInfo, string>> videoList = new List<Tuple<VideoInfo, string>>();
-                                foreach (string item in list)
+                                foreach (string item in list2)
                                 {
                                     string[] parts = item.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                                     parts[0] = parts[0].Substring(parts[0].IndexOf('=') + 1, 11);
@@ -110,7 +153,7 @@ namespace YouTubeDownloaderMass
                                             }
                                             break;
                                         }
-                                        catch (YoutubeParseException)
+                                        catch (YoutubeParseException ex)
                                         {
                                             if (i == 4)
                                             {
@@ -124,7 +167,7 @@ namespace YouTubeDownloaderMass
                                         }
                                     }
                                 }
-                                list.Clear();
+                                list2.Clear();
                                 if (videoList.Count != 0)
                                 {
                                     char[] invalidChars = Path.GetInvalidFileNameChars();
@@ -156,7 +199,7 @@ namespace YouTubeDownloaderMass
                                             {
                                                 switch ((exception.Response as HttpWebResponse).StatusCode)
                                                 {
-                                                    case HttpStatusCode.Forbidden:
+                                                    case System.Net.HttpStatusCode.Forbidden:
                                                         Message(string.Format("Видео {0}: Доступ запрещен.", videoList[i].Item1.Title), true);
                                                         break;
                                                     default:

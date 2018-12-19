@@ -1,14 +1,36 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following set of attributes.
-// Change these attribute values to modify the information associated with an assembly.
+// Управление общими сведениями о сборке осуществляется с помощью 
+// набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
+// связанные со сборкой.
 [assembly: AssemblyTitle("YoutubeExtractor")]
-[assembly: AssemblyDescription("YoutubeExtractor is a library for .NET, written in C#, to extract the download link from YouTube videos, download them, and/or extract their audio track.")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("YoutubeExtractor")]
-[assembly: AssemblyCopyright("Copyright © 2015")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("0.10.11")]
-[assembly: AssemblyFileVersion("0.10.11")]
+
+// Параметр ComVisible со значением FALSE делает типы в сборке невидимыми 
+// для COM-компонентов.  Если требуется обратиться к типу в этой сборке через 
+// COM, задайте атрибуту ComVisible значение TRUE для этого типа.
+[assembly: ComVisible(false)]
+
+// Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
+[assembly: Guid("630ee7f3-0e6c-4da7-938b-fdcb88929922")]
+
+// Сведения о версии сборки состоят из следующих четырех значений:
+//
+//      Основной номер версии
+//      Дополнительный номер версии 
+//   Номер сборки
+//      Редакция
+//
+// Можно задать все значения или принять номера сборки и редакции по умолчанию 
+// используя "*", как показано ниже:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

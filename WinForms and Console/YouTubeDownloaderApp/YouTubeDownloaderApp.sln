@@ -3,18 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloaderApp", "YouTubeDownloaderApp\YouTubeDownloaderApp.csproj", "{429ED5B3-DE70-484B-9C77-8219A90E16C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloaderApp", "YouTubeDownloaderApp\YouTubeDownloaderApp.csproj", "{365FD0BF-66B2-4907-A99C-31E801FD277C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloaderMass", "YouTubeDownloaderMass\YouTubeDownloaderMass.csproj", "{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeExtractor", "YoutubeExtractor\YoutubeExtractor.csproj", "{47B9760F-25CA-4C0B-9A41-61E083A66EFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeParser", "YoutubeParser\YoutubeParser.csproj", "{A761A454-C473-4844-84F8-A6EBC97FE9C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloaderMass", "YouTubeDownloaderMass\YouTubeDownloaderMass.csproj", "{9FBA9E99-8643-484E-9B48-95BA87EC878A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{6ABC67D0-2449-488C-AC52-AAD92DFA67C3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7DB8AD57-5B7B-4ABD-B797-4FE2FD66B911}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeExtractor", "YoutubeExtractor\YoutubeExtractor.csproj", "{ECDC127F-8DEF-4F99-8300-72C13597339D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,22 +20,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{429ED5B3-DE70-484B-9C77-8219A90E16C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{429ED5B3-DE70-484B-9C77-8219A90E16C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{429ED5B3-DE70-484B-9C77-8219A90E16C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{429ED5B3-DE70-484B-9C77-8219A90E16C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E70F7B1-CEBC-4F69-B8CE-885D9F0CB89B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A761A454-C473-4844-84F8-A6EBC97FE9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A761A454-C473-4844-84F8-A6EBC97FE9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A761A454-C473-4844-84F8-A6EBC97FE9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A761A454-C473-4844-84F8-A6EBC97FE9C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ECDC127F-8DEF-4F99-8300-72C13597339D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ECDC127F-8DEF-4F99-8300-72C13597339D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ECDC127F-8DEF-4F99-8300-72C13597339D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ECDC127F-8DEF-4F99-8300-72C13597339D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FBA9E99-8643-484E-9B48-95BA87EC878A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FBA9E99-8643-484E-9B48-95BA87EC878A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FBA9E99-8643-484E-9B48-95BA87EC878A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FBA9E99-8643-484E-9B48-95BA87EC878A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
