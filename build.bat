@@ -67,6 +67,12 @@ echo Rebuild %pathToRep%\WinForms and Console\SnakeNew\SnakeNew.sln
 echo Rebuild %pathToRep%\WinForms and Console\VideoPlayer\VideoPlayer.sln
 "%VS%\devenv.exe" "%pathToRep%\WinForms and Console\VideoPlayer\VideoPlayer.sln" /Rebuild
 
+echo Rebuild %pathToRep%\WinForms and Console\VKApi\VKApi.sln
+"%VS%\devenv.exe" "%pathToRep%\WinForms and Console\VKApi\VKApi.sln" /Rebuild
+
+echo Rebuild %pathToRep%\WinForms and Console\VKStealer\VKStealer.sln
+"%VS%\devenv.exe" "%pathToRep%\WinForms and Console\VKStealer\VKStealer.sln" /Rebuild
+
 echo Rebuild %pathToRep%\WinForms and Console\WaveAlgorithm\WaveAlgorithm.sln
 "%VS%\devenv.exe" "%pathToRep%\WinForms and Console\WaveAlgorithm\WaveAlgorithm.sln" /Rebuild
 
