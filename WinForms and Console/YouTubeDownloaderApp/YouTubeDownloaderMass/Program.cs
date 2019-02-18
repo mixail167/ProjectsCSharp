@@ -264,7 +264,7 @@ namespace YouTubeDownloaderMass
         static void downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
         {
             long milliseconds = GetElapsedTime();
-            double speed = milliseconds != 0 ? (double)(e.ProgressBytes * 1000) / milliseconds : 0;
+            double speed = milliseconds != 0 ? (double)(e.BytesReceived * 1000) / milliseconds : 0;
             if (first)
             {
                 Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
