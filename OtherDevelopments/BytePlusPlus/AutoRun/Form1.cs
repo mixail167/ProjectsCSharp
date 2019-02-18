@@ -78,5 +78,22 @@ namespace AutoRun
                 textBox2.Text = openFileDialog1.FileName;
             }
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            key.Flush();
+            key.Close();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2(key);
+            form2.ShowDialog();
+            if (form2.KeyValue != null)
+            {
+                textBox1.Text = form2.KeyValue.Item1;
+                textBox2.Text = form2.KeyValue.Item2;
+            }
+        }
     }
 }
