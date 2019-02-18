@@ -2,6 +2,7 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -20,6 +21,7 @@ namespace YouTubeDownloaderMass
 
         static bool errorIndicator = false;
         static bool first = true;
+        static Stopwatch time = new Stopwatch();
 
         static void Main(string[] args)
         {
@@ -153,7 +155,7 @@ namespace YouTubeDownloaderMass
                                             }
                                             break;
                                         }
-                                        catch (YoutubeParseException ex)
+                                        catch (YoutubeParseException)
                                         {
                                             if (i == 4)
                                             {
@@ -261,6 +263,8 @@ namespace YouTubeDownloaderMass
 
         static void downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
         {
+            long milliseconds = GetElapsedTime();
+            double speed = milliseconds != 0 ? (double)(e.ProgressBytes * 1000) / milliseconds : 0;
             if (first)
             {
                 Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
@@ -270,7 +274,7 @@ namespace YouTubeDownloaderMass
             {
                 Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
             }
-            Message(string.Format("Прогресс загрузки: {0}%.", Convert.ToInt16(e.ProgressPercentage)));
+            Message(string.Format("Прогресс загрузки: {0:f2}%, средняя скорость: {1,-20}", e.ProgressPercentage, SpeedToString(speed)));
         }
 
         private static void downloader_DownloadStarted(object sender, EventArgs e)
@@ -281,6 +285,7 @@ namespace YouTubeDownloaderMass
 
         static void downloader_DownloadFinished(object sender, EventArgs e)
         {
+            StopTime();
             VideoDownloader downloader = sender as VideoDownloader;
             Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
             Message(string.Format("Видео загружено в {0}.", downloader.SavePath));
@@ -300,6 +305,45 @@ namespace YouTubeDownloaderMass
             list.RemoveAt(index);
             outIndex = index - 1;
             return list;
+        }
+
+        private static long GetElapsedTime()
+        {
+            time.Stop();
+            long milliseconds = time.ElapsedMilliseconds;
+            time.Start();
+            return milliseconds;
+        }
+
+        private static void StopTime()
+        {
+            time.Stop();
+            time.Reset();
+        }
+
+        private static string SpeedToString(double speed)
+        {
+            string si;
+            if (speed >= 1073741824)
+            {
+                speed /= 1073741824;
+                si = "Гб";
+            }
+            else if (speed >= 1048576)
+            {
+                speed /= 1048576;
+                si = "Мб";
+            }
+            else if (speed >= 1024)
+            {
+                speed /= 1024;
+                si = "Кб";
+            }
+            else
+            {
+                si = "Б";
+            }
+            return string.Format("{0:f1} {1}/c", speed, si);
         }
     }
 }
