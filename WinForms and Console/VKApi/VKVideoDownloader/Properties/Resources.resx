@@ -133,4 +133,7 @@
   <data name="GetVideos" xml:space="preserve">
     <value>https://api.vk.com/method/video.get?access_token={0}&amp;owner_id={1}&amp;album_id={2}&amp;extended=1&amp;v=5.92</value>
   </data>
+  <data name="GetVideosWithMinus" xml:space="preserve">
+    <value>https://api.vk.com/method/video.get?access_token={0}&amp;owner_id=-{1}&amp;album_id={2}&amp;extended=1&amp;v=5.92</value>
+  </data>
 </root>

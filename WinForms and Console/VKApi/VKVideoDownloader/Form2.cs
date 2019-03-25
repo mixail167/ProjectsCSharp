@@ -2,6 +2,7 @@
 using MetroFramework.Forms;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Windows.Forms;
@@ -13,12 +14,14 @@ namespace VKVideoDownloader
     {
         string access_token;
         long id;
+        ListViewWPF list;
 
         public Form2(string access_token, string id)
         {
             InitializeComponent();
             this.StyleManager = metroStyleManager1;
             this.id = 0;
+            list = elementHost1.Child as ListViewWPF;
             GetProfileInfo(access_token, id);
         }
 
@@ -95,30 +98,79 @@ namespace VKVideoDownloader
             if (InterNet.IsConnected)
             {
                 long album = (metroTextBoxPlaceHolder2.Text == string.Empty || metroTextBoxPlaceHolder2.isPlaceHolder()) ? 0 : Convert.ToInt64(metroTextBoxPlaceHolder2.Text);
-                long id = (metroTextBoxPlaceHolder1.Text == string.Empty || metroTextBoxPlaceHolder1.isPlaceHolder()) ? this.id : Convert.ToInt64(metroTextBoxPlaceHolder2.Text);
-                    string url = string.Format(Resources.GetVideos, access_token, metroTextBoxPlaceHolder1.Text, album);
-                    Request request = new Request(url);
-                    try
+                long id = (metroTextBoxPlaceHolder1.Text == string.Empty || metroTextBoxPlaceHolder1.isPlaceHolder()) ? this.id : Convert.ToInt64(metroTextBoxPlaceHolder1.Text);
+                string url;
+                if (metroRadioButton1.Checked || (metroRadioButton2.Checked && id == this.id))
+                {
+                    url = string.Format(Resources.GetVideos, access_token, id, album);
+                }
+                else
+                {
+                    url = string.Format(Resources.GetVideosWithMinus, access_token, id, album);
+                }
+                Request request = new Request(url);
+                try
+                {
+                    JObject json = JObject.Parse(request.Get());
+                    if (json.ContainsKey("error"))
                     {
-                        dynamic json = JObject.Parse(request.Get());
-                        JArray items =  json.response.items;
+
+                    }
+                    else if (json.ContainsKey("response"))
+                    {
+                        JObject response = json["response"] as JObject;
+                        JArray items = response["items"] as JArray;
                         if (items.HasValues)
                         {
-                            ListViewWPF list = elementHost1.Child as ListViewWPF;
+                            List<Video> videos = new List<Video>();
                             foreach (JObject item in items)
                             {
-
-                            } 
+                                Video video = new Video();
+                                video.Title = item["title"].ToString();
+                                video.Description = item["description"].ToString();
+                                video.SetDate(Convert.ToInt64(item["date"]));
+                                video.SetPhoto(item["photo_130"].ToString());
+                                video.SetDuration(Convert.ToInt32(item["duration"]));
+                                JObject files = item["files"] as JObject;
+                                if (files.ContainsKey("mp4_144"))
+                                {
+                                    video.Files.Add(new Tuple<string, string>("mp4, 144", files["mp4_144"].ToString()));
+                                }
+                                if (files.ContainsKey("mp4_240"))
+                                {
+                                    video.Files.Add(new Tuple<string, string>("mp4, 240", files["mp4_240"].ToString()));
+                                }
+                                if (files.ContainsKey("mp4_360"))
+                                {
+                                    video.Files.Add(new Tuple<string, string>("mp4, 360", files["mp4_360"].ToString()));
+                                }
+                                if (files.ContainsKey("mp4_480"))
+                                {
+                                    video.Files.Add(new Tuple<string, string>("mp4, 480", files["mp4_480"].ToString()));
+                                }
+                                if (files.ContainsKey("mp4_720"))
+                                {
+                                    video.Files.Add(new Tuple<string, string>("mp4, 720", files["mp4_720"].ToString()));
+                                }
+                                if (files.ContainsKey("mp4_1080"))
+                                {
+                                    video.Files.Add(new Tuple<string, string>("mp4, 1080", files["mp4_1080"].ToString()));
+                                }
+                                videos.Add(video);
+                            }
+                            list.ItemSource = videos;
+                            metroLabel6.Text = videos.Count.ToString();
                         }
                         else
                         {
 
                         }
                     }
-                    catch (Exception ex)
-                    {
+                }
+                catch (Exception ex)
+                {
 
-                    }
+                }
             }
             else
             {
@@ -129,6 +181,16 @@ namespace VKVideoDownloader
         private void metroButton3_Click(object sender, EventArgs e)
         {
             GetVideos();
+        }
+
+        private void metroButton4_Click(object sender, EventArgs e)
+        {
+            list.ModifyCheck(true);
+        }
+
+        private void metroButton5_Click(object sender, EventArgs e)
+        {
+            list.ModifyCheck(false);
         }
     }
 }

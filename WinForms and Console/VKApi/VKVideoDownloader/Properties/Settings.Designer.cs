@@ -26,12 +26,24 @@ namespace VKVideoDownloader.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Password {
+        public string Login {
             get {
-                return ((string)(this["Password"]));
+                return ((string)(this["Login"]));
             }
             set {
-                this["Password"] = value;
+                this["Login"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Remember {
+            get {
+                return ((bool)(this["Remember"]));
+            }
+            set {
+                this["Remember"] = value;
             }
         }
     }

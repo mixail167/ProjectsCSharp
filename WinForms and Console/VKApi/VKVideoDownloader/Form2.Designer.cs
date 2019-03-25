@@ -162,9 +162,9 @@
             this.metroPanel4.HorizontalScrollbarBarColor = true;
             this.metroPanel4.HorizontalScrollbarHighlightOnWheel = false;
             this.metroPanel4.HorizontalScrollbarSize = 10;
-            this.metroPanel4.Location = new System.Drawing.Point(3, 250);
+            this.metroPanel4.Location = new System.Drawing.Point(3, 370);
             this.metroPanel4.Name = "metroPanel4";
-            this.metroPanel4.Size = new System.Drawing.Size(588, 94);
+            this.metroPanel4.Size = new System.Drawing.Size(748, 94);
             this.metroPanel4.Style = MetroFramework.MetroColorStyle.Red;
             this.metroPanel4.TabIndex = 3;
             this.metroPanel4.Theme = MetroFramework.MetroThemeStyle.Dark;
@@ -197,7 +197,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(229, 241);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(229, 361);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // metroLabel2
@@ -331,7 +331,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(594, 347);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(754, 467);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
             // tableLayoutPanel3
@@ -347,8 +347,8 @@
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(353, 241);
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(513, 361);
             this.tableLayoutPanel3.TabIndex = 6;
             // 
             // flowLayoutPanel2
@@ -356,37 +356,39 @@
             this.flowLayoutPanel2.Controls.Add(this.metroButton4);
             this.flowLayoutPanel2.Controls.Add(this.metroButton5);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 209);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 334);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(353, 29);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(507, 24);
             this.flowLayoutPanel2.TabIndex = 6;
             // 
             // metroButton4
             // 
             this.metroButton4.Location = new System.Drawing.Point(3, 3);
             this.metroButton4.Name = "metroButton4";
-            this.metroButton4.Size = new System.Drawing.Size(100, 23);
+            this.metroButton4.Size = new System.Drawing.Size(84, 23);
             this.metroButton4.Style = MetroFramework.MetroColorStyle.Red;
             this.metroButton4.TabIndex = 0;
             this.metroButton4.Text = "Выделить всё";
             this.metroButton4.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.metroButton4.Click += new System.EventHandler(this.metroButton4_Click);
             // 
             // metroButton5
             // 
-            this.metroButton5.Location = new System.Drawing.Point(109, 3);
+            this.metroButton5.Location = new System.Drawing.Point(93, 3);
             this.metroButton5.Name = "metroButton5";
-            this.metroButton5.Size = new System.Drawing.Size(120, 23);
+            this.metroButton5.Size = new System.Drawing.Size(107, 23);
             this.metroButton5.Style = MetroFramework.MetroColorStyle.Red;
             this.metroButton5.TabIndex = 1;
             this.metroButton5.Text = "Снять выделение";
             this.metroButton5.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.metroButton5.Click += new System.EventHandler(this.metroButton5_Click);
             // 
             // elementHost1
             // 
             this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.elementHost1.Location = new System.Drawing.Point(3, 33);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(353, 170);
+            this.elementHost1.Size = new System.Drawing.Size(507, 295);
             this.elementHost1.TabIndex = 8;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.listViewWPF1;
@@ -398,7 +400,7 @@
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(353, 24);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(507, 24);
             this.flowLayoutPanel3.TabIndex = 9;
             // 
             // metroLabel5
@@ -433,7 +435,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 480);
+            this.ClientSize = new System.Drawing.Size(800, 600);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.metroLabel4);
             this.Controls.Add(this.pictureBox1);
@@ -441,7 +443,7 @@
             this.Controls.Add(this.metroLabel1);
             this.DisplayHeader = false;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(640, 480);
+            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Form2";
             this.Padding = new System.Windows.Forms.Padding(20, 30, 20, 20);
             this.Style = MetroFramework.MetroColorStyle.Red;
@@ -484,8 +486,6 @@
         private MetroFramework.Controls.MetroPanel metroPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private MetroFramework.Controls.MetroButton metroButton4;
-        private MetroFramework.Controls.MetroButton metroButton5;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private ListViewWPF listViewWPF1;
         private MetroTextBoxPlaceHolder metroTextBoxPlaceHolder1;
@@ -493,5 +493,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private MetroFramework.Controls.MetroLabel metroLabel5;
         private MetroFramework.Controls.MetroLabel metroLabel6;
+        private MetroFramework.Controls.MetroButton metroButton4;
+        private MetroFramework.Controls.MetroButton metroButton5;
     }
 }

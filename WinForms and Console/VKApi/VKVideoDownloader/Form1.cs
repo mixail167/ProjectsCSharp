@@ -19,7 +19,11 @@ namespace VKVideoDownloader
         {
             InitializeComponent();
             this.StyleManager = metroStyleManager1;
-            metroTextBoxPlaceHolder1.Text = Settings.Default.Password;
+            metroCheckBox1.Checked = Settings.Default.Remember;
+            if (metroCheckBox1.Checked)
+            {
+                metroTextBoxPlaceHolder1.Text = Settings.Default.Login;
+            }
             this.firstForm = firstForm;
         }
 
@@ -44,9 +48,10 @@ namespace VKVideoDownloader
                             access_token = json.access_token.ToString();
                             if (metroCheckBox1.Checked)
                             {
-                                Settings.Default.Password = metroTextBoxPlaceHolder1.Text;
-                                Settings.Default.Save();
+                                Settings.Default.Login = metroTextBoxPlaceHolder1.Text;
                             }
+                            Settings.Default.Remember = metroCheckBox1.Checked;
+                            Settings.Default.Save(); 
                             this.DialogResult = DialogResult.OK;
                             Close();
                         }
