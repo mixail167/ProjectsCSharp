@@ -4,6 +4,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using VKVideoDownloader.Properties;
@@ -156,6 +158,10 @@ namespace VKVideoDownloader
                                 {
                                     video.Files.Add(new Tuple<string, string>("mp4, 1080", files["mp4_1080"].ToString()));
                                 }
+                                if (video.Files.Count > 0)
+                                {
+                                    video.CurrentFile = new Tuple<string, string>(video.Files[video.Files.Count - 1].Item1, video.Files[video.Files.Count - 1].Item2);
+                                }
                                 videos.Add(video);
                             }
                             list.ItemSource = videos;
@@ -191,6 +197,100 @@ namespace VKVideoDownloader
         private void metroButton5_Click(object sender, EventArgs e)
         {
             list.ModifyCheck(false);
+        }
+
+        private void metroComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            list.ModifyQuality(metroComboBox1.Items[metroComboBox1.SelectedIndex].ToString());
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SortItems(pictureBox2, 0);
+        }
+
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SortItems(pictureBox3, 1);
+        }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SortItems(pictureBox4, 2);
+        }
+
+        private void SortItems(PictureBox pictureBox, int index)
+        {
+            if (list.ItemSource != null && list.ItemSource.Count != 0)
+            {
+                List<Video> videos = list.ItemSource as List<Video>;
+                if (pictureBox.Tag as Nullable<bool> == true)
+                {
+                    SetImage(pictureBox, Resources.strelka2);
+                    switch (index)
+                    {
+                        case 0:
+                            list.ItemSource = videos.OrderByDescending(x => x.Title).ToList<Video>();
+                            break;
+                        case 1:
+                            list.ItemSource = videos.OrderByDescending(x => x.DateForSort).ToList<Video>();
+                            break;
+                        case 2:
+                            list.ItemSource = videos.OrderByDescending(x => x.Duration).ToList<Video>();
+                            break;
+                    }
+                }
+                else
+                {
+                    SetImage(pictureBox, Resources.strelka);
+                    switch (index)
+                    {
+                        case 0:
+                            list.ItemSource = videos.OrderBy(x => x.Title).ToList<Video>();
+                            break;
+                        case 1:
+                            list.ItemSource = videos.OrderBy(x => x.DateForSort).ToList<Video>();
+                            break;
+                        case 2:
+                            list.ItemSource = videos.OrderBy(x => x.Duration).ToList<Video>();
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void SetImage(PictureBox pictureBox, Bitmap image)
+        {
+            if (pictureBox == pictureBox2)
+            {
+                pictureBox3.Image = null;
+                pictureBox4.Image = null;
+                pictureBox3.Tag = null;
+                pictureBox4.Tag = null;
+            }
+            else if (pictureBox == pictureBox3)
+            {
+                pictureBox2.Image = null;
+                pictureBox4.Image = null;
+                pictureBox2.Tag = null;
+                pictureBox4.Tag = null;
+            }
+            else if (pictureBox == pictureBox4)
+            {
+                pictureBox3.Image = null;
+                pictureBox2.Image = null;
+                pictureBox3.Tag = null;
+                pictureBox2.Tag = null;
+            }
+            pictureBox.Image = image;
+            if (pictureBox.Tag as Nullable<bool> == true)
+            {
+                pictureBox.Tag = false;
+            }
+            else
+            {
+                pictureBox.Tag = true;
+            }
         }
     }
 }

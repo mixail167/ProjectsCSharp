@@ -114,5 +114,25 @@ namespace VKVideoDownloader.Properties {
                 return ResourceManager.GetString("Page", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap strelka {
+            get {
+                object obj = ResourceManager.GetObject("strelka", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap strelka2 {
+            get {
+                object obj = ResourceManager.GetObject("strelka2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -19,13 +19,35 @@ namespace VKVideoDownloader
             set { listView.ItemsSource = value; }
         }
 
-        internal void ModifyCheck(bool checkedValue)
+        public void ModifyCheck(bool checkedValue)
         {
-            foreach (Video item in ItemSource)
+            List<Video> videos = ItemSource;
+            if (videos != null)
             {
-                item.IsChecked = checkedValue;
+                foreach (Video item in ItemSource)
+                {
+                    item.IsChecked = checkedValue;
+                }
+                listView.Items.Refresh();
             }
-            listView.Items.Refresh();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        public void ModifyQuality(string quality)
+        {
+            List<Video> videos = ItemSource;
+            if (videos != null)
+            {
+                foreach (Video item in ItemSource)
+                {
+                    item.SetCurrentFileFromFiles(quality);
+                }
+                listView.Items.Refresh();
+            }
         }
     }
 }

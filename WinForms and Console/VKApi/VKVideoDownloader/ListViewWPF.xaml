@@ -213,6 +213,40 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+            <Border x:Name="PART_ContentHost" BorderThickness="1" Focusable="False" Background="{TemplateBinding Background}"/>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="2" Background="#111111" BorderBrush="Red" BorderThickness="2" />
+                <Path x:Name="Arrow" Grid.Column="1" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Data="M 0 0 L 4 4 L 8 0 Z"/>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="RoundComboBoxTemplate" TargetType="{x:Type ComboBox}">
+            <Grid>
+                <Rectangle Stroke="White" RadiusX="2" RadiusY="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" 
+                    x:Name="Rectangle" Fill="White" />
+                <ToggleButton Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Height="{TemplateBinding Height}" Focusable="False"
+                        ClickMode="Press" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" Foreground="White">
+                </ToggleButton>
+                <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" Margin="3,3,23,3"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" VerticalAlignment="Center"
+                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" HorizontalAlignment="Center" />
+                <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                    <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                        <Border x:Name="DropDownBorder" Background="Black" BorderThickness="1" BorderBrush="Red"/>
+                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True" Foreground="White">
+                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                        </ScrollViewer>
+                    </Grid>
+                </Popup>
+            </Grid>
+        </ControlTemplate>
     </UserControl.Resources>
     <Grid>
         <Border BorderBrush="White" BorderThickness="2">
@@ -245,7 +279,7 @@
                                         <Label Content="Дата:" Margin="0,0,0,5" Foreground="Red"/>
                                         <TextBlock Text="{Binding Date}" Foreground="White" Margin="0,5,5,5"/>
                                         <Label Content="Качество:" Margin="0,0,0,5" Foreground="Red"/>
-                                        <ComboBox ItemsSource="{Binding Files}" DisplayMemberPath="Item1" SelectedIndex="0" IsReadOnly="True" Cursor="Hand" Margin="0,5,5,5"/>
+                                        <ComboBox ItemsSource="{Binding Files}" DisplayMemberPath="Item1" SelectedValue="{Binding CurrentFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" Margin="0,3,5,5" Template="{StaticResource RoundComboBoxTemplate}" IsEditable="False" Foreground="White" Background="#11111111" SelectionChanged="ComboBox_SelectionChanged"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>

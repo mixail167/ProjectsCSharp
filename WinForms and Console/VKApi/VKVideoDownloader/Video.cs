@@ -15,6 +15,7 @@ namespace VKVideoDownloader
         TimeSpan duration;
         List<Tuple<string, string>> files;
         MemoryStream photo;
+        Tuple<string, string> currentFile;
         bool isChecked;
 
         public Video()
@@ -44,6 +45,11 @@ namespace VKVideoDownloader
         public string Date
         {
             get { return date.ToShortDateString(); }
+        }
+
+        public DateTime DateForSort
+        {
+            get { return date; }
         }
 
         public void SetDate(long value)
@@ -100,6 +106,24 @@ namespace VKVideoDownloader
         public List<Tuple<string, string>> Files
         {
             get { return files; }
+        }
+
+        public Tuple<string, string> CurrentFile
+        {
+            get { return currentFile; }
+            set { currentFile = value; }
+        }
+
+        public void SetCurrentFileFromFiles(string quality)
+        {
+            foreach (Tuple<string,string> item in files)
+            {
+                if (item.Item1 == quality)
+                {
+                    currentFile = item;
+                    break;
+                }
+            }
         }
     }
 }
