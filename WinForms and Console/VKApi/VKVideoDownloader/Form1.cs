@@ -27,7 +27,7 @@ namespace VKVideoDownloader
             this.firstForm = firstForm;
         }
 
-        private async Task<string> Autorization()
+        private async Task Autorization()
         {
             metroProgressSpinner1.Visible = true;
             metroButton1.Enabled = false;
@@ -88,7 +88,6 @@ namespace VKVideoDownloader
             {
                 Error("Отсутствует соединение с сетью Интернет.");
             }
-            return null;
         }
 
         private async void metroButton1_Click(object sender, EventArgs e)

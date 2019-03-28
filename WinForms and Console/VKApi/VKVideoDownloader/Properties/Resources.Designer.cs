@@ -79,7 +79,7 @@ namespace VKVideoDownloader.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на https://api.vk.com/method/video.get?access_token={0}&amp;owner_id={1}&amp;album_id={2}&amp;extended=1&amp;v=5.92.
+        ///   Ищет локализованную строку, похожую на https://api.vk.com/method/video.get?access_token={0}&amp;owner_id={1}&amp;count=200&amp;album_id={2}&amp;extended=0&amp;v=5.92.
         /// </summary>
         internal static string GetVideos {
             get {
@@ -88,7 +88,7 @@ namespace VKVideoDownloader.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на https://api.vk.com/method/video.get?access_token={0}&amp;owner_id=-{1}&amp;album_id={2}&amp;extended=1&amp;v=5.92.
+        ///   Ищет локализованную строку, похожую на https://api.vk.com/method/video.get?access_token={0}&amp;owner_id=-{1}&amp;count=200&amp;album_id={2}&amp;extended=0&amp;v=5.92.
         /// </summary>
         internal static string GetVideosWithMinus {
             get {

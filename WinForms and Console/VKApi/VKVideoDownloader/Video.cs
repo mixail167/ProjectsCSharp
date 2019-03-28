@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace VKVideoDownloader
@@ -14,7 +15,7 @@ namespace VKVideoDownloader
         DateTime date;
         TimeSpan duration;
         List<Tuple<string, string>> files;
-        MemoryStream photo;
+        BitmapImage photo;
         Tuple<string, string> currentFile;
         bool isChecked;
 
@@ -67,40 +68,25 @@ namespace VKVideoDownloader
             get { return duration.ToString(@"mm\:ss"); }
         }
 
-        public void SetPhoto(string url)
+        public async Task SetPhoto(string url)
         {
             using (WebClient client = new WebClient())
             {
-                try
+                using (MemoryStream photoStream = new MemoryStream(await client.DownloadDataTaskAsync(url)))
                 {
-                    photo = new MemoryStream(client.DownloadData(url));
-                }
-                catch (Exception)
-                {
-
+                    photoStream.Position = 0;
+                    photo = new BitmapImage();
+                    photo.BeginInit();
+                    photo.StreamSource = photoStream;
+                    photo.CacheOption = BitmapCacheOption.OnLoad;
+                    photo.EndInit();
                 }
             }
         }
 
         public BitmapImage Photo
         {
-            get
-            {
-                try
-                {
-                    photo.Position = 0;
-                    BitmapImage bitmapimage = new BitmapImage();
-                    bitmapimage.BeginInit();
-                    bitmapimage.StreamSource = photo;
-                    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapimage.EndInit();
-                    return bitmapimage;
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
+            get { return photo; }
         }
 
         public List<Tuple<string, string>> Files
@@ -116,7 +102,7 @@ namespace VKVideoDownloader
 
         public void SetCurrentFileFromFiles(string quality)
         {
-            foreach (Tuple<string,string> item in files)
+            foreach (Tuple<string, string> item in files)
             {
                 if (item.Item1 == quality)
                 {
