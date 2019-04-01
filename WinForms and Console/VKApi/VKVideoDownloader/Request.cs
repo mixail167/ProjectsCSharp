@@ -40,7 +40,7 @@ namespace VKVideoDownloader
         }
 
 
-        internal string Get()
+        public string Get()
         {
             try
             {

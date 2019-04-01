@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VKVideoDownloader.Properties;
@@ -106,11 +107,50 @@ namespace VKVideoDownloader
             }
         }
 
+        private async Task<int> GetCount(string url, long id, long album)
+        {
+            url = string.Format(url, access_token, id, album, 0);
+            Request request = new Request(url);
+            int count = 0;
+            try
+            {
+                JObject json = JObject.Parse(await request.GetAsync());
+                if (json.ContainsKey("response"))
+                {
+                    JObject response = json["response"] as JObject;
+                    if (response.ContainsKey("count"))
+                    {
+                        count = Convert.ToInt32(response["count"]);
+                    }
+                }
+                else if (json.ContainsKey("error"))
+                {
+                    JObject error = json["error"] as JObject;
+                    int code = Convert.ToInt32(error["error_code"]);
+                    string message = error["error_msg"].ToString();
+                    metroLabel13.Text = string.Format("Ошибка {0}: {1}", code, message);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return count;
+        }
+
         private async Task GetVideos()
         {
-            list.ItemSource = null;
+            list.ClearSource();
+            metroTextBoxPlaceHolder4.Text = metroTextBoxPlaceHolder4.PlaceHolder;
+            metroLabel8.ForeColor = Color.Red;
+            pictureBox2.Image = null;
+            pictureBox3.Image = null;
+            pictureBox4.Image = null;
+            pictureBox2.Tag = null;
+            pictureBox3.Tag = null;
+            pictureBox4.Tag = null;
             metroLabel6.Text = "0";
-            metroLabel13.Text = "Пожалуйста, подождите. Выполняется поиск";
+            metroLabel13.Text = "Пожалуйста, подождите. Выполняется поиск видео";
             if (InterNet.IsConnected)
             {
                 long album = (metroTextBoxPlaceHolder2.Text == string.Empty || metroTextBoxPlaceHolder2.isPlaceHolder()) ? 0 : Convert.ToInt64(metroTextBoxPlaceHolder2.Text);
@@ -118,83 +158,33 @@ namespace VKVideoDownloader
                 string url;
                 if (metroRadioButton1.Checked || (metroRadioButton2.Checked && id == this.id))
                 {
-                    url = string.Format(Resources.GetVideos, access_token, id, album);
+                    url = Resources.GetVideos;
                 }
                 else
                 {
-                    url = string.Format(Resources.GetVideosWithMinus, access_token, id, album);
+                    url = Resources.GetVideosWithMinus;
                 }
-                Request request = new Request(url);
-                try
+                int count = await GetCount(url, id, album);
+                if (count > 0)
                 {
-                    JObject json = JObject.Parse(await request.GetAsync());
-                    if (json.ContainsKey("error"))
+                    int countThreads = Convert.ToInt32(Math.Ceiling(count * 1.0 / 200));
+                    Form3 form3 = new Form3(access_token, id, album, url, countThreads);
+                    form3.ShowDialog();
+                    switch (form3.GetDialogResult())
                     {
-                        JObject error = json["error"] as JObject;
-                        int code = Convert.ToInt32(error["error_code"]);
-                        string message = error["error_msg"].ToString();
-                        metroLabel13.Text = string.Format("Ошибка {0}: {1}", code, message);
-                    }
-                    else if (json.ContainsKey("response"))
-                    {
-                        JObject response = json["response"] as JObject;
-                        JArray items = response["items"] as JArray;
-                        if (items.HasValues)
-                        {
-                            List<Video> videos = new List<Video>();
-                            foreach (JObject item in items)
-                            {
-                                Video video = new Video();
-                                JObject files = item["files"] as JObject;
-                                if (files.ContainsKey("mp4_144"))
-                                {
-                                    video.Files.Add(new Tuple<string, string>("mp4, 144", files["mp4_144"].ToString()));
-                                }
-                                if (files.ContainsKey("mp4_240"))
-                                {
-                                    video.Files.Add(new Tuple<string, string>("mp4, 240", files["mp4_240"].ToString()));
-                                }
-                                if (files.ContainsKey("mp4_360"))
-                                {
-                                    video.Files.Add(new Tuple<string, string>("mp4, 360", files["mp4_360"].ToString()));
-                                }
-                                if (files.ContainsKey("mp4_480"))
-                                {
-                                    video.Files.Add(new Tuple<string, string>("mp4, 480", files["mp4_480"].ToString()));
-                                }
-                                if (files.ContainsKey("mp4_720"))
-                                {
-                                    video.Files.Add(new Tuple<string, string>("mp4, 720", files["mp4_720"].ToString()));
-                                }
-                                if (files.ContainsKey("mp4_1080"))
-                                {
-                                    video.Files.Add(new Tuple<string, string>("mp4, 1080", files["mp4_1080"].ToString()));
-                                }
-                                if (video.Files.Count == 0)
-                                {
-                                    continue;
-                                }
-                                video.Title = item["title"].ToString();
-                                video.Description = item["description"].ToString();
-                                video.SetDate(Convert.ToInt64(item["date"]));
-                                video.SetDuration(Convert.ToInt32(item["duration"]));
-                                video.CurrentFile = new Tuple<string, string>(video.Files[video.Files.Count - 1].Item1, video.Files[video.Files.Count - 1].Item2);
-                                await video.SetPhoto(item["photo_130"].ToString());
-                                videos.Add(video);
-                            }
-                            list.ItemSource = videos;
-                            metroLabel6.Text = videos.Count.ToString();
+                        case DialogResult.Abort:
+                            metroLabel13.Text = form3.GetLastError();
+                            break;
+                        case DialogResult.OK:
                             metroLabel13.Text = string.Empty;
-                        }
-                        else
-                        {
-                            metroLabel13.Text = "Видеозаписей не найдено";
-                        }
+                            list.Source = form3.GetVideos();
+                            list.SetSource();
+                            metroLabel6.Text = list.Source.Count.ToString();
+                            break;
+                        default:
+                            metroLabel13.Text = "Поиск отменен";
+                            break;
                     }
-                }
-                catch (Exception)
-                {
-                    metroLabel13.Text = "Ошибка при получении данных";
                 }
             }
             else
@@ -240,22 +230,22 @@ namespace VKVideoDownloader
 
         private void SortItems(PictureBox pictureBox, int index)
         {
-            if (list.ItemSource != null && list.ItemSource.Count != 0)
+            if (list.ItemsSource != null && list.ItemsSource.Count != 0)
             {
-                List<Video> videos = list.ItemSource as List<Video>;
+                List<Video> videos = list.ItemsSource as List<Video>;
                 if (pictureBox.Tag as Nullable<bool> == true)
                 {
                     SetImage(pictureBox, Resources.strelka2);
                     switch (index)
                     {
                         case 0:
-                            list.ItemSource = videos.OrderByDescending(x => x.Title).ToList<Video>();
+                            list.ItemsSource = videos.OrderByDescending(x => x.Title).ToList<Video>();
                             break;
                         case 1:
-                            list.ItemSource = videos.OrderByDescending(x => x.DateForSort).ToList<Video>();
+                            list.ItemsSource = videos.OrderByDescending(x => x.DateForSort).ToList<Video>();
                             break;
                         case 2:
-                            list.ItemSource = videos.OrderByDescending(x => x.Duration).ToList<Video>();
+                            list.ItemsSource = videos.OrderByDescending(x => x.DurationForSort).ToList<Video>();
                             break;
                     }
                 }
@@ -265,13 +255,13 @@ namespace VKVideoDownloader
                     switch (index)
                     {
                         case 0:
-                            list.ItemSource = videos.OrderBy(x => x.Title).ToList<Video>();
+                            list.ItemsSource = videos.OrderBy(x => x.Title).ToList<Video>();
                             break;
                         case 1:
-                            list.ItemSource = videos.OrderBy(x => x.DateForSort).ToList<Video>();
+                            list.ItemsSource = videos.OrderBy(x => x.DateForSort).ToList<Video>();
                             break;
                         case 2:
-                            list.ItemSource = videos.OrderBy(x => x.Duration).ToList<Video>();
+                            list.ItemsSource = videos.OrderBy(x => x.DurationForSort).ToList<Video>();
                             break;
                     }
                 }
@@ -322,7 +312,7 @@ namespace VKVideoDownloader
 
         private async Task Download()
         {
-            List<Video> videos = list.ItemSource as List<Video>;
+            List<Video> videos = list.ItemsSource as List<Video>;
             if (videos != null && videos.Count > 0)
             {
                 videos = videos.Where<Video>(x => x.IsChecked == true).ToList<Video>();
@@ -457,6 +447,79 @@ namespace VKVideoDownloader
         private void metroLabel13_MouseEnter(object sender, EventArgs e)
         {
             metroToolTip1.SetToolTip(metroLabel13, metroLabel13.Text);
+        }
+
+        private void metroButton9_Click(object sender, EventArgs e)
+        {
+            ResetFilter();
+        }
+
+        private void ResetFilter()
+        {
+            if (list.Source != null)
+            {
+                SetSort(list.Source);
+                metroLabel8.ForeColor = Color.Red;
+            }
+        }
+
+        private void Filter()
+        {
+            if (metroTextBoxPlaceHolder4.Text.Trim() == string.Empty || metroTextBoxPlaceHolder4.isPlaceHolder())
+            {
+                ResetFilter();
+            }
+            else if (list.Source != null)
+            {
+                List<Video> videos = list.Source.Where<Video>(x => x.Title.IndexOf(metroTextBoxPlaceHolder4.Text, StringComparison.CurrentCultureIgnoreCase) != -1).ToList<Video>();
+                SetSort(videos);
+                metroLabel8.ForeColor = Color.White;
+            }
+        }
+
+        private void metroButton8_Click(object sender, EventArgs e)
+        {
+            Filter();
+        }
+
+        private void SetSort(List<Video> videos)
+        {
+            switch (pictureBox2.Tag as Nullable<bool>)
+            {
+                case true:
+                    list.ItemsSource = videos.OrderBy(x => x.Title).ToList<Video>();
+                    return;
+                case false:
+                    list.ItemsSource = videos.OrderByDescending(x => x.Title).ToList<Video>();
+                    return;
+            }
+            switch (pictureBox3.Tag as Nullable<bool>)
+            {
+                case true:
+                    list.ItemsSource = videos.OrderBy(x => x.DateForSort).ToList<Video>();
+                    return;
+                case false:
+                    list.ItemsSource = videos.OrderByDescending(x => x.DateForSort).ToList<Video>();
+                    return;
+            }
+            switch (pictureBox4.Tag as Nullable<bool>)
+            {
+                case true:
+                    list.ItemsSource = videos.OrderBy(x => x.DurationForSort).ToList<Video>();
+                    return;
+                case false:
+                    list.ItemsSource = videos.OrderByDescending(x => x.DurationForSort).ToList<Video>();
+                    return;
+            }
+            list.SetSource(videos);
+        }
+
+        private void metroTextBoxPlaceHolder4_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Filter();
+            }
         }
     }
 }

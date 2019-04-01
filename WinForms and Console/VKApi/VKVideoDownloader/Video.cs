@@ -63,16 +63,21 @@ namespace VKVideoDownloader
             duration = new TimeSpan(0, 0, value);
         }
 
-        public string Duration
+        public TimeSpan DurationForSort
         {
-            get { return duration.ToString(@"mm\:ss"); }
+            get { return duration; }
         }
 
-        public async Task SetPhoto(string url)
+        public string Duration
+        {
+            get { return duration.ToString(@"hh\:mm\:ss"); }
+        }
+
+        public void SetPhoto(string url)
         {
             using (WebClient client = new WebClient())
             {
-                using (MemoryStream photoStream = new MemoryStream(await client.DownloadDataTaskAsync(url)))
+                using (MemoryStream photoStream = new MemoryStream(client.DownloadData(url)))
                 {
                     photoStream.Position = 0;
                     photo = new BitmapImage();
@@ -80,6 +85,7 @@ namespace VKVideoDownloader
                     photo.StreamSource = photoStream;
                     photo.CacheOption = BitmapCacheOption.OnLoad;
                     photo.EndInit();
+                    photo.Freeze();
                 }
             }
         }
