@@ -2,13 +2,13 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Timers;
 using xNet;
 using YoutubeExtractor;
 
@@ -21,10 +21,12 @@ namespace YouTubeDownloaderMass
 
         static bool errorIndicator = false;
         static bool first = true;
-        static Stopwatch time = new Stopwatch();
+        static Timer timer;
+        static int bytesCount;
+        static double speed;
 
         static void Main(string[] args)
-        {
+        {            
             Console.Title = "YouTubeDownloader. Массовая загрузка видео";
             if (args.Length > 0)
             {
@@ -172,6 +174,8 @@ namespace YouTubeDownloaderMass
                                 list2.Clear();
                                 if (videoList.Count != 0)
                                 {
+                                    timer = new Timer(1000);
+                                    timer.Elapsed += timer_Elapsed;
                                     char[] invalidChars = Path.GetInvalidFileNameChars();
                                     for (int i = 0; i < videoList.Count; i++)
                                     {
@@ -261,10 +265,14 @@ namespace YouTubeDownloaderMass
             Console.ReadKey();
         }
 
+        private static void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            speed = (double)bytesCount;
+        }
+
         static void downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
         {
-            long milliseconds = GetElapsedTime();
-            double speed = milliseconds > 0 ? (double)(e.BytesReceived * 1000) / milliseconds : 0;
+            bytesCount = e.BytesReceived - bytesCount;
             if (first)
             {
                 Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
@@ -279,13 +287,16 @@ namespace YouTubeDownloaderMass
 
         private static void downloader_DownloadStarted(object sender, EventArgs e)
         {
+            bytesCount = 0;
+            speed = 0;
+            timer.Start();
             VideoDownloader downloader = sender as VideoDownloader;
             Message(string.Format("Загрузка видео {0}.", downloader.Video.Title));
         }
 
         static void downloader_DownloadFinished(object sender, EventArgs e)
         {
-            StopTime();
+            timer.Stop();
             VideoDownloader downloader = sender as VideoDownloader;
             Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
             Message(string.Format("Видео загружено в {0}.", downloader.SavePath));
@@ -305,20 +316,6 @@ namespace YouTubeDownloaderMass
             list.RemoveAt(index);
             outIndex = index - 1;
             return list;
-        }
-
-        private static long GetElapsedTime()
-        {
-            time.Stop();
-            long milliseconds = time.ElapsedMilliseconds;
-            time.Start();
-            return milliseconds;
-        }
-
-        private static void StopTime()
-        {
-            time.Stop();
-            time.Reset();
         }
 
         private static string SpeedToString(double speed)
