@@ -1,4 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace VKVideoDownloader
 {
@@ -12,6 +15,39 @@ namespace VKVideoDownloader
                 return true;
             }
             return false;
+        }
+
+        public static int GetCount(string url, out string errorText)
+        {
+            Request request = new Request(url);
+            int count = 0;
+            errorText = string.Empty;
+            try
+            {
+                JObject json = JObject.Parse(request.Get());
+                if (json.ContainsKey("response"))
+                {
+                    JObject response = json["response"] as JObject;
+                    if (response.ContainsKey("count"))
+                    {
+                        count = Convert.ToInt32(response["count"]);
+                    }
+                }
+                else if (json.ContainsKey("error"))
+                {
+                    JObject error = json["error"] as JObject;
+                    int code = Convert.ToInt32(error["error_code"]);
+                    string message = error["error_msg"].ToString();
+                    errorText = string.Format("Ошибка {0}: {1}", code, message);
+                    count = -1;
+                }
+            }
+            catch (Exception e)
+            {
+                count = -1;
+                errorText = e.Message;
+            }
+            return count;
         }
     }
 }

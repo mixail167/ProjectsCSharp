@@ -8,7 +8,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VKVideoDownloader.Properties;
@@ -99,46 +98,15 @@ namespace VKVideoDownloader
             }
         }
 
-        private async void metroTextBoxPlaceHolder2_KeyDown(object sender, KeyEventArgs e)
+        private void metroTextBoxPlaceHolder2_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                await GetVideos();
+                GetVideos();
             }
         }
 
-        private async Task<int> GetCount(string url, long id, long album)
-        {
-            url = string.Format(url, access_token, id, album, 0);
-            Request request = new Request(url);
-            int count = 0;
-            try
-            {
-                JObject json = JObject.Parse(await request.GetAsync());
-                if (json.ContainsKey("response"))
-                {
-                    JObject response = json["response"] as JObject;
-                    if (response.ContainsKey("count"))
-                    {
-                        count = Convert.ToInt32(response["count"]);
-                    }
-                }
-                else if (json.ContainsKey("error"))
-                {
-                    JObject error = json["error"] as JObject;
-                    int code = Convert.ToInt32(error["error_code"]);
-                    string message = error["error_msg"].ToString();
-                    metroLabel13.Text = string.Format("Ошибка {0}: {1}", code, message);
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-            return count;
-        }
-
-        private async Task GetVideos()
+        private void GetVideos()
         {
             list.ClearSource();
             metroTextBoxPlaceHolder4.Text = metroTextBoxPlaceHolder4.PlaceHolder;
@@ -158,13 +126,14 @@ namespace VKVideoDownloader
                 string url;
                 if (metroRadioButton1.Checked || (metroRadioButton2.Checked && id == this.id))
                 {
-                    url = Resources.GetVideos;
+                    url = Resources.GetVideos;                    
                 }
                 else
                 {
                     url = Resources.GetVideosWithMinus;
                 }
-                int count = await GetCount(url, id, album);
+                string error;
+                int count = Functions.GetCount(string.Format(url, access_token, id, album, 0), out error);
                 if (count > 0)
                 {
                     int countThreads = Convert.ToInt32(Math.Ceiling(count * 1.0 / 200));
@@ -186,6 +155,10 @@ namespace VKVideoDownloader
                             break;
                     }
                 }
+                else if (count < 0)
+                {
+                    metroLabel13.Text = error;
+                }
             }
             else
             {
@@ -193,9 +166,9 @@ namespace VKVideoDownloader
             }
         }
 
-        private async void metroButton3_Click(object sender, EventArgs e)
+        private void metroButton3_Click(object sender, EventArgs e)
         {
-            await GetVideos();
+            GetVideos();
         }
 
         private void metroButton4_Click(object sender, EventArgs e)
@@ -520,6 +493,11 @@ namespace VKVideoDownloader
             {
                 Filter();
             }
+        }
+
+        private void metroButton1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
