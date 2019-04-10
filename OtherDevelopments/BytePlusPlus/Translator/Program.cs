@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Compilator
+namespace Translator
 {
     static class Program
     {
