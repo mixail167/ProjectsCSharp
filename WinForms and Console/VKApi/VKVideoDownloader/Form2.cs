@@ -9,6 +9,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using VKVideoDownloader.Properties;
 
@@ -126,7 +129,7 @@ namespace VKVideoDownloader
                 string url;
                 if (metroRadioButton1.Checked || (metroRadioButton2.Checked && id == this.id))
                 {
-                    url = Resources.GetVideos;                    
+                    url = Resources.GetVideos;
                 }
                 else
                 {
@@ -447,6 +450,39 @@ namespace VKVideoDownloader
                 List<Video> videos = list.Source.Where<Video>(x => x.Title.IndexOf(metroTextBoxPlaceHolder4.Text, StringComparison.CurrentCultureIgnoreCase) != -1).ToList<Video>();
                 SetSort(videos);
                 metroLabel8.ForeColor = Color.White;
+                foreach(object item in list.listView.Items)
+                {
+                    try
+                    {
+                        ContentPresenter contentPresenter = list.listView.ItemContainerGenerator.ContainerFromItem(item) as ContentPresenter;
+                        contentPresenter.ApplyTemplate();
+                        TextBlock textBlock = contentPresenter.ContentTemplate.FindName("Title", contentPresenter) as TextBlock;
+                        List<int> indexes = new List<int>();
+                        for (int index = 0; index != -1; )
+                        {
+                            index = textBlock.Text.IndexOf(metroTextBoxPlaceHolder4.Text, index, StringComparison.CurrentCultureIgnoreCase);
+                            if (index != -1)
+                            {
+                                indexes.Add(index);
+                                index++;
+                            }
+                        }
+                        string text = textBlock.Text;
+                        textBlock.Inlines.Clear();
+                        int offset = 0;
+                        for (int j = 0; j < indexes.Count; j++)
+                        {
+                            textBlock.Inlines.Add(new Run(text.Substring(offset, indexes[j] - offset)));
+                            textBlock.Inlines.Add(new Run(text.Substring(indexes[j], metroTextBoxPlaceHolder4.Text.Length)) { Background = System.Windows.Media.Brushes.Orange });
+                            offset = indexes[j] + metroTextBoxPlaceHolder4.Text.Length;
+                        }
+                        textBlock.Inlines.Add(new Run(text.Substring(offset)));
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
             }
         }
 
