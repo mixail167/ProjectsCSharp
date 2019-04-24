@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace VKVideoDownloader
@@ -9,6 +10,10 @@ namespace VKVideoDownloader
     public partial class ListViewWPF : UserControl
     {
         List<Video> source;
+        int count;
+
+        public delegate void CountChangedHandler();
+        public event CountChangedHandler CountChanged;
 
         public ListViewWPF()
         {
@@ -19,6 +24,11 @@ namespace VKVideoDownloader
         {
             get { return listView.ItemsSource as List<Video>; }
             set { listView.ItemsSource = value; }
+        }
+
+        public int Count
+        {
+            get { return count; }
         }
 
         public List<Video> Source
@@ -46,20 +56,16 @@ namespace VKVideoDownloader
 
         public void ModifyCheck(bool checkedValue)
         {
-            List<Video> videos = listView.ItemsSource as List<Video>;
+            List<Video> videos = source;
             if (videos != null)
             {
                 foreach (Video item in videos)
                 {
                     item.IsChecked = checkedValue;
+                    count = (checkedValue) ? count + 1 : count - 1;
                 }
                 listView.Items.Refresh();
             }
-        }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
 
         public void ModifyQuality(string quality)
@@ -72,6 +78,21 @@ namespace VKVideoDownloader
                     item.SetCurrentFileFromFiles(quality);
                 }
                 listView.Items.Refresh();
+            }
+        }
+
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        {   
+            count++;
+            CountChanged();
+        }
+
+        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (count != 0)
+            {
+                count--;
+                CountChanged();
             }
         }
     }

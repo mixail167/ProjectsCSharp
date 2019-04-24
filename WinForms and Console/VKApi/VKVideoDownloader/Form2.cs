@@ -38,7 +38,13 @@ namespace VKVideoDownloader
             client.DownloadProgressChanged += client_DownloadProgressChanged;
             client.DownloadFileCompleted += client_DownloadFileCompleted;
             list = elementHost1.Child as ListViewWPF;
+            list.CountChanged += list_CountChanged;
             GetProfileInfo(access_token, id);
+        }
+
+        void list_CountChanged()
+        {
+            metroLabel16.Text = list.Count.ToString();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -121,6 +127,7 @@ namespace VKVideoDownloader
             pictureBox3.Tag = null;
             pictureBox4.Tag = null;
             metroLabel6.Text = "0";
+            metroLabel16.Text = "0";
             metroLabel13.Text = "Пожалуйста, подождите. Выполняется поиск видео";
             if (InterNet.IsConnected)
             {
@@ -177,11 +184,13 @@ namespace VKVideoDownloader
         private void metroButton4_Click(object sender, EventArgs e)
         {
             list.ModifyCheck(true);
+            metroLabel16.Text = list.Count.ToString();
         }
 
         private void metroButton5_Click(object sender, EventArgs e)
         {
             list.ModifyCheck(false);
+            metroLabel16.Text = list.Count.ToString();
         }
 
         private void metroComboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -288,7 +297,7 @@ namespace VKVideoDownloader
 
         private async Task Download()
         {
-            List<Video> videos = list.ItemsSource as List<Video>;
+            List<Video> videos = list.Source;
             if (videos != null && videos.Count > 0)
             {
                 videos = videos.Where<Video>(x => x.IsChecked == true).ToList<Video>();
@@ -534,6 +543,15 @@ namespace VKVideoDownloader
         private void metroButton1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void metroButton2_Click(object sender, EventArgs e)
+        {
+            if (list.Source != null)
+            {
+                List<Video> videos = list.Source.Where<Video>(x => x.IsChecked).ToList<Video>();
+                SetSort(videos);
+            }
         }
     }
 }

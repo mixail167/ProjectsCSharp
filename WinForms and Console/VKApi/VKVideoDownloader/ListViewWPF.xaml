@@ -266,7 +266,7 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <CheckBox x:Name="checkBox" Grid.RowSpan="3" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource CheckBoxItem}"/>
+                                    <CheckBox x:Name="checkBox" Grid.RowSpan="3" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource CheckBoxItem}" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked"/>
                                     <Image Source="{Binding Photo}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="5"/>
                                     <TextBlock x:Name="Title" Text="{Binding Title}" Grid.Column="2" Grid.Row="0" Foreground="White" Margin="5"/>
                                     <StackPanel Grid.Column="2" Grid.Row="1">
@@ -279,7 +279,7 @@
                                         <Label Content="Дата:" Margin="0,0,0,5" Foreground="Red"/>
                                         <TextBlock Text="{Binding Date}" Foreground="White" Margin="0,5,5,5"/>
                                         <Label Content="Качество:" Margin="0,0,0,5" Foreground="Red"/>
-                                        <ComboBox ItemsSource="{Binding Files}" DisplayMemberPath="Item1" SelectedValue="{Binding CurrentFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" Margin="0,3,5,5" Template="{StaticResource RoundComboBoxTemplate}" IsEditable="False" Foreground="White" Background="#11111111" SelectionChanged="ComboBox_SelectionChanged"/>
+                                        <ComboBox ItemsSource="{Binding Files}" DisplayMemberPath="Item1" SelectedValue="{Binding CurrentFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" Margin="0,3,5,5" Template="{StaticResource RoundComboBoxTemplate}" IsEditable="False" Foreground="White" Background="#11111111"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
