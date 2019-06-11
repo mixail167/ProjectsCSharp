@@ -121,7 +121,7 @@
     <value>https://oauth.vk.com/token?grant_type=password&amp;client_id=2274003&amp;client_secret=hHbZxrka2uZ6jB1inYsH&amp;username={0}&amp;password={1}</value>
   </data>
   <data name="GetProfileInfo" xml:space="preserve">
-    <value>https://api.vk.com/method/account.getProfileInfo?access_token={0}</value>
+    <value>https://api.vk.com/method/account.getProfileInfo?access_token={0}&amp;v=5.95</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="icon" type="System.Resources.ResXFileRef, System.Windows.Forms">

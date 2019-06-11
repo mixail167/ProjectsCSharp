@@ -7,37 +7,66 @@ namespace MathParser
 {
     class Program
     {
-        static CalculationEngine engine;
-        static Dictionary<string, Func<double, double>> functions;
+        private static Tuple<int,int> GetCursorPosition()
+        {
+            return new Tuple<int, int>(Console.CursorTop, Console.CursorLeft);
+        }
+
+        private static void SetCursorPosition(Tuple<int, int> position)
+        {
+            Console.SetCursorPosition(position.Item2, position.Item1);
+        }
 
         private static string InputEquation()
         {
             string equation = string.Empty;
-            do
+            Console.Write("Уравнение y = ");
+            Tuple<int, int> position = GetCursorPosition();
+            while(true)
             {
                 try
-                {
-                    Console.Write("Уравнение y = ");
-                    equation = Console.ReadLine();
+                {                
+                    equation = Console.ReadLine().Trim();
+                    if (equation!= string.Empty)
+                    {
+                        return equation;
+                    }
                 }
                 catch (Exception)
                 {
 
                 }
-            } while (equation == string.Empty);
-            return equation;
+                finally
+                {
+                    if (equation == string.Empty)
+                    {
+                        SetCursorPosition(position);
+                    }
+                }
+            }            
         }
 
         private static int InputCountParameters()
         {
             int count = 0;
+            Console.Write("Введите количество неизвестных (1-9): ");
+            Tuple<int, int> position = GetCursorPosition();
             do
             {
                 try
                 {
-                    Console.Write("Введите количество неизвестных (1-9):");
-                    count = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
-                    Console.WriteLine();
+                    char number = Console.ReadKey().KeyChar;
+                    if (Char.IsNumber(number) && number != '0')
+                    {
+                        count = Convert.ToInt32(number.ToString());
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        SetCursorPosition(position);
+                        Console.Write(" ");
+                        SetCursorPosition(position);
+                    }
                 }
                 catch (Exception)
                 {
@@ -50,6 +79,7 @@ namespace MathParser
         private static Dictionary<string, double> InputParametersValues(int count)
         {
             Dictionary<string, double> parameters = new Dictionary<string, double>();
+            Tuple<int, int> position = GetCursorPosition();
             int i = 1;
             while (i <= count)
             {
@@ -61,15 +91,33 @@ namespace MathParser
                     Console.WriteLine();
                     if (Char.IsLetter(key.KeyChar) && parameter != "y" && parameter != "e" && !parameters.Keys.Contains(parameter))
                     {
-                        Console.Write(string.Format("Введите значение параметра {0}: ", i));
-                        double value = Convert.ToDouble(Console.ReadLine());
+                        double value = 0;
+                        while (true)
+                        {
+                            try
+                            {
+                                Console.Write(string.Format("Введите значение параметра {0}: ", parameter));
+                                value = Convert.ToDouble(Console.ReadLine());
+                                break;
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Некорректное значение!");
+                                Console.Beep();
+                            }
+                        }
                         parameters.Add(parameter, value);
                         i++;
+                        position = GetCursorPosition();
                     }
+                    else
+                        throw new Exception();
                 }
                 catch (Exception)
                 {
-
+                    SetCursorPosition(position);
+                    Console.Write("                                        ");
+                    SetCursorPosition(position);
                 }
             }
             return parameters;
@@ -77,7 +125,7 @@ namespace MathParser
 
         static void Main(string[] args)
         {
-            functions = new Dictionary<string, Func<double, double>>();
+            Dictionary<string, Func<double, double>> functions = new Dictionary<string, Func<double, double>>();
             functions.Add("abs", x => Math.Abs(x));
             functions.Add("ln", x => Math.Log(x));
             functions.Add("cos", x => Math.Cos(x));
@@ -98,7 +146,7 @@ namespace MathParser
             functions.Add("arch", x => (x >= 1) ? Math.Log(x + Math.Sqrt(x * x - 1)) : 0);
             functions.Add("artanh", x => 0.5 * Math.Log((1 + x) / (1 - x)));
             functions.Add("arctanh", x => 0.5 * Math.Log((1 + x) / (x - 1)));
-            engine = new CalculationEngine();
+            CalculationEngine engine = new CalculationEngine();
             foreach (var item in functions)
             {
                 try
@@ -113,11 +161,11 @@ namespace MathParser
             ConsoleKeyInfo key;
             do
             {
-                Console.Write("Ввести значения неизвестных? (0 - нет) ");
+                Console.Write("Ввести значения неизвестных? (Enter - да) ");
                 key = Console.ReadKey();
                 Console.WriteLine();
                 Dictionary<string, double> parameters;
-                if (key.Key != ConsoleKey.D0 && key.Key != ConsoleKey.NumPad0)
+                if (key.Key == ConsoleKey.Enter)
                 {
                     int count = InputCountParameters();
                     parameters = InputParametersValues(count);
@@ -139,10 +187,10 @@ namespace MathParser
                         Console.WriteLine("Некорректное уравнение!");
                     }
                 } while (true);
-                Console.Write("Повторить ввод? (0 - нет) ");
+                Console.Write("Повторить ввод? (Enter - да) ");
                 key = Console.ReadKey();
                 Console.WriteLine();
-            } while (key.KeyChar.ToString() != "0");
+            } while (key.Key == ConsoleKey.Enter);
         }
     }
 }

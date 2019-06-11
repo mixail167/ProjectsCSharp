@@ -70,7 +70,7 @@ namespace VKVideoDownloader.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на https://api.vk.com/method/account.getProfileInfo?access_token={0}.
+        ///   Ищет локализованную строку, похожую на https://api.vk.com/method/account.getProfileInfo?access_token={0}&amp;v=5.95.
         /// </summary>
         internal static string GetProfileInfo {
             get {
