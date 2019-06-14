@@ -81,7 +81,6 @@
             this.metroLabel13.Name = "metroLabel13";
             this.metroLabel13.Size = new System.Drawing.Size(264, 40);
             this.metroLabel13.TabIndex = 10;
-            this.metroLabel13.Text = "Пожалуйста, подождите. \r\nВыполняется поиск видео";
             this.metroLabel13.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // metroProgressSpinner1
@@ -94,7 +93,6 @@
             this.metroProgressSpinner1.Style = MetroFramework.MetroColorStyle.Red;
             this.metroProgressSpinner1.TabIndex = 11;
             this.metroProgressSpinner1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroProgressSpinner1.Value = 50;
             // 
             // Form3
             // 
@@ -113,6 +111,7 @@
             this.Name = "Form3";
             this.Padding = new System.Windows.Forms.Padding(0, 60, 0, 0);
             this.Resizable = false;
+            this.ShowInTaskbar = false;
             this.Style = MetroFramework.MetroColorStyle.Red;
             this.TextAlign = System.Windows.Forms.VisualStyles.HorizontalAlign.Center;
             this.Theme = MetroFramework.MetroThemeStyle.Dark;

@@ -196,7 +196,8 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.Controls.Add(this.metroLabel2, 0, 0);
@@ -206,7 +207,7 @@
             this.tableLayoutPanel2.Controls.Add(this.metroTextBoxPlaceHolder1, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.metroTextBoxPlaceHolder2, 1, 3);
             this.tableLayoutPanel2.Controls.Add(this.metroButton3, 1, 5);
-            this.tableLayoutPanel2.Controls.Add(this.metroButton1, 1, 4);
+            this.tableLayoutPanel2.Controls.Add(this.metroButton1, 2, 3);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -303,24 +304,23 @@
             // metroButton3
             // 
             this.metroButton3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.metroButton3.Location = new System.Drawing.Point(89, 132);
+            this.metroButton3.Location = new System.Drawing.Point(89, 103);
             this.metroButton3.Name = "metroButton3";
-            this.metroButton3.Size = new System.Drawing.Size(131, 23);
+            this.metroButton3.Size = new System.Drawing.Size(100, 23);
             this.metroButton3.Style = MetroFramework.MetroColorStyle.Red;
             this.metroButton3.TabIndex = 8;
-            this.metroButton3.Text = "Поиск видеозаписей";
+            this.metroButton3.Text = "Поиск ";
             this.metroButton3.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroButton3.Click += new System.EventHandler(this.metroButton3_Click);
             // 
             // metroButton1
             // 
             this.metroButton1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.metroButton1.Location = new System.Drawing.Point(89, 103);
+            this.metroButton1.Location = new System.Drawing.Point(195, 74);
             this.metroButton1.Name = "metroButton1";
-            this.metroButton1.Size = new System.Drawing.Size(131, 23);
+            this.metroButton1.Size = new System.Drawing.Size(23, 23);
             this.metroButton1.Style = MetroFramework.MetroColorStyle.Red;
             this.metroButton1.TabIndex = 11;
-            this.metroButton1.Text = "Поиск ID";
             this.metroButton1.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroButton1.Click += new System.EventHandler(this.metroButton1_Click);
             // 

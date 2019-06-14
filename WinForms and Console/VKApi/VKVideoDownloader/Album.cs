@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
@@ -7,27 +6,24 @@ using System.Windows.Media.Imaging;
 
 namespace VKVideoDownloader
 {
-    public class Video
+    public class Album
     {
+        int id;
         string title;
-        string description;
         DateTime date;
-        TimeSpan duration;
-        List<Tuple<string, string>> files;
         BitmapImage photo;
-        Tuple<string, string> currentFile;
-        bool isChecked;
+        int count;
 
-        public Video()
+        public int ID
         {
-            files = new List<Tuple<string, string>>();
-            isChecked = false;
+            get { return id; }
+            set { id = value; }
         }
 
-        public bool IsChecked
+        public int Count
         {
-            get { return isChecked; }
-            set { isChecked = value; }
+            get { return count; }
+            set { count = value; }
         }
 
         public string Title
@@ -36,40 +32,14 @@ namespace VKVideoDownloader
             set { title = value; }
         }
 
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
-
         public string Date
         {
             get { return date.ToShortDateString(); }
         }
 
-        public DateTime DateForSort
-        {
-            get { return date; }
-        }
-
         public void SetDate(long value)
         {
             date = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(value).ToLocalTime();
-        }
-
-        public void SetDuration(int value)
-        {
-            duration = new TimeSpan(0, 0, value);
-        }
-
-        public TimeSpan DurationForSort
-        {
-            get { return duration; }
-        }
-
-        public string Duration
-        {
-            get { return duration.ToString(@"hh\:mm\:ss"); }
         }
 
         public void SetPhoto(string url)
@@ -103,29 +73,6 @@ namespace VKVideoDownloader
         public BitmapImage Photo
         {
             get { return photo; }
-        }
-
-        public List<Tuple<string, string>> Files
-        {
-            get { return files; }
-        }
-
-        public Tuple<string, string> CurrentFile
-        {
-            get { return currentFile; }
-            set { currentFile = value; }
-        }
-
-        public void SetCurrentFileFromFiles(string quality)
-        {
-            foreach (Tuple<string, string> item in files)
-            {
-                if (item.Item1 == quality)
-                {
-                    currentFile = item;
-                    break;
-                }
-            }
         }
     }
 }

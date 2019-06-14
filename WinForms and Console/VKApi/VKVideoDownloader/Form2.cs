@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Forms;
@@ -147,7 +146,7 @@ namespace VKVideoDownloader
                 if (count > 0)
                 {
                     int countThreads = Convert.ToInt32(Math.Ceiling(count * 1.0 / 200));
-                    Form3 form3 = new Form3(access_token, id, album, url, countThreads);
+                    Form3 form3 = new Form3(access_token, id, album, url, countThreads, count);
                     form3.ShowDialog();
                     switch (form3.GetDialogResult())
                     {
@@ -459,7 +458,7 @@ namespace VKVideoDownloader
                 List<Video> videos = list.Source.Where<Video>(x => x.Title.IndexOf(metroTextBoxPlaceHolder4.Text, StringComparison.CurrentCultureIgnoreCase) != -1).ToList<Video>();
                 SetSort(videos);
                 metroLabel8.ForeColor = Color.White;
-                foreach(object item in list.listView.Items)
+                foreach (object item in list.listView.Items)
                 {
                     try
                     {
@@ -542,7 +541,28 @@ namespace VKVideoDownloader
 
         private void metroButton1_Click(object sender, EventArgs e)
         {
-
+            if (InterNet.IsConnected)
+            {
+                long id = (metroTextBoxPlaceHolder1.Text == string.Empty || metroTextBoxPlaceHolder1.isPlaceHolder()) ? this.id : Convert.ToInt64(metroTextBoxPlaceHolder1.Text);
+                string url;
+                if (metroRadioButton1.Checked || (metroRadioButton2.Checked && id == this.id))
+                {
+                    url = Resources.GetAlbums;
+                }
+                else
+                {
+                    url = Resources.GetAlbumsWithMinus;
+                }
+                Form4 form4 = new Form4(access_token, id, url);
+                if(form4.ShowDialog() == DialogResult.OK)
+                {
+                    metroTextBoxPlaceHolder2.Text = form4.ID.ToString();
+                }
+            }
+            else
+            {
+                metroLabel13.Text = "Отсутствует соединение с Интернет";
+            }
         }
 
         private void metroButton2_Click(object sender, EventArgs e)

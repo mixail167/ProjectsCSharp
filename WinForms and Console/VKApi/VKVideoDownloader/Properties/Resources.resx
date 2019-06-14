@@ -142,4 +142,13 @@
   <data name="strelka2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\strelka2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="GetAlbums" xml:space="preserve">
+    <value>https://api.vk.com/method/video.getAlbums?access_token={0}&amp;owner_id={1}&amp;count=100&amp;offset={2}&amp;extended=1&amp;v=5.95</value>
+  </data>
+  <data name="GetAlbumsWithMinus" xml:space="preserve">
+    <value>https://api.vk.com/method/video.getAlbums?access_token={0}&amp;owner_id=-{1}&amp;count=100&amp;offset={2}&amp;extended=1&amp;v=5.95</value>
+  </data>
+  <data name="photo_160x120" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\photo_160x120.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

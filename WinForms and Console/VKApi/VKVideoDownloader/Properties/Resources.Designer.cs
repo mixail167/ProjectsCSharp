@@ -70,6 +70,24 @@ namespace VKVideoDownloader.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на https://api.vk.com/method/video.getAlbums?access_token={0}&amp;owner_id={1}&amp;count=100&amp;offset={2}&amp;extended=1&amp;v=5.95.
+        /// </summary>
+        internal static string GetAlbums {
+            get {
+                return ResourceManager.GetString("GetAlbums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на https://api.vk.com/method/video.getAlbums?access_token={0}&amp;owner_id=-{1}&amp;count=100&amp;offset={2}&amp;extended=1&amp;v=5.95.
+        /// </summary>
+        internal static string GetAlbumsWithMinus {
+            get {
+                return ResourceManager.GetString("GetAlbumsWithMinus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на https://api.vk.com/method/account.getProfileInfo?access_token={0}&amp;v=5.95.
         /// </summary>
         internal static string GetProfileInfo {
@@ -112,6 +130,16 @@ namespace VKVideoDownloader.Properties {
         internal static string Page {
             get {
                 return ResourceManager.GetString("Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap photo_160x120 {
+            get {
+                object obj = ResourceManager.GetObject("photo_160x120", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

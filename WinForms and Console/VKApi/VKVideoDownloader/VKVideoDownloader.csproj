@@ -69,6 +69,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Album.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,8 +88,17 @@
     <Compile Include="Form3.Designer.cs">
       <DependentUpon>Form3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form4.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form4.Designer.cs">
+      <DependentUpon>Form4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Functions.cs" />
     <Compile Include="InterNet.cs" />
+    <Compile Include="ListAlbumWPF.xaml.cs">
+      <DependentUpon>ListAlbumWPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ListViewWPF.xaml.cs">
       <DependentUpon>ListViewWPF.xaml</DependentUpon>
     </Compile>
@@ -108,6 +118,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form4.resx">
+      <DependentUpon>Form4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -134,6 +147,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\photo_160x120.png" />
     <None Include="Resources\strelka2.jpg" />
     <None Include="Resources\strelka.jpg" />
     <None Include="icon.jpg" />
@@ -142,6 +156,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Page Include="ListAlbumWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ListViewWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

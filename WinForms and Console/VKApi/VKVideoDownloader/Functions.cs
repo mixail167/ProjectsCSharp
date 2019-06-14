@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace VKVideoDownloader
 {
@@ -22,30 +21,38 @@ namespace VKVideoDownloader
             Request request = new Request(url);
             int count = 0;
             errorText = string.Empty;
-            try
+            if (InterNet.IsConnected)
             {
-                JObject json = JObject.Parse(request.Get());
-                if (json.ContainsKey("response"))
+                try
                 {
-                    JObject response = json["response"] as JObject;
-                    if (response.ContainsKey("count"))
+                    JObject json = JObject.Parse(request.Get());
+                    if (json.ContainsKey("response"))
                     {
-                        count = Convert.ToInt32(response["count"]);
+                        JObject response = json["response"] as JObject;
+                        if (response.ContainsKey("count"))
+                        {
+                            count = Convert.ToInt32(response["count"]);
+                        }
+                    }
+                    else if (json.ContainsKey("error"))
+                    {
+                        JObject error = json["error"] as JObject;
+                        int code = Convert.ToInt32(error["error_code"]);
+                        string message = error["error_msg"].ToString();
+                        errorText = string.Format("Ошибка {0}: {1}", code, message);
+                        count = -1;
                     }
                 }
-                else if (json.ContainsKey("error"))
+                catch (Exception e)
                 {
-                    JObject error = json["error"] as JObject;
-                    int code = Convert.ToInt32(error["error_code"]);
-                    string message = error["error_msg"].ToString();
-                    errorText = string.Format("Ошибка {0}: {1}", code, message);
                     count = -1;
-                }
+                    errorText = e.Message;
+                } 
             }
-            catch (Exception e)
+            else
             {
                 count = -1;
-                errorText = e.Message;
+                errorText = "Отсутствует соединение с сетью Интернет.";
             }
             return count;
         }
