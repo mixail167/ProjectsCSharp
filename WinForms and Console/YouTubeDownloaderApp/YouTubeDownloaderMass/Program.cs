@@ -23,10 +23,10 @@ namespace YouTubeDownloaderMass
         static bool first = true;
         static Timer timer;
         static int bytesCount;
-        static double speed;
+        static double percent;
 
         static void Main(string[] args)
-        {            
+        {
             Console.Title = "YouTubeDownloader. Массовая загрузка видео";
             if (args.Length > 0)
             {
@@ -218,10 +218,6 @@ namespace YouTubeDownloaderMass
                                         {
                                             Message(string.Format("Видео {0}: {1}", videoList[i].Item1.Title, exception.Message), true);
                                         }
-                                        finally
-                                        {
-                                            first = true;
-                                        }
                                     }
                                     videoList.Clear();
                                 }
@@ -267,28 +263,29 @@ namespace YouTubeDownloaderMass
 
         private static void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            speed = (double)bytesCount;
-        }
-
-        static void downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
-        {
-            bytesCount = e.BytesReceived - bytesCount;
             if (first)
             {
-                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
                 first = false;
             }
             else
             {
-                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                Console.CursorTop--;
             }
-            Message(string.Format("Прогресс загрузки: {0:f2}%, средняя скорость: {1,-20}", e.ProgressPercentage, SpeedToString(speed)));
+            Message(string.Format("Прогресс загрузки: {0:f2}%, скорость: {1,-20}", percent, SpeedToString(bytesCount)));
+            bytesCount = 0;
+        }
+
+        static void downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
+        {
+            bytesCount += e.BytesReceived;
+            percent = e.ProgressPercentage;
         }
 
         private static void downloader_DownloadStarted(object sender, EventArgs e)
         {
             bytesCount = 0;
-            speed = 0;
+            percent = 0;
+            first = true;
             timer.Start();
             VideoDownloader downloader = sender as VideoDownloader;
             Message(string.Format("Загрузка видео {0}.", downloader.Video.Title));
@@ -298,7 +295,7 @@ namespace YouTubeDownloaderMass
         {
             timer.Stop();
             VideoDownloader downloader = sender as VideoDownloader;
-            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+            Console.CursorTop--;
             Message(string.Format("Видео загружено в {0}.", downloader.SavePath));
         }
 
