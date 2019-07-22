@@ -181,14 +181,25 @@ namespace YouTubeDownloaderMass
                                     {
                                         try
                                         {
-                                            string title = videoList[i].Item1.Title;
+                                            string title1 = videoList[i].Item1.Title;
                                             foreach (char item in invalidChars)
                                             {
-                                                if (title.IndexOf(item) != -1)
+                                                if (title1.IndexOf(item) != -1)
                                                 {
-                                                    title = title.Replace(item, '_');
+                                                    title1 = title1.Replace(item, '_');
                                                 }
                                             }
+											string title = title1;
+											int j = 1;
+											while(true)
+											{
+												if(File.Exists(Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension)))
+												{
+													title = title1 + string.Format(" ({0})", j);
+                                                    j++;
+												}
+												else break;
+											}
                                             VideoDownloader downloader = new VideoDownloader(videoList[i].Item1, Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension));
                                             downloader.DownloadStarted += downloader_DownloadStarted;
                                             downloader.DownloadFinished += downloader_DownloadFinished;
