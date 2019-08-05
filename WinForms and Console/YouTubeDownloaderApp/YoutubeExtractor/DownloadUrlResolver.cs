@@ -289,8 +289,9 @@ namespace YoutubeExtractor
 
         private static string GetVideoTitle(JObject json)
         {
-            JToken title = json["args"]["title"];
-
+            //JToken title = json["args"]["title"];
+            JObject player_response = JObject.Parse(json["args"]["player_response"].ToString());
+            JToken title = player_response["videoDetails"]["title"];
             return title == null ? String.Empty : title.ToString();
         }
 

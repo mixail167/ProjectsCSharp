@@ -31,6 +31,7 @@
             this.gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -43,7 +44,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.button3 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -77,7 +77,7 @@
             this.gMapControl1.ShowTileGridLines = false;
             this.gMapControl1.Size = new System.Drawing.Size(568, 556);
             this.gMapControl1.TabIndex = 0;
-            this.gMapControl1.Zoom = 18D;
+            this.gMapControl1.Zoom = 9D;
             this.gMapControl1.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.gMapControl1_OnMapZoomChanged);
             // 
             // tableLayoutPanel1
@@ -115,6 +115,16 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Координаты";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(10, 97);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(135, 35);
+            this.button3.TabIndex = 5;
+            this.button3.Text = "Текущее местоположение";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.Button3_ClickAsync);
             // 
             // button1
             // 
@@ -226,15 +236,6 @@
             this.trackBar1.TabIndex = 5;
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(10, 97);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(135, 35);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "Текущее местоположение";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -244,6 +245,7 @@
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "Form1";
             this.Text = "Maps";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);

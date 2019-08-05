@@ -189,17 +189,17 @@ namespace YouTubeDownloaderMass
                                                     title1 = title1.Replace(item, '_');
                                                 }
                                             }
-											string title = title1;
-											int j = 1;
-											while(true)
-											{
-												if(File.Exists(Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension)))
-												{
-													title = title1 + string.Format(" ({0})", j);
+                                            string title = title1;
+                                            int j = 1;
+                                            while (true)
+                                            {
+                                                if (File.Exists(Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension)))
+                                                {
+                                                    title = title1 + string.Format(" ({0})", j);
                                                     j++;
-												}
-												else break;
-											}
+                                                }
+                                                else break;
+                                            }
                                             VideoDownloader downloader = new VideoDownloader(videoList[i].Item1, Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension));
                                             downloader.DownloadStarted += downloader_DownloadStarted;
                                             downloader.DownloadFinished += downloader_DownloadFinished;
@@ -282,7 +282,7 @@ namespace YouTubeDownloaderMass
             {
                 Console.CursorTop--;
             }
-            Message(string.Format("Прогресс загрузки: {0:f2}%, скорость: {1,-20}", percent, SpeedToString(bytesCount)));
+            Message(string.Format("{0,-" + (Console.BufferWidth - 1) + "}", string.Format("Прогресс загрузки: {0:f2}%, скорость: {1}", percent, SpeedToString(bytesCount))));
             bytesCount = 0;
         }
 
@@ -307,11 +307,12 @@ namespace YouTubeDownloaderMass
             timer.Stop();
             VideoDownloader downloader = sender as VideoDownloader;
             Console.CursorTop--;
-            Message(string.Format("Видео загружено в {0}.", downloader.SavePath));
+            Message(string.Format("{0,-" + (Console.BufferWidth - 1) + "}", string.Format("Видео загружено в {0}.", downloader.SavePath)));
         }
 
         private static void Message(string message, bool error = false)
         {
+            Console.CursorLeft = 0;
             Console.WriteLine(message);
             if (!errorIndicator && error)
             {
