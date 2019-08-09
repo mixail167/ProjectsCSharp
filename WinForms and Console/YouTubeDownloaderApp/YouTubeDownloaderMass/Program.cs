@@ -72,66 +72,78 @@ namespace YouTubeDownloaderMass
                             string allText = string.Join("\n", list);
                             list = allText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                             const string pattern = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/watch\?v=([-_0-9a-zA-Z]){11}(&([-=_0-9a-zA-Z&])*)?\|(144|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$";
-                            const string pattern2 = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/playlist\?list=([-_0-9a-zA-Z]){34}(&([-=_0-9a-zA-Z&])*)?\|(144|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""]))+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])\\)+)$";
-                            for (int i = 0; i < list.Count; i++)
+                            const string pattern2 = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/playlist\?list=([-_0-9a-zA-Z]){34}(&([-=_0-9a-zA-Z&])*)?\|(144|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?)+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?\\)+)$";
+                            foreach (string item in list)
                             {
-                                if (!Regex.IsMatch(list[i], pattern))
+                                if (!Regex.IsMatch(item, pattern))
                                 {
-                                    if (!Regex.IsMatch(list[i], pattern2))
+                                    if (!Regex.IsMatch(item, pattern2))
                                     {
-                                        Message(string.Format("Строка {0} имеет недопустимый формат.", list[i]), true);
+                                        Message(string.Format("Строка {0} имеет недопустимый формат.", item), true);
                                     }
                                     else
                                     {
-                                        string url = list[i].Substring(0, list[i].IndexOf("=") + 35);
-                                        HttpRequest request = new HttpRequest();
-                                        string response = request.Get(url).ToString();
-                                        if (response != null && response != string.Empty)
+                                        char driverName;
+                                        if (CheckDrive(item, out driverName))
                                         {
-                                            HtmlDocument document = new HtmlDocument();
-                                            document.LoadHtml(response);
-                                            IEnumerable<HtmlNode> htmlNodes = document.DocumentNode.QuerySelectorAll("a.pl-video-title-link.yt-uix-tile-link.yt-uix-sessionlink.spf-link");
-                                            if (htmlNodes != null && htmlNodes.Count() > 0)
+                                            string url = item.Substring(0, item.IndexOf("=") + 35);
+                                            HttpRequest request = new HttpRequest();
+                                            string response = request.Get(url).ToString();
+                                            if (response != null && response != string.Empty)
                                             {
-                                                foreach (HtmlNode item in htmlNodes)
+                                                HtmlDocument document = new HtmlDocument();
+                                                document.LoadHtml(response);
+                                                IEnumerable<HtmlNode> htmlNodes = document.DocumentNode.QuerySelectorAll("a.pl-video-title-link.yt-uix-tile-link.yt-uix-sessionlink.spf-link");
+                                                if (htmlNodes != null && htmlNodes.Count() > 0)
                                                 {
-                                                    string href = item.GetAttributeValue("href", null).Replace("amp;", "");
-                                                    if (href != null && href != string.Empty)
+                                                    foreach (HtmlNode itemNode in htmlNodes)
                                                     {
-                                                        list2.Add(string.Concat("https://www.youtube.com", href, list[i].Substring(list[i].IndexOf("|"))));
+                                                        string href = itemNode.GetAttributeValue("href", null).Replace("amp;", "");
+                                                        if (href != null && href != string.Empty)
+                                                        {
+                                                            list2.Add(string.Concat("https://www.youtube.com", href.Substring(0, href.IndexOf("&")), item.Substring(item.IndexOf("|"))));
+                                                        }
                                                     }
+                                                }
+                                                else
+                                                {
+                                                    Message(string.Format("Видео в плейлисте {0} не найдено.", item), true);
                                                 }
                                             }
                                             else
                                             {
-                                                Message(string.Format("Видео в плейлисте {0} не найдено.", list[i]), true);
+                                                Message(string.Format("Ответ от {0} не был получен.", url), true);
                                             }
                                         }
                                         else
                                         {
-                                            Message(string.Format("Ответ от {0} не был получен.", url), true);
+                                            Message(string.Format("Строка {0}: Диск {1} не существует.", item, driverName), true);
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    list2.Add(list[i]);
+                                    list2.Add(item);
                                 }
                             }
                             list.Clear();
-                            for (int i = 0; i < list2.Count; i++)
+                            foreach (string item in list2)
                             {
-                                char driverName = list2[i][list2[i].LastIndexOf('|') + 1];
-                                if (DriveInfo.GetDrives().FirstOrDefault(p => p.Name.StartsWith(driverName.ToString(), true, null)) == null)
+                                char driverName;
+                                if (CheckDrive(item, out driverName))
                                 {
-                                    Message(string.Format("Строка {0}: Диск {1} не существует.", list2[i], driverName), true);
-                                    list2 = RemoveItem(list2, i, out i);
+                                    list.Add(item);
+                                }
+                                else
+                                {
+                                    Message(string.Format("Строка {0}: Диск {1} не существует.", item, driverName), true);
                                 }
                             }
-                            if (list2.Count != 0)
+                            list2.Clear();
+                            if (list.Count != 0)
                             {
                                 List<Tuple<VideoInfo, string>> videoList = new List<Tuple<VideoInfo, string>>();
-                                foreach (string item in list2)
+                                foreach (string item in list)
                                 {
                                     string[] parts = item.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                                     parts[0] = parts[0].Substring(parts[0].IndexOf('=') + 1, 11);
@@ -171,7 +183,7 @@ namespace YouTubeDownloaderMass
                                         }
                                     }
                                 }
-                                list2.Clear();
+                                list.Clear();
                                 if (videoList.Count != 0)
                                 {
                                     timer = new Timer(1000);
@@ -320,13 +332,6 @@ namespace YouTubeDownloaderMass
             }
         }
 
-        private static List<string> RemoveItem(List<string> list, int index, out int outIndex)
-        {
-            list.RemoveAt(index);
-            outIndex = index - 1;
-            return list;
-        }
-
         private static string SpeedToString(double speed)
         {
             string si;
@@ -350,6 +355,17 @@ namespace YouTubeDownloaderMass
                 si = "Б";
             }
             return string.Format("{0:f1} {1}/c", speed, si);
+        }
+
+        private static bool CheckDrive(string searchString, out char driveNameOut)
+        {
+            char driverName = searchString[searchString.LastIndexOf('|') + 1];
+            driveNameOut = driverName;
+            if (DriveInfo.GetDrives().FirstOrDefault(p => p.Name.StartsWith(driverName.ToString(), true, null)) == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -395,21 +395,21 @@ namespace VKVideoDownloader
         {
             double new_value;
             string unit;
-            if (value >= 1000000000)
+            if (value >= 1073741824)
             {
-                new_value = value * 1.0 / 1000000000;
+                new_value = value * 1.0 / 1073741824;
                 unit = "Гб";
                 return string.Format("{0:f1} {1}", new_value, unit);
             }
-            else if (value >= 1000000)
+            else if (value >= 1048576)
             {
-                new_value = value * 1.0 / 1000000;
+                new_value = value * 1.0 / 1048576;
                 unit = "Мб";
                 return string.Format("{0:f2} {1}", new_value, unit);
             }
-            else if (value >= 1000)
+            else if (value >= 1024)
             {
-                new_value = value * 1.0 / 1000;
+                new_value = value * 1.0 / 1024;
                 unit = "Кб";
                 return string.Format("{0:f2} {1}", new_value, unit);
             }

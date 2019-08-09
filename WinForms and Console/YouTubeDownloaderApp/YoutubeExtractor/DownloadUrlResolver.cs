@@ -164,7 +164,7 @@ namespace YoutubeExtractor
                 return false;
             }
 
-            normalizedUrl = "http://youtube.com/watch?v=" + v;
+            normalizedUrl = "https://youtube.com/watch?v=" + v;
 
             return true;
         }
