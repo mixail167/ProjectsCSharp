@@ -20,8 +20,9 @@ namespace WebDownloader
         static bool first = true;
         static bool endOfDownload;
         static Timer timer;
+        static long bytesReceived;
         static long bytesCount;
-        static double percent;
+        static int percent;
 
         static void Main(string[] args)
         {
@@ -206,18 +207,19 @@ namespace WebDownloader
             {
                 Console.CursorTop--;
             }
-            Message(string.Format("{0,-" + (Console.BufferWidth - 1) + "}", string.Format("Прогресс загрузки: {0:f2}%, скорость: {1}", percent, SpeedToString(bytesCount))));
-            bytesCount = 0;
+            Message(string.Format("{0,-" + (Console.BufferWidth - 1) + "}", string.Format("Прогресс загрузки: {0}%, скорость: {1}", percent, SpeedToString(bytesReceived - bytesCount))));
+            bytesCount = bytesReceived;
         }
 
         static void downloader_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            bytesCount += e.BytesReceived;
+            bytesReceived = e.BytesReceived;
             percent = e.ProgressPercentage;
         }
 
         private static void DownloadStarted(string title)
         {
+            bytesReceived = 0;
             bytesCount = 0;
             percent = 0;
             first = true;
@@ -247,7 +249,7 @@ namespace WebDownloader
             }
         }
 
-        private static string SpeedToString(double speed)
+        private static string SpeedToString(long speed)
         {
             string si;
             if (speed >= 1073741824)
@@ -269,7 +271,7 @@ namespace WebDownloader
             {
                 si = "Б";
             }
-            return string.Format("{0:f1} {1}/c", speed, si);
+            return string.Format("{0} {1}/c", speed, si);
         }
 
         private static bool CheckDrive(string searchString, out char driveNameOut)
