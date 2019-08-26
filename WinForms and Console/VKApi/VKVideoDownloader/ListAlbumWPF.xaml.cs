@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace VKVideoDownloader
 {
@@ -52,7 +53,7 @@ namespace VKVideoDownloader
             listView.ItemsSource = albums;
         }
 
-        private void listView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void listView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (listView.SelectedIndex != -1)
             {

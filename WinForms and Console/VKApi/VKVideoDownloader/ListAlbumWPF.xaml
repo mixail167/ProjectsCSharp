@@ -259,7 +259,7 @@
                                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="DarkBlue" />
                             </Style.Resources>
                         </Style>
-                    </ListView.Style>                    
+                    </ListView.Style>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="Red" BorderThickness="2">
@@ -286,6 +286,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </ScrollViewer>
-        </Border>            
+        </Border>
     </Grid>
 </UserControl>

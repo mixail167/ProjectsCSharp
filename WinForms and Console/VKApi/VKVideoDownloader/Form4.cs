@@ -60,6 +60,9 @@ namespace VKVideoDownloader
                     list.SetSource();
                     metroLabel6.Text = list.Source.Count.ToString();
                     break;
+                case DialogResult.No:
+                    metroLabel13.Text = "Альбомов не найдено";
+                    break;
                 default:
                     Close();
                     break;

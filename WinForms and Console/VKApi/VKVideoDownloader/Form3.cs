@@ -15,7 +15,6 @@ namespace VKVideoDownloader
         User
     }
 
-
     public partial class Form3 : MetroForm
     {
         string access_token;
@@ -232,6 +231,10 @@ namespace VKVideoDownloader
                     {
                         lastError = error;
                         this.DialogResult = DialogResult.Abort;
+                    }
+                    else
+                    {
+                        this.DialogResult = DialogResult.No;
                     }
                     break;
                 case Search.User:
