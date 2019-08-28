@@ -68,7 +68,7 @@ namespace WebDownloader
                         List<string> list2 = new List<string>();
                         string allText = string.Join("\n", list);
                         list = allText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        const string pattern = @"^(((https?)|(ftp)):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?\|.+\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?)+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?\\)+)$";
+                        const string pattern = @"^(((https?)|(ftp)):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?(\|.+)?\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?)+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?\\)+)$";
                         foreach (string item in list)
                         {
                             if (!Regex.IsMatch(item, pattern))
@@ -95,7 +95,20 @@ namespace WebDownloader
                             foreach (string item in list2)
                             {
                                 string[] parts = item.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                                videoList.Add(new Tuple<string, string, string>(parts[0], parts[1], parts[2]));
+                                string fileName;
+                                if (parts.Length == 2)
+                                {
+                                    fileName = Path.GetFileName(parts[0]);
+                                    if (fileName == string.Empty)
+                                    {
+                                        fileName = "NewFile " + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss");
+                                    }
+                                }
+                                else
+                                {
+                                    fileName = parts[1];
+                                }
+                                videoList.Add(new Tuple<string, string, string>(parts[0], fileName, parts[1]));
                             }
                             list2.Clear();
                             if (videoList.Count != 0)
