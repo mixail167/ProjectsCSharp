@@ -48,18 +48,6 @@
             this.metroButton1 = new MetroFramework.Controls.MetroButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.metroLabel13 = new MetroFramework.Controls.MetroLabel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-            this.metroLabel10 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel11 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel12 = new MetroFramework.Controls.MetroLabel();
-            this.metroProgressBar2 = new MetroFramework.Controls.MetroProgressBar();
-            this.metroProgressBar1 = new MetroFramework.Controls.MetroProgressBar();
-            this.metroButton7 = new MetroFramework.Controls.MetroButton();
-            this.metroCheckBox1 = new MetroFramework.Controls.MetroCheckBox();
-            this.metroButton6 = new MetroFramework.Controls.MetroButton();
-            this.metroTextBoxPlaceHolder3 = new VKVideoDownloader.MetroTextBoxPlaceHolder();
-            this.metroLabel9 = new MetroFramework.Controls.MetroLabel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.metroButton4 = new MetroFramework.Controls.MetroButton();
@@ -89,15 +77,14 @@
             this.metroLabel16 = new MetroFramework.Controls.MetroLabel();
             this.metroButton2 = new MetroFramework.Controls.MetroButton();
             this.metroButton10 = new MetroFramework.Controls.MetroButton();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.metroToolTip1 = new MetroFramework.Components.MetroToolTip();
+            this.metroTextBoxPlaceHolder3 = new MetroFramework.Components.MetroStyleManager(this.components);
+            this.metroButton7 = new MetroFramework.Controls.MetroButton();
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.flowLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -107,6 +94,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.metroPanel1.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.metroTextBoxPlaceHolder3)).BeginInit();
             this.SuspendLayout();
             // 
             // metroStyleManager1
@@ -218,7 +206,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(229, 421);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(229, 431);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // metroLabel2
@@ -332,17 +320,15 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 235F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.metroLabel13, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.metroLabel13, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(23, 110);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(754, 667);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(754, 467);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
             // metroLabel13
@@ -351,182 +337,13 @@
             this.metroLabel13.CustomForeColor = true;
             this.metroLabel13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroLabel13.ForeColor = System.Drawing.Color.Red;
-            this.metroLabel13.Location = new System.Drawing.Point(3, 627);
+            this.metroLabel13.Location = new System.Drawing.Point(3, 437);
             this.metroLabel13.Name = "metroLabel13";
-            this.metroLabel13.Size = new System.Drawing.Size(748, 40);
+            this.metroLabel13.Size = new System.Drawing.Size(748, 30);
             this.metroLabel13.Style = MetroFramework.MetroColorStyle.Red;
             this.metroLabel13.TabIndex = 9;
             this.metroLabel13.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroLabel13.MouseEnter += new System.EventHandler(this.metroLabel13_MouseEnter);
-            // 
-            // groupBox1
-            // 
-            this.tableLayoutPanel1.SetColumnSpan(this.groupBox1, 2);
-            this.groupBox1.Controls.Add(this.flowLayoutPanel5);
-            this.groupBox1.Controls.Add(this.metroProgressBar2);
-            this.groupBox1.Controls.Add(this.metroProgressBar1);
-            this.groupBox1.Controls.Add(this.metroButton7);
-            this.groupBox1.Controls.Add(this.metroCheckBox1);
-            this.groupBox1.Controls.Add(this.metroButton6);
-            this.groupBox1.Controls.Add(this.metroTextBoxPlaceHolder3);
-            this.groupBox1.Controls.Add(this.metroLabel9);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(3, 430);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(748, 194);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Загрузка";
-            // 
-            // flowLayoutPanel5
-            // 
-            this.flowLayoutPanel5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel5.Controls.Add(this.metroLabel10);
-            this.flowLayoutPanel5.Controls.Add(this.metroLabel11);
-            this.flowLayoutPanel5.Controls.Add(this.metroLabel12);
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(7, 121);
-            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(735, 57);
-            this.flowLayoutPanel5.TabIndex = 17;
-            // 
-            // metroLabel10
-            // 
-            this.metroLabel10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroLabel10.CustomForeColor = true;
-            this.metroLabel10.ForeColor = System.Drawing.Color.White;
-            this.metroLabel10.Location = new System.Drawing.Point(3, 0);
-            this.metroLabel10.Name = "metroLabel10";
-            this.metroLabel10.Size = new System.Drawing.Size(730, 19);
-            this.metroLabel10.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroLabel10.TabIndex = 2;
-            this.metroLabel10.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
-            // metroLabel11
-            // 
-            this.metroLabel11.AutoSize = true;
-            this.metroLabel11.CustomForeColor = true;
-            this.metroLabel11.ForeColor = System.Drawing.Color.White;
-            this.metroLabel11.Location = new System.Drawing.Point(3, 19);
-            this.metroLabel11.Name = "metroLabel11";
-            this.metroLabel11.Size = new System.Drawing.Size(0, 0);
-            this.metroLabel11.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroLabel11.TabIndex = 3;
-            this.metroLabel11.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
-            // metroLabel12
-            // 
-            this.metroLabel12.AutoSize = true;
-            this.metroLabel12.CustomForeColor = true;
-            this.metroLabel12.ForeColor = System.Drawing.Color.White;
-            this.metroLabel12.Location = new System.Drawing.Point(9, 19);
-            this.metroLabel12.Name = "metroLabel12";
-            this.metroLabel12.Size = new System.Drawing.Size(0, 0);
-            this.metroLabel12.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroLabel12.TabIndex = 4;
-            this.metroLabel12.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
-            // metroProgressBar2
-            // 
-            this.metroProgressBar2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroProgressBar2.FontSize = MetroFramework.MetroProgressBarSize.Small;
-            this.metroProgressBar2.FontWeight = MetroFramework.MetroProgressBarWeight.Bold;
-            this.metroProgressBar2.HideProgressText = false;
-            this.metroProgressBar2.Location = new System.Drawing.Point(6, 99);
-            this.metroProgressBar2.Name = "metroProgressBar2";
-            this.metroProgressBar2.Size = new System.Drawing.Size(736, 15);
-            this.metroProgressBar2.Step = 1;
-            this.metroProgressBar2.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroProgressBar2.TabIndex = 16;
-            this.metroProgressBar2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.metroProgressBar2.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
-            // metroProgressBar1
-            // 
-            this.metroProgressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroProgressBar1.FontSize = MetroFramework.MetroProgressBarSize.Small;
-            this.metroProgressBar1.FontWeight = MetroFramework.MetroProgressBarWeight.Bold;
-            this.metroProgressBar1.HideProgressText = false;
-            this.metroProgressBar1.Location = new System.Drawing.Point(6, 78);
-            this.metroProgressBar1.Name = "metroProgressBar1";
-            this.metroProgressBar1.Size = new System.Drawing.Size(736, 15);
-            this.metroProgressBar1.Step = 1;
-            this.metroProgressBar1.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroProgressBar1.TabIndex = 15;
-            this.metroProgressBar1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.metroProgressBar1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
-            // metroButton7
-            // 
-            this.metroButton7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroButton7.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.metroButton7.Location = new System.Drawing.Point(672, 47);
-            this.metroButton7.Name = "metroButton7";
-            this.metroButton7.Size = new System.Drawing.Size(70, 25);
-            this.metroButton7.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroButton7.TabIndex = 14;
-            this.metroButton7.Text = "Загрузить";
-            this.metroButton7.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton7.Click += new System.EventHandler(this.metroButton7_Click);
-            // 
-            // metroCheckBox1
-            // 
-            this.metroCheckBox1.AutoSize = true;
-            this.metroCheckBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.metroCheckBox1.CustomForeColor = true;
-            this.metroCheckBox1.Location = new System.Drawing.Point(117, 45);
-            this.metroCheckBox1.Name = "metroCheckBox1";
-            this.metroCheckBox1.Size = new System.Drawing.Size(84, 15);
-            this.metroCheckBox1.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroCheckBox1.TabIndex = 13;
-            this.metroCheckBox1.Text = "Запомнить";
-            this.metroCheckBox1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroCheckBox1.UseVisualStyleBackColor = true;
-            // 
-            // metroButton6
-            // 
-            this.metroButton6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroButton6.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.metroButton6.Location = new System.Drawing.Point(672, 16);
-            this.metroButton6.Name = "metroButton6";
-            this.metroButton6.Size = new System.Drawing.Size(70, 25);
-            this.metroButton6.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroButton6.TabIndex = 12;
-            this.metroButton6.Text = "Обзор...";
-            this.metroButton6.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton6.Click += new System.EventHandler(this.metroButton6_Click);
-            // 
-            // metroTextBoxPlaceHolder3
-            // 
-            this.metroTextBoxPlaceHolder3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroTextBoxPlaceHolder3.ForeColor = System.Drawing.Color.Gray;
-            this.metroTextBoxPlaceHolder3.Location = new System.Drawing.Point(117, 16);
-            this.metroTextBoxPlaceHolder3.Name = "metroTextBoxPlaceHolder3";
-            this.metroTextBoxPlaceHolder3.PlaceHolder = "Папка загрузки...";
-            this.metroTextBoxPlaceHolder3.Size = new System.Drawing.Size(549, 23);
-            this.metroTextBoxPlaceHolder3.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroTextBoxPlaceHolder3.TabIndex = 11;
-            this.metroTextBoxPlaceHolder3.Text = "Папка загрузки...";
-            this.metroTextBoxPlaceHolder3.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroTextBoxPlaceHolder3.KeyDown += new System.Windows.Forms.KeyEventHandler(this.metroTextBoxPlaceHolder3_KeyDown);
-            // 
-            // metroLabel9
-            // 
-            this.metroLabel9.AutoSize = true;
-            this.metroLabel9.CustomForeColor = true;
-            this.metroLabel9.ForeColor = System.Drawing.Color.White;
-            this.metroLabel9.Location = new System.Drawing.Point(6, 16);
-            this.metroLabel9.Name = "metroLabel9";
-            this.metroLabel9.Size = new System.Drawing.Size(105, 19);
-            this.metroLabel9.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroLabel9.TabIndex = 2;
-            this.metroLabel9.Text = "Папка загрузки:";
-            this.metroLabel9.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
             // tableLayoutPanel3
             // 
@@ -548,7 +365,7 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(513, 421);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(513, 431);
             this.tableLayoutPanel3.TabIndex = 6;
             // 
             // flowLayoutPanel2
@@ -558,7 +375,7 @@
             this.flowLayoutPanel2.Controls.Add(this.metroLabel7);
             this.flowLayoutPanel2.Controls.Add(this.metroComboBox1);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 354);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 364);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(507, 29);
             this.flowLayoutPanel2.TabIndex = 6;
@@ -629,7 +446,7 @@
             this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.elementHost1.Location = new System.Drawing.Point(3, 98);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(507, 250);
+            this.elementHost1.Size = new System.Drawing.Size(507, 260);
             this.elementHost1.TabIndex = 8;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.listViewWPF1;
@@ -842,7 +659,7 @@
             this.metroLabel8.Location = new System.Drawing.Point(3, 5);
             this.metroLabel8.Margin = new System.Windows.Forms.Padding(3, 5, 0, 0);
             this.metroLabel8.Name = "metroLabel8";
-            this.metroLabel8.Size = new System.Drawing.Size(56, 19);
+            this.metroLabel8.Size = new System.Drawing.Size(55, 19);
             this.metroLabel8.Style = MetroFramework.MetroColorStyle.Red;
             this.metroLabel8.TabIndex = 15;
             this.metroLabel8.Text = "Фильтр:";
@@ -854,8 +671,9 @@
             this.flowLayoutPanel6.Controls.Add(this.metroLabel16);
             this.flowLayoutPanel6.Controls.Add(this.metroButton2);
             this.flowLayoutPanel6.Controls.Add(this.metroButton10);
+            this.flowLayoutPanel6.Controls.Add(this.metroButton7);
             this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 389);
+            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 399);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
             this.flowLayoutPanel6.Size = new System.Drawing.Size(507, 29);
             this.flowLayoutPanel6.TabIndex = 12;
@@ -918,11 +736,30 @@
             this.metroToolTip1.Style = MetroFramework.MetroColorStyle.Red;
             this.metroToolTip1.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
+            // metroTextBoxPlaceHolder3
+            // 
+            this.metroTextBoxPlaceHolder3.Owner = null;
+            this.metroTextBoxPlaceHolder3.Style = MetroFramework.MetroColorStyle.Red;
+            this.metroTextBoxPlaceHolder3.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
+            // metroButton7
+            // 
+            this.metroButton7.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.metroButton7.Location = new System.Drawing.Point(433, 3);
+            this.metroButton7.Margin = new System.Windows.Forms.Padding(60, 3, 3, 3);
+            this.metroButton7.Name = "metroButton7";
+            this.metroButton7.Size = new System.Drawing.Size(70, 25);
+            this.metroButton7.Style = MetroFramework.MetroColorStyle.Red;
+            this.metroButton7.TabIndex = 15;
+            this.metroButton7.Text = "Загрузить";
+            this.metroButton7.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.metroButton7.Click += new System.EventHandler(this.MetroButton7_Click_1);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 800);
+            this.ClientSize = new System.Drawing.Size(800, 600);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.metroLabel4);
             this.Controls.Add(this.pictureBox1);
@@ -930,9 +767,10 @@
             this.Controls.Add(this.metroLabel1);
             this.DisplayHeader = false;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(800, 800);
+            this.MaximizeBox = false;
             this.Name = "Form2";
             this.Padding = new System.Windows.Forms.Padding(20, 30, 20, 20);
+            this.Resizable = false;
             this.Style = MetroFramework.MetroColorStyle.Red;
             this.Text = "VKVideoDownloader";
             this.Theme = MetroFramework.MetroThemeStyle.Dark;
@@ -943,10 +781,6 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.flowLayoutPanel5.ResumeLayout(false);
-            this.flowLayoutPanel5.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
@@ -961,6 +795,7 @@
             this.metroPanel1.PerformLayout();
             this.flowLayoutPanel6.ResumeLayout(false);
             this.flowLayoutPanel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.metroTextBoxPlaceHolder3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1001,19 +836,6 @@
         private System.Windows.Forms.LinkLabel linkLabel4;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.LinkLabel linkLabel5;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private MetroFramework.Controls.MetroCheckBox metroCheckBox1;
-        private MetroFramework.Controls.MetroButton metroButton6;
-        private MetroTextBoxPlaceHolder metroTextBoxPlaceHolder3;
-        private MetroFramework.Controls.MetroLabel metroLabel9;
-        private MetroFramework.Controls.MetroButton metroButton7;
-        private MetroFramework.Controls.MetroProgressBar metroProgressBar2;
-        private MetroFramework.Controls.MetroProgressBar metroProgressBar1;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
-        private MetroFramework.Controls.MetroLabel metroLabel10;
-        private MetroFramework.Controls.MetroLabel metroLabel11;
-        private MetroFramework.Controls.MetroLabel metroLabel12;
         private MetroFramework.Controls.MetroLabel metroLabel13;
         private MetroFramework.Components.MetroToolTip metroToolTip1;
         private ListViewWPF listViewWPF1;
@@ -1029,5 +851,7 @@
         private MetroFramework.Controls.MetroLabel metroLabel16;
         private MetroFramework.Controls.MetroButton metroButton2;
         private MetroFramework.Controls.MetroButton metroButton10;
+        private MetroFramework.Components.MetroStyleManager metroTextBoxPlaceHolder3;
+        private MetroFramework.Controls.MetroButton metroButton7;
     }
 }

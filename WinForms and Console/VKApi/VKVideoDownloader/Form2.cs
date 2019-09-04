@@ -21,21 +21,12 @@ namespace VKVideoDownloader
         string access_token;
         long id;
         ListViewWPF list;
-        WebClient client;
 
         public Form2(string access_token, string id)
         {
             InitializeComponent();
             this.StyleManager = metroStyleManager1;
-            this.id = 0;
-            metroCheckBox1.Checked = Settings.Default.Remember1;
-            if (metroCheckBox1.Checked)
-            {
-                metroTextBoxPlaceHolder3.Text = Settings.Default.Path;
-            }
-            client = new WebClient();
-            client.DownloadProgressChanged += client_DownloadProgressChanged;
-            client.DownloadFileCompleted += client_DownloadFileCompleted;
+            this.id = 0;  
             list = elementHost1.Child as ListViewWPF;
             list.CountChanged += list_CountChanged;
             GetProfileInfo(access_token, id);
@@ -286,148 +277,6 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroButton6_Click(object sender, EventArgs e)
-        {
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-            {
-                metroTextBoxPlaceHolder3.Text = folderBrowserDialog1.SelectedPath;
-            }
-        }
-
-        private async Task Download()
-        {
-            List<Video> videos = list.Source;
-            if (videos != null && videos.Count > 0)
-            {
-                videos = videos.Where<Video>(x => x.IsChecked == true).ToList<Video>();
-                if (videos != null && videos.Count > 0)
-                {
-                    Exception exception = null;
-                    try
-                    {
-                        metroLabel13.Text = "Пожалуйста, подождите. Выполняется загрузка видео";
-                        if (Directory.Exists(metroTextBoxPlaceHolder3.Text))
-                        {
-                            string path = metroTextBoxPlaceHolder3.Text;
-                            if (!path.EndsWith("\\"))
-                            {
-                                path += "\\";
-                            }
-                            if (metroCheckBox1.Checked)
-                            {
-                                Settings.Default.Path = metroTextBoxPlaceHolder3.Text;
-                            }
-                            Settings.Default.Remember1 = metroCheckBox1.Checked;
-                            Settings.Default.Save();
-                            metroButton7.Text = "Отменить";
-                            metroProgressBar2.Maximum = videos.Count;
-                            for (int i = 0; i < videos.Count; i++)
-                            {
-                                string fullpath = path + videos[i].Title + ".mp4";
-                                metroLabel10.Text = fullpath;
-                                metroLabel12.Text = string.Format("{0}/{1}", i, videos.Count);
-                                await client.DownloadFileTaskAsync(videos[i].CurrentFile.Item2, fullpath);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        exception = ex;
-                    }
-                    finally
-                    {
-                        CancelDownload(exception);
-                    }
-                }
-            }
-        }
-
-        void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Cancelled || e.Error != null)
-            {
-                CancelDownload(e.Error);
-            }
-            else
-            {
-                metroProgressBar2.Value++;
-            }
-            metroProgressBar1.Value = 0;
-
-        }
-
-        private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            metroProgressBar1.Value = e.ProgressPercentage;
-            metroLabel11.Text = string.Format("{0}/{1}", GetSize(e.BytesReceived), GetSize(e.TotalBytesToReceive));
-        }
-
-        private async void metroButton7_Click(object sender, EventArgs e)
-        {
-            if (metroButton7.Text == "Загрузить")
-            {
-                await Download();
-            }
-            else
-            {
-                client.CancelAsync();
-            }
-        }
-
-        private void CancelDownload(Exception exception)
-        {
-            metroButton7.Text = "Загрузить";
-            metroProgressBar2.Value = 0;
-            metroLabel10.Text = string.Empty;
-            metroLabel11.Text = string.Empty;
-            metroLabel12.Text = string.Empty;
-            if (exception == null)
-            {
-                metroLabel13.Text = string.Empty;
-            }
-            else
-            {
-                metroLabel13.Text = exception.Message;
-            }
-        }
-
-        private string GetSize(long value)
-        {
-            double new_value;
-            string unit;
-            if (value >= 1073741824)
-            {
-                new_value = value * 1.0 / 1073741824;
-                unit = "Гб";
-                return string.Format("{0:f1} {1}", new_value, unit);
-            }
-            else if (value >= 1048576)
-            {
-                new_value = value * 1.0 / 1048576;
-                unit = "Мб";
-                return string.Format("{0:f2} {1}", new_value, unit);
-            }
-            else if (value >= 1024)
-            {
-                new_value = value * 1.0 / 1024;
-                unit = "Кб";
-                return string.Format("{0:f2} {1}", new_value, unit);
-            }
-            else
-            {
-                unit = "Б";
-                return string.Format("{0} {1}", value, unit);
-            }
-        }
-
-        private async void metroTextBoxPlaceHolder3_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                await Download();
-            }
-        }
-
         private void metroLabel13_MouseEnter(object sender, EventArgs e)
         {
             metroToolTip1.SetToolTip(metroLabel13, metroLabel13.Text);
@@ -571,6 +420,20 @@ namespace VKVideoDownloader
             {
                 List<Video> videos = list.Source.Where<Video>(x => x.IsChecked).ToList<Video>();
                 SetSort(videos);
+            }
+        }
+
+        private void MetroButton7_Click_1(object sender, EventArgs e)
+        {
+            List<Video> videos = list.Source;
+            if (videos != null && videos.Count > 0)
+            {
+                videos = videos.Where<Video>(x => x.IsChecked == true).ToList<Video>();
+                if (videos != null && videos.Count > 0)
+                {
+                    Form5 form5 = new Form5(videos);
+                    form5.ShowDialog();
+                }
             }
         }
     }

@@ -268,10 +268,10 @@
                                     </Grid.RowDefinitions>
                                     <CheckBox x:Name="checkBox" Grid.RowSpan="3" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource CheckBoxItem}" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked"/>
                                     <Image Source="{Binding Photo}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="5"/>
-                                    <TextBlock x:Name="Title" Text="{Binding Title}" Grid.Column="2" Grid.Row="0" Foreground="White" Margin="5"/>
+                                    <TextBlock x:Name="Title" Text="{Binding Title}" Grid.Column="2" Grid.Row="0" Foreground="White" Margin="5" TextWrapping="Wrap" Width="300" HorizontalAlignment="Left"/>
                                     <StackPanel Grid.Column="2" Grid.Row="1">
                                         <Label Content="Описание:" Margin="0,5,5,0" Foreground="Red"/>
-                                        <TextBlock Text="{Binding Description}" Foreground="White" Margin="5"/>
+                                        <TextBlock Text="{Binding Description}" Foreground="White" Margin="5" TextWrapping="Wrap" Width="300" HorizontalAlignment="Left"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="2">
                                         <Label Content="Длительность:" Margin="0,0,0,5" Foreground="Red"/>

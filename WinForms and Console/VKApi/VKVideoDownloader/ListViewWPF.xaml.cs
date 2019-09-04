@@ -57,7 +57,7 @@ namespace VKVideoDownloader
         public void ModifyCheck(bool checkedValue)
         {
             List<Video> videos = source;
-            if (videos != null)
+            if (videos != null && count > 0)
             {
                 foreach (Video item in videos)
                 {
