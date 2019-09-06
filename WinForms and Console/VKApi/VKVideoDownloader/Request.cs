@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace VKVideoDownloader
 {
     class Request
     {
-        string url;
+        readonly string url;
 
         public Request(string url)
         {

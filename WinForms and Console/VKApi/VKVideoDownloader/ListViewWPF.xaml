@@ -266,7 +266,7 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <CheckBox x:Name="checkBox" Grid.RowSpan="3" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource CheckBoxItem}" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked"/>
+                                    <CheckBox x:Name="checkBox" Grid.RowSpan="3" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource CheckBoxItem}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
                                     <Image Source="{Binding Photo}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="5"/>
                                     <TextBlock x:Name="Title" Text="{Binding Title}" Grid.Column="2" Grid.Row="0" Foreground="White" Margin="5" TextWrapping="Wrap" Width="300" HorizontalAlignment="Left"/>
                                     <StackPanel Grid.Column="2" Grid.Row="1">

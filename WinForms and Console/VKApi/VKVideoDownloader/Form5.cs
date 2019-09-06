@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,8 +12,8 @@ namespace VKVideoDownloader
 {
     public partial class Form5 : MetroForm
     {
-        WebClient client;
-        List<Video> list;
+        readonly WebClient client;
+        readonly List<Video> list;
         bool cancel;
 
         public Form5(List<Video> list)
@@ -27,12 +26,12 @@ namespace VKVideoDownloader
                 metroTextBoxPlaceHolder5.Text = Settings.Default.Path;
             }
             client = new WebClient();
-            client.DownloadProgressChanged += client_DownloadProgressChanged;
-            client.DownloadFileCompleted += client_DownloadFileCompleted;
+            client.DownloadProgressChanged += Client_DownloadProgressChanged;
+            client.DownloadFileCompleted += Client_DownloadFileCompleted;
             this.list = list;
         }
 
-        private void metroButton6_Click(object sender, EventArgs e)
+        private void MetroButton6_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -96,7 +95,7 @@ namespace VKVideoDownloader
             }
         }
 
-        void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (!e.Cancelled)
             {
@@ -113,13 +112,13 @@ namespace VKVideoDownloader
 
         }
 
-        private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             metroProgressBar1.Value = e.ProgressPercentage;
             metroLabel11.Text = string.Format("Загружено {0}/{1}.", GetSize(e.BytesReceived), GetSize(e.TotalBytesToReceive));
         }
 
-        private async void metroButton7_Click(object sender, EventArgs e)
+        private async void MetroButton7_Click(object sender, EventArgs e)
         {
             if (metroButton7.Text == "Загрузить")
             {
@@ -174,7 +173,7 @@ namespace VKVideoDownloader
             }
         }
 
-        private async void metroTextBoxPlaceHolder3_KeyDown(object sender, KeyEventArgs e)
+        private async void MetroTextBoxPlaceHolder3_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {

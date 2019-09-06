@@ -77,9 +77,9 @@
             this.metroLabel16 = new MetroFramework.Controls.MetroLabel();
             this.metroButton2 = new MetroFramework.Controls.MetroButton();
             this.metroButton10 = new MetroFramework.Controls.MetroButton();
+            this.metroButton7 = new MetroFramework.Controls.MetroButton();
             this.metroToolTip1 = new MetroFramework.Components.MetroToolTip();
             this.metroTextBoxPlaceHolder3 = new MetroFramework.Components.MetroStyleManager(this.components);
-            this.metroButton7 = new MetroFramework.Controls.MetroButton();
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -129,7 +129,7 @@
             this.linkLabel1.TabIndex = 2;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "linkLabel1";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel1_LinkClicked);
             // 
             // flowLayoutPanel1
             // 
@@ -153,7 +153,7 @@
             this.linkLabel2.TabIndex = 3;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Сменить пользователя";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel2_LinkClicked);
             // 
             // metroLabel4
             // 
@@ -272,8 +272,8 @@
             this.metroTextBoxPlaceHolder1.TabIndex = 9;
             this.metroTextBoxPlaceHolder1.Text = "ID п/с...";
             this.metroTextBoxPlaceHolder1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroTextBoxPlaceHolder1.TextChanged += new System.EventHandler(this.metroTextBox1_TextChanged);
-            this.metroTextBoxPlaceHolder1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.metroTextBoxPlaceHolder2_KeyDown);
+            this.metroTextBoxPlaceHolder1.TextChanged += new System.EventHandler(this.MetroTextBox1_TextChanged);
+            this.metroTextBoxPlaceHolder1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MetroTextBoxPlaceHolder2_KeyDown);
             // 
             // metroTextBoxPlaceHolder2
             // 
@@ -286,8 +286,8 @@
             this.metroTextBoxPlaceHolder2.TabIndex = 10;
             this.metroTextBoxPlaceHolder2.Text = "ID альбома...";
             this.metroTextBoxPlaceHolder2.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroTextBoxPlaceHolder2.TextChanged += new System.EventHandler(this.metroTextBox1_TextChanged);
-            this.metroTextBoxPlaceHolder2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.metroTextBoxPlaceHolder2_KeyDown);
+            this.metroTextBoxPlaceHolder2.TextChanged += new System.EventHandler(this.MetroTextBox1_TextChanged);
+            this.metroTextBoxPlaceHolder2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MetroTextBoxPlaceHolder2_KeyDown);
             // 
             // metroButton3
             // 
@@ -299,7 +299,7 @@
             this.metroButton3.TabIndex = 8;
             this.metroButton3.Text = "Поиск ";
             this.metroButton3.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton3.Click += new System.EventHandler(this.metroButton3_Click);
+            this.metroButton3.Click += new System.EventHandler(this.MetroButton3_Click);
             // 
             // metroButton1
             // 
@@ -310,7 +310,7 @@
             this.metroButton1.Style = MetroFramework.MetroColorStyle.Red;
             this.metroButton1.TabIndex = 11;
             this.metroButton1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton1.Click += new System.EventHandler(this.metroButton1_Click);
+            this.metroButton1.Click += new System.EventHandler(this.MetroButton1_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -343,7 +343,7 @@
             this.metroLabel13.Style = MetroFramework.MetroColorStyle.Red;
             this.metroLabel13.TabIndex = 9;
             this.metroLabel13.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroLabel13.MouseEnter += new System.EventHandler(this.metroLabel13_MouseEnter);
+            this.metroLabel13.MouseEnter += new System.EventHandler(this.MetroLabel13_MouseEnter);
             // 
             // tableLayoutPanel3
             // 
@@ -390,7 +390,7 @@
             this.metroButton4.TabIndex = 0;
             this.metroButton4.Text = "Выделить всё";
             this.metroButton4.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton4.Click += new System.EventHandler(this.metroButton4_Click);
+            this.metroButton4.Click += new System.EventHandler(this.MetroButton4_Click);
             // 
             // metroButton5
             // 
@@ -402,7 +402,7 @@
             this.metroButton5.TabIndex = 1;
             this.metroButton5.Text = "Снять выделение";
             this.metroButton5.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton5.Click += new System.EventHandler(this.metroButton5_Click);
+            this.metroButton5.Click += new System.EventHandler(this.MetroButton5_Click);
             // 
             // metroLabel7
             // 
@@ -427,19 +427,19 @@
             this.metroComboBox1.FormattingEnabled = true;
             this.metroComboBox1.ItemHeight = 19;
             this.metroComboBox1.Items.AddRange(new object[] {
-            "mp4, 144",
-            "mp4, 240",
-            "mp4, 360",
-            "mp4, 480",
-            "mp4, 720",
-            "mp4, 1080"});
+            "144",
+            "240",
+            "360",
+            "480",
+            "720",
+            "1080"});
             this.metroComboBox1.Location = new System.Drawing.Point(278, 3);
             this.metroComboBox1.Name = "metroComboBox1";
             this.metroComboBox1.Size = new System.Drawing.Size(121, 25);
             this.metroComboBox1.Style = MetroFramework.MetroColorStyle.Red;
             this.metroComboBox1.TabIndex = 2;
             this.metroComboBox1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroComboBox1.SelectedIndexChanged += new System.EventHandler(this.metroComboBox1_SelectedIndexChanged);
+            this.metroComboBox1.SelectedIndexChanged += new System.EventHandler(this.MetroComboBox1_SelectedIndexChanged);
             // 
             // elementHost1
             // 
@@ -540,7 +540,7 @@
             this.linkLabel3.TabIndex = 13;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "Названию";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel3_LinkClicked);
             // 
             // pictureBox3
             // 
@@ -564,7 +564,7 @@
             this.linkLabel4.TabIndex = 15;
             this.linkLabel4.TabStop = true;
             this.linkLabel4.Text = "Дате";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel4_LinkClicked);
             // 
             // pictureBox4
             // 
@@ -588,7 +588,7 @@
             this.linkLabel5.TabIndex = 17;
             this.linkLabel5.TabStop = true;
             this.linkLabel5.Text = "Длительности";
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel5_LinkClicked);
             // 
             // metroPanel1
             // 
@@ -621,7 +621,7 @@
             this.metroButton9.TabIndex = 18;
             this.metroButton9.Text = "Сброс";
             this.metroButton9.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton9.Click += new System.EventHandler(this.metroButton9_Click);
+            this.metroButton9.Click += new System.EventHandler(this.MetroButton9_Click);
             // 
             // metroButton8
             // 
@@ -634,7 +634,7 @@
             this.metroButton8.TabIndex = 17;
             this.metroButton8.Text = "Применить";
             this.metroButton8.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton8.Click += new System.EventHandler(this.metroButton8_Click);
+            this.metroButton8.Click += new System.EventHandler(this.MetroButton8_Click);
             // 
             // metroTextBoxPlaceHolder4
             // 
@@ -649,7 +649,7 @@
             this.metroTextBoxPlaceHolder4.TabIndex = 16;
             this.metroTextBoxPlaceHolder4.Text = "Фильтр...";
             this.metroTextBoxPlaceHolder4.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroTextBoxPlaceHolder4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.metroTextBoxPlaceHolder4_KeyDown);
+            this.metroTextBoxPlaceHolder4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MetroTextBoxPlaceHolder4_KeyDown);
             // 
             // metroLabel8
             // 
@@ -716,7 +716,7 @@
             this.metroButton2.TabIndex = 4;
             this.metroButton2.Text = "Показать выделенное";
             this.metroButton2.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton2.Click += new System.EventHandler(this.metroButton2_Click);
+            this.metroButton2.Click += new System.EventHandler(this.MetroButton2_Click);
             // 
             // metroButton10
             // 
@@ -729,18 +729,7 @@
             this.metroButton10.TabIndex = 19;
             this.metroButton10.Text = "Сброс";
             this.metroButton10.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton10.Click += new System.EventHandler(this.metroButton9_Click);
-            // 
-            // metroToolTip1
-            // 
-            this.metroToolTip1.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroToolTip1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
-            // metroTextBoxPlaceHolder3
-            // 
-            this.metroTextBoxPlaceHolder3.Owner = null;
-            this.metroTextBoxPlaceHolder3.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroTextBoxPlaceHolder3.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.metroButton10.Click += new System.EventHandler(this.MetroButton9_Click);
             // 
             // metroButton7
             // 
@@ -754,6 +743,17 @@
             this.metroButton7.Text = "Загрузить";
             this.metroButton7.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroButton7.Click += new System.EventHandler(this.MetroButton7_Click_1);
+            // 
+            // metroToolTip1
+            // 
+            this.metroToolTip1.Style = MetroFramework.MetroColorStyle.Red;
+            this.metroToolTip1.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
+            // metroTextBoxPlaceHolder3
+            // 
+            this.metroTextBoxPlaceHolder3.Owner = null;
+            this.metroTextBoxPlaceHolder3.Style = MetroFramework.MetroColorStyle.Red;
+            this.metroTextBoxPlaceHolder3.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
             // Form2
             // 

@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -17,17 +16,17 @@ namespace VKVideoDownloader
 
     public partial class Form3 : MetroForm
     {
-        string access_token;
-        string url;
-        long album;
-        long id;
+        readonly string access_token;
+        readonly string url;
+        readonly long album;
+        readonly long id;
         int count;
-        int countThreads;
-        Semaphore semaphore;
-        List<Video> videos;
-        List<Album> albums;
+        readonly int countThreads;
+        readonly Semaphore semaphore;
+        readonly List<Video> videos;
+        readonly List<Album> albums;
         string lastError;
-        Search key;
+        readonly Search key;
 
         public Form3(string access_token, long id, long album, string url, int countThreads, int count)
         {
@@ -111,27 +110,27 @@ namespace VKVideoDownloader
                                             JObject files = item["files"] as JObject;
                                             if (files.ContainsKey("mp4_144"))
                                             {
-                                                video.Files.Add(new Tuple<string, string>("mp4, 144", files["mp4_144"].ToString()));
+                                                video.Files.Add(new Tuple<int, string>(144, files["mp4_144"].ToString()));
                                             }
                                             if (files.ContainsKey("mp4_240"))
                                             {
-                                                video.Files.Add(new Tuple<string, string>("mp4, 240", files["mp4_240"].ToString()));
+                                                video.Files.Add(new Tuple<int, string>(240, files["mp4_240"].ToString()));
                                             }
                                             if (files.ContainsKey("mp4_360"))
                                             {
-                                                video.Files.Add(new Tuple<string, string>("mp4, 360", files["mp4_360"].ToString()));
+                                                video.Files.Add(new Tuple<int, string>(360, files["mp4_360"].ToString()));
                                             }
                                             if (files.ContainsKey("mp4_480"))
                                             {
-                                                video.Files.Add(new Tuple<string, string>("mp4, 480", files["mp4_480"].ToString()));
+                                                video.Files.Add(new Tuple<int, string>(480, files["mp4_480"].ToString()));
                                             }
                                             if (files.ContainsKey("mp4_720"))
                                             {
-                                                video.Files.Add(new Tuple<string, string>("mp4, 720", files["mp4_720"].ToString()));
+                                                video.Files.Add(new Tuple<int, string>(720, files["mp4_720"].ToString()));
                                             }
                                             if (files.ContainsKey("mp4_1080"))
                                             {
-                                                video.Files.Add(new Tuple<string, string>("mp4, 1080", files["mp4_1080"].ToString()));
+                                                video.Files.Add(new Tuple<int, string>(1080, files["mp4_1080"].ToString()));
                                             }
                                             if (video.Files.Count == 0)
                                             {
@@ -141,7 +140,7 @@ namespace VKVideoDownloader
                                             video.Description = item["description"].ToString();
                                             video.SetDate(Convert.ToInt64(item["date"]));
                                             video.SetDuration(Convert.ToInt32(item["duration"]));
-                                            video.CurrentFile = new Tuple<string, string>(video.Files[video.Files.Count - 1].Item1, video.Files[video.Files.Count - 1].Item2);
+                                            video.CurrentFile = new Tuple<int, string>(video.Files[video.Files.Count - 1].Item1, video.Files[video.Files.Count - 1].Item2);
                                             video.SetPhoto(item["photo_130"].ToString());
                                             semaphore.WaitOne();
                                             videos.Add(video);

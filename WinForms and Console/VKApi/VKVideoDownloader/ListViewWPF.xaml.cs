@@ -68,10 +68,10 @@ namespace VKVideoDownloader
             }
         }
 
-        public void ModifyQuality(string quality)
+        public void ModifyQuality(int quality)
         {
-            List<Video> videos = listView.ItemsSource as List<Video>;
-            if (videos != null)
+
+            if (listView.ItemsSource is List<Video> videos)
             {
                 foreach (Video item in videos)
                 {
@@ -81,13 +81,13 @@ namespace VKVideoDownloader
             }
         }
 
-        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {   
             count++;
             CountChanged();
         }
 
-        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             if (count != 0)
             {

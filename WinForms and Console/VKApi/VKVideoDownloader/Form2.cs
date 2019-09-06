@@ -2,13 +2,9 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Forms;
@@ -20,7 +16,7 @@ namespace VKVideoDownloader
     {
         string access_token;
         long id;
-        ListViewWPF list;
+        readonly ListViewWPF list;
 
         public Form2(string access_token, string id)
         {
@@ -28,21 +24,21 @@ namespace VKVideoDownloader
             this.StyleManager = metroStyleManager1;
             this.id = 0;  
             list = elementHost1.Child as ListViewWPF;
-            list.CountChanged += list_CountChanged;
+            list.CountChanged += List_CountChanged;
             GetProfileInfo(access_token, id);
         }
 
-        void list_CountChanged()
+        void List_CountChanged()
         {
             metroLabel16.Text = list.Count.ToString();
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(string.Format(Resources.Page, id));
         }
 
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Form1 form1 = new Form1(false);
             form1.ShowDialog();
@@ -81,10 +77,10 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroTextBox1_TextChanged(object sender, EventArgs e)
+        private void MetroTextBox1_TextChanged(object sender, EventArgs e)
         {
             MetroTextBoxPlaceHolder metroTextBox = sender as MetroTextBoxPlaceHolder;
-            if (!metroTextBox.isPlaceHolder())
+            if (!metroTextBox.IsPlaceHolder())
             {
                 if (Functions.CheckValid(metroTextBox.Text, "^[0-9]{0,12}$"))
                 {
@@ -97,7 +93,7 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroTextBoxPlaceHolder2_KeyDown(object sender, KeyEventArgs e)
+        private void MetroTextBoxPlaceHolder2_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -121,8 +117,8 @@ namespace VKVideoDownloader
             metroLabel13.Text = "Пожалуйста, подождите. Выполняется поиск видео";
             if (InterNet.IsConnected)
             {
-                long album = (metroTextBoxPlaceHolder2.Text == string.Empty || metroTextBoxPlaceHolder2.isPlaceHolder()) ? 0 : Convert.ToInt64(metroTextBoxPlaceHolder2.Text);
-                long id = (metroTextBoxPlaceHolder1.Text == string.Empty || metroTextBoxPlaceHolder1.isPlaceHolder()) ? this.id : Convert.ToInt64(metroTextBoxPlaceHolder1.Text);
+                long album = (metroTextBoxPlaceHolder2.Text == string.Empty || metroTextBoxPlaceHolder2.IsPlaceHolder()) ? 0 : Convert.ToInt64(metroTextBoxPlaceHolder2.Text);
+                long id = (metroTextBoxPlaceHolder1.Text == string.Empty || metroTextBoxPlaceHolder1.IsPlaceHolder()) ? this.id : Convert.ToInt64(metroTextBoxPlaceHolder1.Text);
                 string url;
                 if (metroRadioButton1.Checked || (metroRadioButton2.Checked && id == this.id))
                 {
@@ -132,8 +128,7 @@ namespace VKVideoDownloader
                 {
                     url = Resources.GetVideosWithMinus;
                 }
-                string error;
-                int count = Functions.GetCount(string.Format(url, access_token, id, album, 0), out error);
+                int count = Functions.GetCount(string.Format(url, access_token, id, album, 0), out string error);
                 if (count > 0)
                 {
                     int countThreads = Convert.ToInt32(Math.Ceiling(count * 1.0 / 200));
@@ -166,39 +161,39 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroButton3_Click(object sender, EventArgs e)
+        private void MetroButton3_Click(object sender, EventArgs e)
         {
             GetVideos();
         }
 
-        private void metroButton4_Click(object sender, EventArgs e)
+        private void MetroButton4_Click(object sender, EventArgs e)
         {
             list.ModifyCheck(true);
             metroLabel16.Text = list.Count.ToString();
         }
 
-        private void metroButton5_Click(object sender, EventArgs e)
+        private void MetroButton5_Click(object sender, EventArgs e)
         {
             list.ModifyCheck(false);
             metroLabel16.Text = list.Count.ToString();
         }
 
-        private void metroComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void MetroComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            list.ModifyQuality(metroComboBox1.Items[metroComboBox1.SelectedIndex].ToString());
+            list.ModifyQuality(Convert.ToInt32(metroComboBox1.Items[metroComboBox1.SelectedIndex]));
         }
 
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SortItems(pictureBox2, 0);
         }
 
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SortItems(pictureBox3, 1);
         }
 
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SortItems(pictureBox4, 2);
         }
@@ -277,12 +272,12 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroLabel13_MouseEnter(object sender, EventArgs e)
+        private void MetroLabel13_MouseEnter(object sender, EventArgs e)
         {
             metroToolTip1.SetToolTip(metroLabel13, metroLabel13.Text);
         }
 
-        private void metroButton9_Click(object sender, EventArgs e)
+        private void MetroButton9_Click(object sender, EventArgs e)
         {
             ResetFilter();
         }
@@ -298,7 +293,7 @@ namespace VKVideoDownloader
 
         private void Filter()
         {
-            if (metroTextBoxPlaceHolder4.Text.Trim() == string.Empty || metroTextBoxPlaceHolder4.isPlaceHolder())
+            if (metroTextBoxPlaceHolder4.Text.Trim() == string.Empty || metroTextBoxPlaceHolder4.IsPlaceHolder())
             {
                 ResetFilter();
             }
@@ -343,7 +338,7 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroButton8_Click(object sender, EventArgs e)
+        private void MetroButton8_Click(object sender, EventArgs e)
         {
             Filter();
         }
@@ -380,7 +375,7 @@ namespace VKVideoDownloader
             list.SetSource(videos);
         }
 
-        private void metroTextBoxPlaceHolder4_KeyDown(object sender, KeyEventArgs e)
+        private void MetroTextBoxPlaceHolder4_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -388,11 +383,11 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroButton1_Click(object sender, EventArgs e)
+        private void MetroButton1_Click(object sender, EventArgs e)
         {
             if (InterNet.IsConnected)
             {
-                long id = (metroTextBoxPlaceHolder1.Text == string.Empty || metroTextBoxPlaceHolder1.isPlaceHolder()) ? this.id : Convert.ToInt64(metroTextBoxPlaceHolder1.Text);
+                long id = (metroTextBoxPlaceHolder1.Text == string.Empty || metroTextBoxPlaceHolder1.IsPlaceHolder()) ? this.id : Convert.ToInt64(metroTextBoxPlaceHolder1.Text);
                 string url;
                 if (metroRadioButton1.Checked || (metroRadioButton2.Checked && id == this.id))
                 {
@@ -414,7 +409,7 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroButton2_Click(object sender, EventArgs e)
+        private void MetroButton2_Click(object sender, EventArgs e)
         {
             if (list.Source != null)
             {

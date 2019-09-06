@@ -53,7 +53,7 @@ namespace VKVideoDownloader
             listView.ItemsSource = albums;
         }
 
-        private void listView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (listView.SelectedIndex != -1)
             {

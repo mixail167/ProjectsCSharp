@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VKVideoDownloader.Properties;
@@ -11,7 +10,7 @@ namespace VKVideoDownloader
 {
     public partial class Form1 : MetroForm
     {
-        bool firstForm;
+        readonly bool firstForm;
         string id;
         string access_token;
 
@@ -90,7 +89,7 @@ namespace VKVideoDownloader
             }
         }
 
-        private async void metroButton1_Click(object sender, EventArgs e)
+        private async void MetroButton1_Click(object sender, EventArgs e)
         {
            await Autorization();
         }       
@@ -123,14 +122,14 @@ namespace VKVideoDownloader
             get { return access_token; }
         }
 
-        private void metroLabel3_MouseEnter(object sender, EventArgs e)
+        private void MetroLabel3_MouseEnter(object sender, EventArgs e)
         {
             metroToolTip1.SetToolTip(metroLabel3, metroLabel3.Text);
         }
 
-        private void metroTextBox1_TextChanged(object sender, EventArgs e)
+        private void MetroTextBox1_TextChanged(object sender, EventArgs e)
         {
-            if (!metroTextBoxPlaceHolder1.isPlaceHolder())
+            if (!metroTextBoxPlaceHolder1.IsPlaceHolder())
             {
                 if (Functions.CheckValid(metroTextBoxPlaceHolder1.Text, "^[0-9]{0,12}$"))
                 {
@@ -151,9 +150,9 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroTextBoxPlaceHolder2_TextChanged(object sender, EventArgs e)
+        private void MetroTextBoxPlaceHolder2_TextChanged(object sender, EventArgs e)
         {
-            if (!metroTextBoxPlaceHolder2.isPlaceHolder())
+            if (!metroTextBoxPlaceHolder2.IsPlaceHolder())
             {
                 if (Functions.CheckValid(metroTextBoxPlaceHolder2.Text, "^[0-9a-zA-Z]{0,20}$"))
                 {

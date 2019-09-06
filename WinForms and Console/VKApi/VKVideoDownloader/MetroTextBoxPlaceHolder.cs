@@ -37,7 +37,7 @@ namespace VKVideoDownloader
             }
         }
 
-        public bool isPlaceHolder()
+        public bool IsPlaceHolder()
         {
             return (this.Text == this.placeHolder) ? true : false;
         }

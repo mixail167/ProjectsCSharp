@@ -131,7 +131,7 @@
             this.metroLabel13.Style = MetroFramework.MetroColorStyle.Red;
             this.metroLabel13.TabIndex = 17;
             this.metroLabel13.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroLabel13.MouseEnter += new System.EventHandler(this.metroLabel13_MouseEnter);
+            this.metroLabel13.MouseEnter += new System.EventHandler(this.MetroLabel13_MouseEnter);
             // 
             // metroButton3
             // 
@@ -144,7 +144,7 @@
             this.metroButton3.TabIndex = 9;
             this.metroButton3.Text = "Обновить";
             this.metroButton3.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton3.Click += new System.EventHandler(this.metroButton3_Click);
+            this.metroButton3.Click += new System.EventHandler(this.MetroButton3_Click);
             // 
             // flowLayoutPanel3
             // 
@@ -233,7 +233,7 @@
             this.linkLabel3.TabIndex = 13;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "Названию";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel3_LinkClicked);
             // 
             // metroPanel1
             // 
@@ -268,7 +268,7 @@
             this.metroButton1.TabIndex = 19;
             this.metroButton1.Text = "Сброс";
             this.metroButton1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton1.Click += new System.EventHandler(this.metroButton9_Click);
+            this.metroButton1.Click += new System.EventHandler(this.MetroButton9_Click);
             // 
             // metroButton9
             // 
@@ -293,7 +293,7 @@
             this.metroButton8.TabIndex = 17;
             this.metroButton8.Text = "Применить";
             this.metroButton8.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton8.Click += new System.EventHandler(this.metroButton8_Click);
+            this.metroButton8.Click += new System.EventHandler(this.MetroButton8_Click);
             // 
             // metroTextBoxPlaceHolder4
             // 
@@ -308,7 +308,7 @@
             this.metroTextBoxPlaceHolder4.TabIndex = 16;
             this.metroTextBoxPlaceHolder4.Text = "Фильтр...";
             this.metroTextBoxPlaceHolder4.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroTextBoxPlaceHolder4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.metroTextBoxPlaceHolder4_KeyDown);
+            this.metroTextBoxPlaceHolder4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MetroTextBoxPlaceHolder4_KeyDown);
             // 
             // metroLabel8
             // 

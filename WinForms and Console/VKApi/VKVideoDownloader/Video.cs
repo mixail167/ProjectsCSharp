@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Windows.Media.Imaging;
 
@@ -9,52 +10,36 @@ namespace VKVideoDownloader
 {
     public class Video
     {
-        string title;
-        string description;
-        DateTime date;
         TimeSpan duration;
-        List<Tuple<string, string>> files;
-        BitmapImage photo;
-        Tuple<string, string> currentFile;
-        bool isChecked;
+        private bool isChecked;
+        private string title;
+        private string description;
+        private Tuple<int, string> currentFile;
+        private BitmapImage photo;
+        private readonly List<Tuple<int, string>> files;
 
         public Video()
         {
-            files = new List<Tuple<string, string>>();
-            isChecked = false;
+            files = new List<Tuple<int, string>>();
+            IsChecked = false;
         }
 
-        public bool IsChecked
-        {
-            get { return isChecked; }
-            set { isChecked = value; }
-        }
+        public bool IsChecked { get => isChecked; set => isChecked = value; }
 
-        public string Title
-        {
-            get { return title; }
-            set { title = value; }
-        }
+        public string Title { get => title; set => title = value; }
 
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
+        public string Description { get => description; set => description = value; }
 
         public string Date
         {
-            get { return date.ToShortDateString(); }
+            get { return DateForSort.ToShortDateString(); }
         }
 
-        public DateTime DateForSort
-        {
-            get { return date; }
-        }
+        public DateTime DateForSort { get; private set; }
 
         public void SetDate(long value)
         {
-            date = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(value).ToLocalTime();
+            DateForSort = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(value).ToLocalTime();
         }
 
         public void SetDuration(int value)
@@ -88,44 +73,28 @@ namespace VKVideoDownloader
                 }
                 finally
                 {
-                    photo = new BitmapImage();
+                    Photo = new BitmapImage();
                     photoStream.Position = 0;
-                    photo.BeginInit();
-                    photo.StreamSource = photoStream;
-                    photo.CacheOption = BitmapCacheOption.OnLoad;
-                    photo.EndInit();
-                    photo.Freeze();
+                    Photo.BeginInit();
+                    Photo.StreamSource = photoStream;
+                    Photo.CacheOption = BitmapCacheOption.OnLoad;
+                    Photo.EndInit();
+                    Photo.Freeze();
                     photoStream.Close();
                 }
             }
         }
 
-        public BitmapImage Photo
-        {
-            get { return photo; }
-        }
+        public BitmapImage Photo { get => photo; private set => photo = value; }
 
-        public List<Tuple<string, string>> Files
-        {
-            get { return files; }
-        }
+        public List<Tuple<int, string>> Files => files;
 
-        public Tuple<string, string> CurrentFile
-        {
-            get { return currentFile; }
-            set { currentFile = value; }
-        }
+        public Tuple<int, string> CurrentFile { get => currentFile; set => currentFile = value; }
 
-        public void SetCurrentFileFromFiles(string quality)
+        public void SetCurrentFileFromFiles(int quality)
         {
-            foreach (Tuple<string, string> item in files)
-            {
-                if (item.Item1 == quality)
-                {
-                    currentFile = item;
-                    break;
-                }
-            }
+            Tuple<int, string> file = files.OrderByDescending(p => p.Item1).FirstOrDefault(p => p.Item1 <= quality);
+            currentFile = (file != null) ? file : files[0];
         }
     }
 }

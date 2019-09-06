@@ -6,6 +6,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        <ControlTemplate x:Key="NoScroll">
+            <ItemsPresenter></ItemsPresenter>
+        </ControlTemplate>
         <SolidColorBrush x:Key="StandardBorderBrush" Color="#888" />
         <SolidColorBrush x:Key="StandardBackgroundBrush" Color="#FFF" />
         <SolidColorBrush x:Key="HoverBorderBrush" Color="#DDD" />
@@ -251,7 +254,7 @@
     <Grid>
         <Border BorderBrush="White" BorderThickness="2">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource FavsScrollViewer}">
-                <ListView x:Name="listView" Background="#FF111111" Foreground="White" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" MouseDoubleClick="listView_MouseDoubleClick" SelectionMode="Single">
+                <ListView x:Name="listView" Template="{StaticResource NoScroll}" Background="#FF111111" Foreground="White" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" MouseDoubleClick="ListView_MouseDoubleClick" SelectionMode="Single">
                     <ListView.Style>
                         <Style TargetType="{x:Type ListView}">
                             <Style.Resources>

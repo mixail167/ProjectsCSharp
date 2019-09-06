@@ -89,7 +89,6 @@
             this.metroProgressSpinner1.Maximum = 100;
             this.metroProgressSpinner1.Name = "metroProgressSpinner1";
             this.metroProgressSpinner1.Size = new System.Drawing.Size(50, 50);
-            this.metroProgressSpinner1.Speed = 2F;
             this.metroProgressSpinner1.Style = MetroFramework.MetroColorStyle.Red;
             this.metroProgressSpinner1.TabIndex = 11;
             this.metroProgressSpinner1.Theme = MetroFramework.MetroThemeStyle.Dark;

@@ -84,7 +84,7 @@
             this.metroTextBoxPlaceHolder2.TabIndex = 8;
             this.metroTextBoxPlaceHolder2.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroTextBoxPlaceHolder2.UseSystemPasswordChar = true;
-            this.metroTextBoxPlaceHolder2.TextChanged += new System.EventHandler(this.metroTextBoxPlaceHolder2_TextChanged);
+            this.metroTextBoxPlaceHolder2.TextChanged += new System.EventHandler(this.MetroTextBoxPlaceHolder2_TextChanged);
             this.metroTextBoxPlaceHolder2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.metroTextBoxPlaceHolder2.PlaceHolder = "Пароль...";
             // 
@@ -99,7 +99,7 @@
             this.metroTextBoxPlaceHolder1.TabIndex = 7;
             this.metroTextBoxPlaceHolder1.Text = "Логин...";
             this.metroTextBoxPlaceHolder1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroTextBoxPlaceHolder1.TextChanged += new System.EventHandler(this.metroTextBox1_TextChanged);
+            this.metroTextBoxPlaceHolder1.TextChanged += new System.EventHandler(this.MetroTextBox1_TextChanged);
             this.metroTextBoxPlaceHolder1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             // 
             // metroCheckBox1
@@ -142,7 +142,7 @@
             this.metroButton1.TabIndex = 5;
             this.metroButton1.Text = "Авторизоваться";
             this.metroButton1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton1.Click += new System.EventHandler(this.metroButton1_Click);
+            this.metroButton1.Click += new System.EventHandler(this.MetroButton1_Click);
             // 
             // metroLabel3
             // 
@@ -155,7 +155,7 @@
             this.metroLabel3.TabIndex = 4;
             this.metroLabel3.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroLabel3.Visible = false;
-            this.metroLabel3.MouseEnter += new System.EventHandler(this.metroLabel3_MouseEnter);
+            this.metroLabel3.MouseEnter += new System.EventHandler(this.MetroLabel3_MouseEnter);
             // 
             // metroLabel2
             // 

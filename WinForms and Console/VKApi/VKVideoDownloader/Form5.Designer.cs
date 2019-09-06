@@ -153,7 +153,7 @@
             this.metroButton7.TabIndex = 14;
             this.metroButton7.Text = "Загрузить";
             this.metroButton7.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton7.Click += new System.EventHandler(this.metroButton7_Click);
+            this.metroButton7.Click += new System.EventHandler(this.MetroButton7_Click);
             // 
             // metroCheckBox1
             // 
@@ -180,7 +180,7 @@
             this.metroButton6.TabIndex = 12;
             this.metroButton6.Text = "Обзор...";
             this.metroButton6.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroButton6.Click += new System.EventHandler(this.metroButton6_Click);
+            this.metroButton6.Click += new System.EventHandler(this.MetroButton6_Click);
             // 
             // metroLabel9
             // 
@@ -287,7 +287,7 @@
             this.metroTextBoxPlaceHolder5.TabIndex = 18;
             this.metroTextBoxPlaceHolder5.Text = "Папка загрузки...";
             this.metroTextBoxPlaceHolder5.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroTextBoxPlaceHolder5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.metroTextBoxPlaceHolder3_KeyDown);
+            this.metroTextBoxPlaceHolder5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MetroTextBoxPlaceHolder3_KeyDown);
             // 
             // Form5
             // 

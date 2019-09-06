@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Forms;
@@ -12,10 +13,10 @@ namespace VKVideoDownloader
 {
     public partial class Form4 : MetroForm
     {
-        ListAlbumWPF list;
-        string url;
-        string access_token;
-        long id;
+        readonly ListAlbumWPF list;
+        readonly string url;
+        readonly string access_token;
+        readonly long id;
 
         public Form4(string access_token, long id, string url)
         {
@@ -25,7 +26,7 @@ namespace VKVideoDownloader
             this.id = id;
             this.access_token = access_token;
             list = elementHost1.Child as ListAlbumWPF;
-            list.AlbumSelected += list_AlbumSelected;
+            list.AlbumSelected += List_AlbumSelected;
         }
 
         public long ID
@@ -33,7 +34,7 @@ namespace VKVideoDownloader
             get { return list.ID; }
         }
 
-        private void list_AlbumSelected()
+        private void List_AlbumSelected()
         {
             DialogResult = DialogResult.OK;
         }
@@ -74,7 +75,7 @@ namespace VKVideoDownloader
             GetAlbums();
         }
 
-        private void metroButton9_Click(object sender, EventArgs e)
+        private void MetroButton9_Click(object sender, EventArgs e)
         {
             ResetFilter();
         }
@@ -102,10 +103,28 @@ namespace VKVideoDownloader
             list.SetSource(albums);
         }
 
+        private ChildItem FindVisualChild<ChildItem>(DependencyObject obj) where ChildItem : DependencyObject
+        {
+            for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = System.Windows.Media.VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is ChildItem)
+                    return (ChildItem)child;
+                else
+                {
+                    ChildItem childOfChild = FindVisualChild<ChildItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
+
+
 
         private void Filter()
         {
-            if (metroTextBoxPlaceHolder4.Text.Trim() == string.Empty || metroTextBoxPlaceHolder4.isPlaceHolder())
+            if (metroTextBoxPlaceHolder4.Text.Trim() == string.Empty || metroTextBoxPlaceHolder4.IsPlaceHolder())
             {
                 ResetFilter();
             }
@@ -114,12 +133,12 @@ namespace VKVideoDownloader
                 List<Album> videos = list.Source.Where<Album>(x => x.Title.IndexOf(metroTextBoxPlaceHolder4.Text, StringComparison.CurrentCultureIgnoreCase) != -1).ToList<Album>();
                 SetSort(videos);
                 metroLabel8.ForeColor = Color.White;
+                list.listView.UpdateLayout();
                 foreach (object item in list.listView.Items)
                 {
                     try
                     {
-                        ContentPresenter contentPresenter = list.listView.ItemContainerGenerator.ContainerFromItem(item) as ContentPresenter;
-                        contentPresenter.ApplyTemplate();
+                        ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(list.listView.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem);
                         TextBlock textBlock = contentPresenter.ContentTemplate.FindName("Title", contentPresenter) as TextBlock;
                         List<int> indexes = new List<int>();
                         for (int index = 0; index != -1; )
@@ -150,13 +169,13 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroButton8_Click(object sender, EventArgs e)
+        private void MetroButton8_Click(object sender, EventArgs e)
         {
             Filter();
         }
 
 
-        private void metroTextBoxPlaceHolder4_KeyDown(object sender, KeyEventArgs e)
+        private void MetroTextBoxPlaceHolder4_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -164,7 +183,7 @@ namespace VKVideoDownloader
             }
         }
 
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (list.ItemsSource != null && list.ItemsSource.Count != 0)
             {
@@ -184,12 +203,12 @@ namespace VKVideoDownloader
             }
         }
 
-        private void metroButton3_Click(object sender, EventArgs e)
+        private void MetroButton3_Click(object sender, EventArgs e)
         {
             GetAlbums();
         }
 
-        private void metroLabel13_MouseEnter(object sender, EventArgs e)
+        private void MetroLabel13_MouseEnter(object sender, EventArgs e)
         {
             metroToolTip1.SetToolTip(metroLabel13, metroLabel13.Text);
         }
