@@ -57,12 +57,15 @@ namespace VKVideoDownloader
         public void ModifyCheck(bool checkedValue)
         {
             List<Video> videos = source;
-            if (videos != null && count > 0)
+            if (videos != null)
             {
                 foreach (Video item in videos)
                 {
                     item.IsChecked = checkedValue;
-                    count = (checkedValue) ? count + 1 : count - 1;
+                    if (checkedValue)
+                        count++;
+                    else if (count > 0)
+                        count--;
                 }
                 listView.Items.Refresh();
             }
@@ -82,7 +85,7 @@ namespace VKVideoDownloader
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {   
+        {
             count++;
             CountChanged();
         }
