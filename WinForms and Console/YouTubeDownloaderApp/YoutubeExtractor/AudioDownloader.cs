@@ -100,10 +100,7 @@ namespace YoutubeExtractor
             {
                 flvFile.ConversionProgressChanged += (sender, args) =>
                 {
-                    if (this.AudioExtractionProgressChanged != null)
-                    {
-                        this.AudioExtractionProgressChanged(this, new ProgressEventArgs(args.ProgressPercentage));
-                    }
+                    AudioExtractionProgressChanged?.Invoke(this, new ProgressEventArgs(args.ProgressPercentage));
                 };
 
                 flvFile.ExtractStreams();

@@ -103,6 +103,11 @@ namespace YouTubeDownloaderApp
                                         }
                                     }
                                 }
+                                catch(VideoNotAvailableException)
+                                {
+                                    MessageBox.Show("Not Autorized");
+                                    break;
+                                }
                                 catch (Exception exception)
                                 {
                                     MessageBox.Show(exception.Message);

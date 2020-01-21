@@ -1,6 +1,5 @@
 ﻿using NAudio.Wave;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -87,6 +86,53 @@ namespace BitrateChanger
                                     {
                                         MediaFoundationEncoder.EncodeToMp3(reader, path, bitrate);
                                         Console.WriteLine("{0} -> {1}", item, path);
+                                    }
+                                    try
+                                    {
+                                        TagLib.Tag tag = TagLib.File.Create(item).Tag;
+                                        if (!tag.IsEmpty)
+                                        {
+                                            TagLib.File file = TagLib.File.Create(path);
+                                            file.Tag.MusicBrainzReleaseArtistId = tag.MusicBrainzReleaseArtistId;
+                                            file.Tag.MusicBrainzTrackId = tag.MusicBrainzTrackId;
+                                            file.Tag.MusicBrainzDiscId = tag.MusicBrainzDiscId;
+                                            file.Tag.MusicIpId = tag.MusicIpId;
+                                            file.Tag.AmazonId = tag.AmazonId;
+                                            file.Tag.MusicBrainzReleaseStatus = tag.MusicBrainzReleaseStatus;
+                                            file.Tag.MusicBrainzReleaseType = tag.MusicBrainzReleaseType;
+                                            file.Tag.MusicBrainzReleaseCountry = tag.MusicBrainzReleaseCountry;
+                                            file.Tag.Pictures = tag.Pictures;
+                                            file.Tag.Artists = tag.Artists;
+                                            file.Tag.MusicBrainzReleaseId = tag.MusicBrainzReleaseId;
+                                            file.Tag.MusicBrainzArtistId = tag.MusicBrainzArtistId;
+                                            file.Tag.Copyright = tag.Copyright;
+                                            file.Tag.Conductor = tag.Conductor;
+                                            file.Tag.Title = tag.Title;
+                                            file.Tag.TitleSort = tag.TitleSort;
+                                            file.Tag.Performers = tag.Performers;
+                                            file.Tag.PerformersSort = tag.PerformersSort;
+                                            file.Tag.AlbumArtists = tag.AlbumArtists;
+                                            file.Tag.AlbumArtistsSort = tag.AlbumArtistsSort;
+                                            file.Tag.Composers = tag.Composers;
+                                            file.Tag.Album = tag.Album;
+                                            file.Tag.ComposersSort = tag.ComposersSort;
+                                            file.Tag.Comment = tag.Comment;
+                                            file.Tag.Genres = tag.Genres;
+                                            file.Tag.Year = tag.Year;
+                                            file.Tag.Track = tag.Track;
+                                            file.Tag.TrackCount = tag.TrackCount;
+                                            file.Tag.Disc = tag.Disc;
+                                            file.Tag.DiscCount = tag.DiscCount;
+                                            file.Tag.Lyrics = tag.Lyrics;
+                                            file.Tag.Grouping = tag.Grouping;
+                                            file.Tag.BeatsPerMinute = tag.BeatsPerMinute;
+                                            file.Tag.AlbumSort = tag.AlbumSort;
+                                            file.Save();
+                                        }
+                                    }
+                                    catch (Exception)
+                                    {
+                                        Console.WriteLine("{0}: невозможно изменить теги.", path);
                                     }
                                 }
                                 else

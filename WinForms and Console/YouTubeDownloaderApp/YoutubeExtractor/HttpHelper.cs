@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -24,8 +25,7 @@ namespace YoutubeExtractor
 #else
             using (var client = new WebClient())
             {
-                client.Encoding = Encoding.UTF8;
-                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36");
+                client.Encoding = System.Text.Encoding.UTF8;
                 return client.DownloadString(url);
             }
 #endif
@@ -53,7 +53,16 @@ namespace YoutubeExtractor
             foreach (string vp in Regex.Split(s, "&"))
             {
                 string[] strings = Regex.Split(vp, "=");
-                dictionary.Add(strings[0], strings.Length == 2 ? UrlDecode(strings[1]) : string.Empty);
+
+                string key = strings[0];
+                string value = string.Empty;
+
+                if (strings.Length == 2)
+                    value = strings[1];
+                else if (strings.Length > 2)
+                    value = string.Join("=", strings.Skip(1).ToArray());
+
+                dictionary.Add(key, value);
             }
 
             return dictionary;
@@ -96,6 +105,15 @@ namespace YoutubeExtractor
             return System.Net.WebUtility.UrlDecode(url);
 #else
             return System.Web.HttpUtility.UrlDecode(url);
+#endif
+        }
+
+        public static string UrlEncode(string url)
+        {
+#if PORTABLE
+            return System.Net.WebUtility.UrlEncode(url);
+#else
+            return System.Web.HttpUtility.UrlEncode(url);
 #endif
         }
 

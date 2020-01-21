@@ -4,11 +4,10 @@ namespace YoutubeExtractor
 {
     public class ProgressEventArgs : EventArgs
     {
-        public ProgressEventArgs(double progressPercentage, int bytesReceived = 0, int totalBytesReceived = 0)
+        public ProgressEventArgs(double progressPercentage, int bytesReceived = 0)
         {
             this.ProgressPercentage = progressPercentage;
             this.BytesReceived = bytesReceived;
-            this.TotalBytesReceived = totalBytesReceived;
         }
 
         /// <summary>
@@ -20,12 +19,6 @@ namespace YoutubeExtractor
         /// Gets the progress percentage in a range from 0.0 to 100.0.
         /// </summary>
         public double ProgressPercentage { get; private set; }
-
-        /// <summary>
-        ///  Gets the received bytes
-        /// </summary>
-        public int TotalBytesReceived { get; private set; }
-
         public int BytesReceived { get; private set; }
     }
 }

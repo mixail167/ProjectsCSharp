@@ -176,6 +176,11 @@ namespace YouTubeDownloaderMass
                                                 Message(string.Format("Видео по URL {0} не найдено.", url), true);
                                             }
                                         }
+                                        catch(VideoNotAvailableException)
+                                        {
+                                            Message(string.Format("URL: {0}: Необходима авторизация.", url), true);
+                                            break;
+                                        }
                                         catch (Exception exception)
                                         {
                                             Message(string.Format("URL: {0}: {1}", url, exception.Message), true);
