@@ -57,6 +57,7 @@
     <Compile Include="BigEndianBitConverter.cs" />
     <Compile Include="BitHelper.cs" />
     <Compile Include="Decipherer.cs" />
+    <Compile Include="DecipherSignatureException.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="DownloadUrlResolver.cs" />
     <Compile Include="FlvFile.cs" />
@@ -72,7 +73,6 @@
     <Compile Include="YoutubeParseException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="packages.YoutubeExtractor.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

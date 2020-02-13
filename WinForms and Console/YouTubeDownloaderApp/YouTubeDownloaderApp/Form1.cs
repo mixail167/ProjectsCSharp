@@ -57,6 +57,10 @@ namespace YouTubeDownloaderApp
                                                                                         p.AudioType != AudioType.Unknown);
                                     if (video != null)
                                     {
+                                        if (video.RequiresDecryption)
+                                        {
+                                            DownloadUrlResolver.DecryptDownloadUrl(video);
+                                        }
                                         saveFileDialog1.FileName = video.Title;
                                         saveFileDialog1.InitialDirectory = Properties.Settings.Default.initialDirectory;
                                         if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -87,6 +91,10 @@ namespace YouTubeDownloaderApp
                                     {
                                         MessageBox.Show("Video not found");
                                     }
+                                }
+                                catch (DecipherSignatureException ex)
+                                {
+                                    MessageBox.Show(ex.Message);
                                 }
                                 catch (WebException exception)
                                 {

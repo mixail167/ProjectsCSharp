@@ -161,6 +161,10 @@ namespace YouTubeDownloaderMass
                                                                                                         p.AudioType != AudioType.Unknown);
                                             if (video != null)
                                             {
+                                                if (video.RequiresDecryption)
+                                                {
+                                                    DownloadUrlResolver.DecryptDownloadUrl(video);
+                                                }
                                                 videoList.Add(new Tuple<VideoInfo, string>(video, parts[2]));
                                             }
                                             else
@@ -176,9 +180,14 @@ namespace YouTubeDownloaderMass
                                                 Message(string.Format("Видео по URL {0} не найдено.", url), true);
                                             }
                                         }
-                                        catch(VideoNotAvailableException)
+                                        catch (VideoNotAvailableException)
                                         {
                                             Message(string.Format("URL: {0}: Необходима авторизация.", url), true);
+                                            break;
+                                        }
+                                        catch (DecipherSignatureException)
+                                        {
+                                            Message(string.Format("URL: {0}: Невозможно расшифровать цифровую подпись.", url), true);
                                             break;
                                         }
                                         catch (Exception exception)

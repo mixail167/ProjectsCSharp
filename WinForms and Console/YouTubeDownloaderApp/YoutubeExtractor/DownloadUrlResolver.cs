@@ -38,10 +38,9 @@ namespace YoutubeExtractor
                 {
                     decrypted = GetDecipheredSignature(videoInfo.HtmlPlayerVersion, encryptedSignature);
                 }
-
                 catch (Exception ex)
                 {
-                    throw new YoutubeParseException("Could not decipher signature", ex);
+                    throw new DecipherSignatureException("Could not decipher signature", ex);
                 }
 
                 videoInfo.DownloadUrl = HttpHelper.ReplaceQueryStringParameter(videoInfo.DownloadUrl, SignatureQuery, decrypted);
