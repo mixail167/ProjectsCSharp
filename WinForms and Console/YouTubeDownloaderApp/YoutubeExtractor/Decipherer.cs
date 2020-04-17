@@ -27,7 +27,7 @@ namespace YoutubeExtractor
             var lines = funcBody.Split(';'); //Each line in sig function
 
             string idReverse = "", idSlice = "", idCharSwap = ""; //Hold name for each cipher method
-            string functionIdentifier = "";
+            string functionIdentifier;
             string operations = "";
 
             foreach (var line in lines.Skip(1).Take(lines.Length - 2)) //Matches the funcBody with each cipher method. Only runs till all three are defined.

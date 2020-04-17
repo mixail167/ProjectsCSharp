@@ -70,7 +70,7 @@ namespace YoutubeExtractor
         /// An error occurred while downloading the YouTube page html.
         /// </exception>
         /// <exception cref="YoutubeParseException">The Youtube page could not be parsed.</exception>
-        public static IEnumerable<VideoInfo> GetDownloadUrls(string videoUrl, bool decryptSignature = true)
+        public static IEnumerable<VideoInfo> GetDownloadUrls(string videoUrl)
         {
             if (videoUrl == null)
                 throw new ArgumentNullException("videoUrl");

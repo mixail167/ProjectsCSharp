@@ -577,7 +577,7 @@
             this.dataGridView2.Location = new System.Drawing.Point(11, 38);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersVisible = false;
-            this.dataGridView2.Size = new System.Drawing.Size(597, 315);
+            this.dataGridView2.Size = new System.Drawing.Size(597, 300);
             this.dataGridView2.TabIndex = 4;
             this.dataGridView2.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
             this.dataGridView2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellClick);

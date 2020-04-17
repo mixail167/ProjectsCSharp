@@ -71,8 +71,8 @@ namespace YouTubeDownloaderMass
                             List<string> list2 = new List<string>();
                             string allText = string.Join("\n", list);
                             list = allText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                            const string pattern = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/watch\?v=([-_0-9a-zA-Z]){11}(&([-=_0-9a-zA-Z&])*)?\|(144|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?)+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?\\)+)$";
-                            const string pattern2 = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/playlist\?list=([-_0-9a-zA-Z]){34}(&([-=_0-9a-zA-Z&])*)?\|(144|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?)+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?\\)+)$";
+                            const string pattern = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/watch\?v=([-_0-9a-zA-Z]){11}(&([-=_0-9a-zA-Z&])*)?\|(144|240|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?)+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?\\)+)$";
+                            const string pattern2 = @"^(http(s)?\:\/\/)?(www\.)?youtube\.com\/playlist\?list=([-_0-9a-zA-Z]){34}(&([-=_0-9a-zA-Z&])*)?\|(144|240|360|480|720|1080)\|([a-zA-Z]:\\|[a-zA-Z]:(\\(\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?)+|[a-zA-Z]:\\((\b[^ \\\/\*\:\?\<\>\|\""][^\\\/\*\:\?\<\>\|\""]*[^ \\\/\*\:\?\<\>\|\""]\b|[^ \\\/\*\:\?\<\>\|\""])[\)]?\\)+)$";
                             foreach (string item in list)
                             {
                                 if (!Regex.IsMatch(item, pattern))
@@ -155,10 +155,9 @@ namespace YouTubeDownloaderMass
                                         try
                                         {
                                             VideoInfo video = DownloadUrlResolver.GetDownloadUrls(url)
-                                                                                      .OrderByDescending(p => p.Resolution)
-                                                                                      .FirstOrDefault(p => p.VideoType == VideoType.Mp4 &&
-                                                                                                        p.Resolution <= resolution &&
-                                                                                                        p.AudioType != AudioType.Unknown);
+                                                .OrderByDescending(p => p.Resolution)
+                                                .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution <= resolution &&
+                                                                     p.Resolution > 0 && p.AudioType != AudioType.Unknown);
                                             if (video != null)
                                             {
                                                 if (video.RequiresDecryption)
@@ -216,15 +215,9 @@ namespace YouTubeDownloaderMass
                                                 }
                                             }
                                             string title = title1;
-                                            int j = 1;
-                                            while (true)
+                                            for (int j = 1; File.Exists(Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension)); j++)
                                             {
-                                                if (File.Exists(Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension)))
-                                                {
-                                                    title = title1 + string.Format(" ({0})", j);
-                                                    j++;
-                                                }
-                                                else break;
+                                                title = title1 + string.Format(" ({0})", j);
                                             }
                                             VideoDownloader downloader = new VideoDownloader(videoList[i].Item1, Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension));
                                             downloader.DownloadStarted += downloader_DownloadStarted;

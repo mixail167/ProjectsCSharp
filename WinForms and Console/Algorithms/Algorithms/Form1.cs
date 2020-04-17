@@ -2,12 +2,8 @@
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using Drawing = System.Drawing;
-using System.Windows;
-using System.Diagnostics;
 using System.Text;
 
 namespace Algorithms
@@ -21,7 +17,6 @@ namespace Algorithms
         private Graph graph;
         private DataGridCell cell;
         private bool semaphore;
-        private bool semaphore2;
         private int[] path;
         private delegate T[] Sort<T>(T[] massiv, bool revers) where T : IComparable<T>;
         private List<Drawing.Point> points;
@@ -53,7 +48,6 @@ namespace Algorithms
             AddCellsAndNodes(0, dataGridView2.ColumnCount);
             cell = new DataGridCell(0, 0);
             semaphore = false;
-            semaphore2 = false;
             points = new List<Drawing.Point>();
             drawPolygon = false;
             bitmap = new Drawing.Bitmap(pictureBox1.Width, pictureBox1.Height);
@@ -813,7 +807,7 @@ namespace Algorithms
                 buttonCell.Value = i;
                 dataGridView2[i, 0] = buttonCell;
                 dataGridView2[i, i].Value = 0;
-                dataGridView2[i, i].Style.BackColor = System.Drawing.Color.Yellow;
+                dataGridView2[i, i].Style.BackColor = Drawing.Color.Yellow;
                 dataGridView2[i, i].ReadOnly = true;
                 graph.AddNode(i.ToString());
             }
@@ -833,6 +827,52 @@ namespace Algorithms
                 }
             }
         }
+
+        private void CreateEdges()
+        {
+            for (int i = 1; i < dataGridView2.RowCount - 1; i++)
+            {
+                for (int j = i + 1; j < dataGridView2.ColumnCount; j++)
+                {
+                    try
+                    {
+                        graph.RemoveEdge(graph.Edges.First(item => (item.Source.Equals(i.ToString()) && item.Target.Equals(j.ToString()))));
+                    }
+                    catch
+                    {
+
+                    }
+                    try
+                    {
+                        graph.RemoveEdge(graph.Edges.First(item => (item.Source.Equals(j.ToString()) && item.Target.Equals(i.ToString()))));
+                    }
+                    catch
+                    {
+
+                    }
+                    int value1 = Convert.ToInt32(dataGridView2[j, i].Value);
+                    int value2 = Convert.ToInt32(dataGridView2[i, j].Value);
+                    if (value1 != 0)
+                    {
+                        Edge edge = graph.AddEdge(i.ToString(), value1.ToString(), j.ToString());
+                        if (value1 == value2)
+                        {
+                            edge.Attr.ArrowheadAtTarget = ArrowStyle.None;
+                        }
+                        else
+                        {
+                            edge.Attr.ArrowheadAtTarget = ArrowStyle.Normal;
+                            if (value2 != 0)
+                            {
+                                edge = graph.AddEdge(j.ToString(), value2.ToString(), i.ToString());
+                                edge.Attr.ArrowheadAtTarget = ArrowStyle.Normal;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
         private void ShowGraph(Graph graph)
         {
@@ -1070,57 +1110,16 @@ namespace Algorithms
 
         private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (semaphore2)
-            {
-                semaphore2 = !semaphore2;
-                return;
-            }
             try
             {
-                if (e.RowIndex != e.ColumnIndex && !semaphore2)
+                if (e.RowIndex != e.ColumnIndex)
                 {
                     int temp = Convert.ToInt32(dataGridView2[e.ColumnIndex, e.RowIndex].Value);
                     if (temp < 0)
                         throw new Exception();
-                    semaphore2 = !semaphore2;
-                    bool isFound = false;
-                    dataGridView2[e.RowIndex, e.ColumnIndex].Value = temp;
                     if (dataGridView2[e.ColumnIndex, e.RowIndex].Value == null)
                     {
-                        semaphore2 = !semaphore2;
                         dataGridView2[e.ColumnIndex, e.RowIndex].Value = temp;
-                    }
-                    if (temp != 0)
-                    {
-                        try
-                        {
-                            graph.Edges.First(item => (item.Source.Equals(e.ColumnIndex.ToString()) && item.Target.Equals(e.RowIndex.ToString()))
-                                                     || (item.Source.Equals(e.RowIndex.ToString()) && item.Target.Equals(e.ColumnIndex.ToString()))).LabelText = temp.ToString();
-                            isFound = true;
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-                    if (!isFound)
-                    {
-                        if (temp != 0)
-                        {
-                            graph.AddEdge(e.RowIndex.ToString(), temp.ToString(), e.ColumnIndex.ToString()).Attr.ArrowheadAtTarget = ArrowStyle.None;
-                        }
-                        else
-                        {
-                            try
-                            {
-                                graph.RemoveEdge(graph.Edges.First(item => (item.Source.Equals(e.ColumnIndex.ToString()) && item.Target.Equals(e.RowIndex.ToString()))
-                                                         || (item.Source.Equals(e.RowIndex.ToString()) && item.Target.Equals(e.ColumnIndex.ToString()))));
-                            }
-                            catch
-                            {
-
-                            }
-                        }
                     }
                     ButtonVisible(false);
                     UpdateLabel(string.Empty);
@@ -1128,7 +1127,6 @@ namespace Algorithms
             }
             catch
             {
-                semaphore2 = !semaphore2;
                 dataGridView2[e.ColumnIndex, e.RowIndex].Value = oldValue;
             }
         }
@@ -1137,15 +1135,15 @@ namespace Algorithms
         {
             if (!semaphore && cell.ColumnNumber != 0 && cell.RowNumber != 0)
             {
-                dataGridView2[cell.ColumnNumber, 0].Style.BackColor = System.Drawing.Color.White;
-                dataGridView2[0, cell.RowNumber].Style.BackColor = System.Drawing.Color.White;
+                dataGridView2[cell.ColumnNumber, 0].Style.BackColor = Drawing.Color.White;
+                dataGridView2[0, cell.RowNumber].Style.BackColor = Drawing.Color.White;
                 if (cell.ColumnNumber == cell.RowNumber)
                 {
-                    dataGridView2[cell.ColumnNumber, cell.RowNumber].Style.BackColor = System.Drawing.Color.Yellow;
+                    dataGridView2[cell.ColumnNumber, cell.RowNumber].Style.BackColor = Drawing.Color.Yellow;
                 }
                 else
                 {
-                    dataGridView2[cell.ColumnNumber, cell.RowNumber].Style.BackColor = System.Drawing.Color.White;
+                    dataGridView2[cell.ColumnNumber, cell.RowNumber].Style.BackColor = Drawing.Color.White;
                 }
                 cell.ColumnNumber = 0;
                 cell.RowNumber = 0;
@@ -1158,20 +1156,20 @@ namespace Algorithms
                     {
                         if (cell.ColumnNumber != 0)
                         {
-                            dataGridView2[cell.ColumnNumber, 0].Style.BackColor = System.Drawing.Color.White;
-                            dataGridView2[e.ColumnIndex, 0].Style.BackColor = System.Drawing.Color.Red;
+                            dataGridView2[cell.ColumnNumber, 0].Style.BackColor = Drawing.Color.White;
+                            dataGridView2[e.ColumnIndex, 0].Style.BackColor = Drawing.Color.Red;
                             cell.ColumnNumber = e.ColumnIndex;
                         }
                         else
                         {
                             cell.ColumnNumber = e.ColumnIndex;
-                            dataGridView2[cell.ColumnNumber, cell.RowNumber].Style.BackColor = System.Drawing.Color.Red;
+                            dataGridView2[cell.ColumnNumber, cell.RowNumber].Style.BackColor = Drawing.Color.Red;
                             semaphore = !semaphore;
                         }
                     }
                     else
                     {
-                        dataGridView2[e.ColumnIndex, 0].Style.BackColor = System.Drawing.Color.Red;
+                        dataGridView2[e.ColumnIndex, 0].Style.BackColor = Drawing.Color.Red;
                         cell.ColumnNumber = e.ColumnIndex;
                         semaphore = !semaphore;
                     }
@@ -1182,20 +1180,20 @@ namespace Algorithms
                     {
                         if (cell.RowNumber != 0)
                         {
-                            dataGridView2[0, cell.RowNumber].Style.BackColor = System.Drawing.Color.White;
-                            dataGridView2[0, e.RowIndex].Style.BackColor = System.Drawing.Color.Red;
+                            dataGridView2[0, cell.RowNumber].Style.BackColor = Drawing.Color.White;
+                            dataGridView2[0, e.RowIndex].Style.BackColor = Drawing.Color.Red;
                             cell.RowNumber = e.RowIndex;
                         }
                         else
                         {
                             cell.RowNumber = e.RowIndex;
-                            dataGridView2[cell.ColumnNumber, cell.RowNumber].Style.BackColor = System.Drawing.Color.Red;
+                            dataGridView2[cell.ColumnNumber, cell.RowNumber].Style.BackColor = Drawing.Color.Red;
                             semaphore = !semaphore;
                         }
                     }
                     else
                     {
-                        dataGridView2[0, e.RowIndex].Style.BackColor = System.Drawing.Color.Red;
+                        dataGridView2[0, e.RowIndex].Style.BackColor = Drawing.Color.Red;
                         cell.RowNumber = e.RowIndex;
                         semaphore = !semaphore;
                     }
@@ -1205,6 +1203,7 @@ namespace Algorithms
 
         private void button3_Click(object sender, EventArgs e)
         {
+            CreateEdges();
             ShowGraph(graph);
         }
 
@@ -1225,16 +1224,24 @@ namespace Algorithms
                 int[,] massiv = GetMassiv(dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1);
                 if (radioButton7.Checked)
                 {
-                    int[] distance = AlgorithmDijkstra(left - 1, massiv);
-                    if (distance[right - 1] != int.MaxValue)
+                    if (CheckGraph())
                     {
-                        UpdateLabel(left, right, distance[right - 1]);
-                        path = GetPathDijkstra(distance, massiv, right - 1);
-                        ButtonVisible(true);
+                        int[] distance = AlgorithmDijkstra(left - 1, massiv);
+                        if (distance[right - 1] != int.MaxValue)
+                        {
+                            UpdateLabel(left, right, distance[right - 1]);
+                            path = GetPathDijkstra(distance, massiv, right - 1);
+                            ButtonVisible(true);
+                        }
+                        else
+                        {
+                            UpdateLabel(left, right, double.PositiveInfinity);
+                            ButtonVisible(false);
+                        }
                     }
                     else
                     {
-                        UpdateLabel(left, right, double.PositiveInfinity);
+                        UpdateLabel("Ошибка: Граф является ориентированным.");
                         ButtonVisible(false);
                     }
                 }
@@ -1262,322 +1269,341 @@ namespace Algorithms
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private bool CheckGraph()
         {
-            SetEdgeColor(path, Color.Red);
-            ShowGraph(graph);
-            SetEdgeColor(path, Color.Black);
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            int[,] graph = AlgorithmFloyd(GetMassiv(dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1));
-            int[] maxDistances = new int[graph.GetLength(1)];
-            for (int i = 0; i < maxDistances.Length; i++)
+            for (int i = 1; i < dataGridView2.RowCount - 1; i++)
             {
-                maxDistances[i] = MaxInColumn(i, graph);
+                for (int j = i + 1; j < dataGridView2.ColumnCount; j++)
+                {
+                    int value1 = Convert.ToInt32(dataGridView2[j, i].Value);
+                    int value2 = Convert.ToInt32(dataGridView2[i, j].Value);
+                    if (value1 != value2)
+                    {
+                        return false;
+                    }
+                }
             }
-            UpdateLabel(IndexMinInMassiv(maxDistances));
+            return true;
         }
+    
+    private void button5_Click(object sender, EventArgs e)
+    {
+        CreateEdges();
+        SetEdgeColor(path, Color.Red);
+        ShowGraph(graph);
+        SetEdgeColor(path, Color.Black);
+    }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+    private void button6_Click(object sender, EventArgs e)
+    {
+        int[,] graph = AlgorithmFloyd(GetMassiv(dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1));
+        int[] maxDistances = new int[graph.GetLength(1)];
+        for (int i = 0; i < maxDistances.Length; i++)
         {
-            graphics.Clear(Drawing.Color.White);
+            maxDistances[i] = MaxInColumn(i, graph);
+        }
+        UpdateLabel(IndexMinInMassiv(maxDistances));
+    }
+
+    private void pictureBox1_Paint(object sender, PaintEventArgs e)
+    {
+        graphics.Clear(Drawing.Color.White);
+        if (drawPolygon)
+        {
+            graphics.FillPolygon(Drawing.Brushes.Red, points.ToArray());
+        }
+        for (int i = 0; i < points.Count && !drawPolygon; i++)
+        {
+            graphics.DrawEllipse(Drawing.Pens.Red, points[i].X, points[i].Y, 1, 1);
+            graphics.DrawString(i.ToString(), new Drawing.Font("Courier New", 10, Drawing.FontStyle.Italic), Drawing.Brushes.Black, points[i]);
+        }
+        pictureBox1.Image = bitmap;
+    }
+
+    private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+    {
+        if (e.Button == System.Windows.Forms.MouseButtons.Right)
+        {
+            if (points.Count > 2)
+            {
+                drawPolygon = true;
+            }
+        }
+        else if (e.Button == System.Windows.Forms.MouseButtons.Left)
+        {
             if (drawPolygon)
-            {
-                graphics.FillPolygon(Drawing.Brushes.Red, points.ToArray());
-            }
-            for (int i = 0; i < points.Count && !drawPolygon; i++)
-            {
-                graphics.DrawEllipse(Drawing.Pens.Red, points[i].X, points[i].Y, 1, 1);
-                graphics.DrawString(i.ToString(), new Drawing.Font("Courier New", 10, Drawing.FontStyle.Italic), Drawing.Brushes.Black, points[i]);
-            }
-            pictureBox1.Image = bitmap;
-        }
-
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
-            {
-                if (points.Count > 2)
-                {
-                    drawPolygon = true;
-                }
-            }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Left)
-            {
-                if (drawPolygon)
-                {
-                    points.Clear();
-                    drawPolygon = false;
-                    label13.Text = string.Empty;
-                }
-                points.Add(new Drawing.Point(e.X, e.Y));
-            }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
             {
                 points.Clear();
                 drawPolygon = false;
                 label13.Text = string.Empty;
             }
-            pictureBox1.Invalidate();
+            points.Add(new Drawing.Point(e.X, e.Y));
         }
-
-        private void button7_Click(object sender, EventArgs e)
+        else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
         {
-            if (drawPolygon)
+            points.Clear();
+            drawPolygon = false;
+            label13.Text = string.Empty;
+        }
+        pictureBox1.Invalidate();
+    }
+
+    private void button7_Click(object sender, EventArgs e)
+    {
+        if (drawPolygon)
+        {
+            int count = 0;
+            for (int i = 0; i < bitmap.Width; i++)
             {
-                int count = 0;
-                for (int i = 0; i < bitmap.Width; i++)
+                for (int j = 0; j < bitmap.Height; j++)
                 {
-                    for (int j = 0; j < bitmap.Height; j++)
+                    Drawing.Color color = bitmap.GetPixel(i, j);
+                    if (color.R == 255 && color.G == 0 && color.B == 0)
                     {
-                        Drawing.Color color = bitmap.GetPixel(i, j);
-                        if (color.R == 255 && color.G == 0 && color.B == 0)
-                        {
-                            count++;
-                        }
-                    }
-                }
-                double square = (double)numericUpDown5.Value * (double)numericUpDown6.Value * count / (bitmap.Width * bitmap.Height);
-                label13.Text = string.Format("{0:f2}", square);
-            }
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            startPosition = null;
-            finishPosition = null;
-            graphics3 = null;
-            map = GenerateLabirint((int)numericUpDown7.Value, (int)numericUpDown8.Value);
-            graphics2 = panel1.CreateGraphics();
-            panel1.Invalidate();
-            panel2.Invalidate();
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            if (graphics2 != null)
-            {
-                int width = map.GetLength(0);
-                int height = map.GetLength(1);
-                float widthBlock = (float)(panel1.Width * 1.0f / width);
-                float heightBlock = (float)(panel1.Height * 1.0f / height);
-                for (int i = 0; i < width; i++)
-                {
-                    for (int j = 0; j < height; j++)
-                    {
-                        switch (map[i, j].Value)
-                        {
-                            case -1:
-                                graphics2.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                                break;
-                            default:
-                                graphics2.FillRectangle(Drawing.Brushes.Black, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                                break;
-                        }
-                    }
-                }
-                if (startPosition != null)
-                {
-                    graphics2.FillRectangle(Drawing.Brushes.Yellow, new Drawing.RectangleF(startPosition.X * widthBlock, startPosition.Y * heightBlock, widthBlock, heightBlock));
-                }
-                if (finishPosition != null)
-                {
-                    graphics2.FillRectangle(Drawing.Brushes.Red, new Drawing.RectangleF(finishPosition.X * widthBlock, finishPosition.Y * heightBlock, widthBlock, heightBlock));
-                }
-            }
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-            if (graphics3 != null)
-            {
-                int width = map1.GetLength(0);
-                int height = map1.GetLength(1);
-                float widthBlock = (float)(panel1.Width * 1.0f / width);
-                float heightBlock = (float)(panel1.Height * 1.0f / height);
-                for (int i = 0; i < width; i++)
-                {
-                    for (int j = 0; j < height; j++)
-                    {
-                        switch (map1[i, j].Value)
-                        {
-                            case 0:
-                                graphics3.FillRectangle(Drawing.Brushes.Yellow, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                                break;
-                            case -1:
-                                graphics3.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                                break;
-                            case -2:
-                                graphics3.FillRectangle(Drawing.Brushes.Red, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                                break;
-                            case -3:
-                                graphics3.FillRectangle(Drawing.Brushes.Blue, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                                break;
-                            case -4:
-                                graphics3.FillRectangle(Drawing.Brushes.Black, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                                break;
-                            default:
-                                graphics3.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                                break;
-                        }
+                        count++;
                     }
                 }
             }
+            double square = (double)numericUpDown5.Value * (double)numericUpDown6.Value * count / (bitmap.Width * bitmap.Height);
+            label13.Text = string.Format("{0:f2}", square);
         }
+    }
 
-        private void panel1_MouseClick(object sender, MouseEventArgs e)
+    private void button8_Click(object sender, EventArgs e)
+    {
+        startPosition = null;
+        finishPosition = null;
+        graphics3 = null;
+        map = GenerateLabirint((int)numericUpDown7.Value, (int)numericUpDown8.Value);
+        graphics2 = panel1.CreateGraphics();
+        panel1.Invalidate();
+        panel2.Invalidate();
+    }
+
+    private void panel1_Paint(object sender, PaintEventArgs e)
+    {
+        if (graphics2 != null)
         {
-            if (graphics2 != null)
+            int width = map.GetLength(0);
+            int height = map.GetLength(1);
+            float widthBlock = (float)(panel1.Width * 1.0f / width);
+            float heightBlock = (float)(panel1.Height * 1.0f / height);
+            for (int i = 0; i < width; i++)
             {
-                if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+                for (int j = 0; j < height; j++)
                 {
-                    startPosition = null;
-                    finishPosition = null;
-                    panel1.Invalidate();
-                }
-                else
-                {
-                    int width = map.GetLength(0);
-                    int height = map.GetLength(1);
-                    double widthBlock = (double)(panel2.Width * 1.0f / width);
-                    double heightBlock = (double)(panel2.Height * 1.0f / height);
-                    int x = (int)Math.Truncate((double)e.X / widthBlock);
-                    int y = (int)Math.Truncate((double)e.Y / heightBlock);
-                    if (map[x, y].Value != -4)
+                    switch (map[i, j].Value)
                     {
-                        if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                        {
-                            startPosition = new Cell(x, y);
-                        }
-                        else if (e.Button == System.Windows.Forms.MouseButtons.Right)
-                        {
-                            finishPosition = new Cell(x, y);
-                        }
-                        panel1.Invalidate();
+                        case -1:
+                            graphics2.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                            break;
+                        default:
+                            graphics2.FillRectangle(Drawing.Brushes.Black, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                            break;
                     }
                 }
             }
-        }
-
-        private void button9_Click(object sender, EventArgs e)
-        {
-            graphics3 = null;
-            map1 = WavePropagation(Cell.CopyMatrix(map), new Cell(startPosition), new Cell(finishPosition));
-            if (map1 != null)
+            if (startPosition != null)
             {
-                graphics3 = panel2.CreateGraphics();
+                graphics2.FillRectangle(Drawing.Brushes.Yellow, new Drawing.RectangleF(startPosition.X * widthBlock, startPosition.Y * heightBlock, widthBlock, heightBlock));
             }
-            panel2.Invalidate();
-        }
-
-        private void panel3_Paint(object sender, PaintEventArgs e)
-        {
-            for (int i = 0; i < rombMesh.GetLength(0); i++)
+            if (finishPosition != null)
             {
-                for (int j = 0; j < rombMesh.GetLength(1); j++)
+                graphics2.FillRectangle(Drawing.Brushes.Red, new Drawing.RectangleF(finishPosition.X * widthBlock, finishPosition.Y * heightBlock, widthBlock, heightBlock));
+            }
+        }
+    }
+
+    private void panel2_Paint(object sender, PaintEventArgs e)
+    {
+        if (graphics3 != null)
+        {
+            int width = map1.GetLength(0);
+            int height = map1.GetLength(1);
+            float widthBlock = (float)(panel1.Width * 1.0f / width);
+            float heightBlock = (float)(panel1.Height * 1.0f / height);
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
                 {
-                    float d = (float)rombMesh[i, j].Radius * 2;
-                    e.Graphics.DrawEllipse(Drawing.Pens.Black, (float)(rombMesh[i, j].CenterPoint.X - rombMesh[i, j].Radius), (float)(rombMesh[i, j].CenterPoint.Y - rombMesh[i, j].Radius), d, d);
-                    e.Graphics.DrawPolygon(Drawing.Pens.Black, rombMesh[i, j].Points);
-                }
-            }
-            foreach (Sprait item in objects)
-            {
-                e.Graphics.DrawImage(item.Image, item.Point);
-            }
-        }
-
-        private void panel3_MouseMove(object sender, MouseEventArgs e)
-        {
-            label16.Text = e.Location.ToString();
-            Drawing.Point point = Romb.Check(rombMesh, e.Location);
-            if (point.X != -1)
-            {
-                label17.Text = point.ToString();
-            }
-            else label17.Text = string.Empty;
-        }
-
-        private void panel3_MouseLeave(object sender, EventArgs e)
-        {
-            label17.Text = string.Empty;
-            label16.Text = string.Empty;
-        }
-
-        private void panel3_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            Drawing.Point coordinate = Romb.Check(rombMesh, e.Location);
-            if (coordinate.X != -1)
-            {
-                Drawing.PointF pilot = rombMesh[coordinate.X, coordinate.Y].CenterPoint;
-                objects.Add(new Sprait(Properties.Resources.Tree, new Drawing.PointF(pilot.X - Properties.Resources.Tree.Width / 2, pilot.Y - Properties.Resources.Tree.Height)));
-                objects = objects.ToArray().OrderBy(x => x.Point.Y).ThenBy(x => x.Point.X).ToList();
-                panel3.Invalidate();
-            }
-        }
-
-        private void button10_Click(object sender, EventArgs e)
-        {
-            if (richTextBox2.Text.Length > 0)
-            {
-                int key = Convert.ToInt32(numericUpDown9.Value);
-                byte[] text;
-                switch (comboBox1.SelectedIndex)
-                {
-                    case 0:
-                        text = Encoding.ASCII.GetBytes(richTextBox2.Text);
-                        break;
-                    case 1:
-                        text = Encoding.Unicode.GetBytes(richTextBox2.Text);
-                        break;
-                    case 2:
-                        text = Encoding.BigEndianUnicode.GetBytes(richTextBox2.Text);
-                        break;
-                    case 3:
-                        text = Encoding.UTF7.GetBytes(richTextBox2.Text);
-                        break;
-                    case 4:                        
-                        text = Encoding.UTF8.GetBytes(richTextBox2.Text);
-                        break;
-                    case 5:
-                        text = Encoding.UTF32.GetBytes(richTextBox2.Text);
-                        break;
-                    default:
-                        text = Encoding.Default.GetBytes(richTextBox2.Text);
-                        break;
-                }
-                byte[] text2 = new byte[text.Length];
-                for (int i = 0; i < text2.Length; i++)
-                {
-                    text2[i] = (byte)(text[i] ^ key);
-                }
-                switch (comboBox1.SelectedIndex)
-                {
-                    case 0:
-                        richTextBox3.Text = Encoding.ASCII.GetString(text2);
-                        break;
-                    case 1:
-                        richTextBox3.Text = Encoding.Unicode.GetString(text2);
-                        break;
-                    case 2:
-                        richTextBox3.Text = Encoding.BigEndianUnicode.GetString(text2);
-                        break;
-                    case 3:
-                        richTextBox3.Text = Encoding.UTF7.GetString(text2);
-                        break;
-                    case 4:
-                        richTextBox3.Text = Encoding.UTF8.GetString(text2);
-                        break;
-                    case 5:
-                        richTextBox3.Text = Encoding.UTF32.GetString(text2);
-                        break;
-                    default:
-                        richTextBox3.Text = Encoding.Default.GetString(text2);
-                        break;
+                    switch (map1[i, j].Value)
+                    {
+                        case 0:
+                            graphics3.FillRectangle(Drawing.Brushes.Yellow, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                            break;
+                        case -1:
+                            graphics3.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                            break;
+                        case -2:
+                            graphics3.FillRectangle(Drawing.Brushes.Red, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                            break;
+                        case -3:
+                            graphics3.FillRectangle(Drawing.Brushes.Blue, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                            break;
+                        case -4:
+                            graphics3.FillRectangle(Drawing.Brushes.Black, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                            break;
+                        default:
+                            graphics3.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
+                            break;
+                    }
                 }
             }
         }
     }
+
+    private void panel1_MouseClick(object sender, MouseEventArgs e)
+    {
+        if (graphics2 != null)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                startPosition = null;
+                finishPosition = null;
+                panel1.Invalidate();
+            }
+            else
+            {
+                int width = map.GetLength(0);
+                int height = map.GetLength(1);
+                double widthBlock = (double)(panel2.Width * 1.0f / width);
+                double heightBlock = (double)(panel2.Height * 1.0f / height);
+                int x = (int)Math.Truncate((double)e.X / widthBlock);
+                int y = (int)Math.Truncate((double)e.Y / heightBlock);
+                if (map[x, y].Value != -4)
+                {
+                    if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                    {
+                        startPosition = new Cell(x, y);
+                    }
+                    else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                    {
+                        finishPosition = new Cell(x, y);
+                    }
+                    panel1.Invalidate();
+                }
+            }
+        }
+    }
+
+    private void button9_Click(object sender, EventArgs e)
+    {
+        graphics3 = null;
+        map1 = WavePropagation(Cell.CopyMatrix(map), new Cell(startPosition), new Cell(finishPosition));
+        if (map1 != null)
+        {
+            graphics3 = panel2.CreateGraphics();
+        }
+        panel2.Invalidate();
+    }
+
+    private void panel3_Paint(object sender, PaintEventArgs e)
+    {
+        for (int i = 0; i < rombMesh.GetLength(0); i++)
+        {
+            for (int j = 0; j < rombMesh.GetLength(1); j++)
+            {
+                float d = (float)rombMesh[i, j].Radius * 2;
+                e.Graphics.DrawEllipse(Drawing.Pens.Black, (float)(rombMesh[i, j].CenterPoint.X - rombMesh[i, j].Radius), (float)(rombMesh[i, j].CenterPoint.Y - rombMesh[i, j].Radius), d, d);
+                e.Graphics.DrawPolygon(Drawing.Pens.Black, rombMesh[i, j].Points);
+            }
+        }
+        foreach (Sprait item in objects)
+        {
+            e.Graphics.DrawImage(item.Image, item.Point);
+        }
+    }
+
+    private void panel3_MouseMove(object sender, MouseEventArgs e)
+    {
+        label16.Text = e.Location.ToString();
+        Drawing.Point point = Romb.Check(rombMesh, e.Location);
+        if (point.X != -1)
+        {
+            label17.Text = point.ToString();
+        }
+        else label17.Text = string.Empty;
+    }
+
+    private void panel3_MouseLeave(object sender, EventArgs e)
+    {
+        label17.Text = string.Empty;
+        label16.Text = string.Empty;
+    }
+
+    private void panel3_MouseDoubleClick(object sender, MouseEventArgs e)
+    {
+        Drawing.Point coordinate = Romb.Check(rombMesh, e.Location);
+        if (coordinate.X != -1)
+        {
+            Drawing.PointF pilot = rombMesh[coordinate.X, coordinate.Y].CenterPoint;
+            objects.Add(new Sprait(Properties.Resources.Tree, new Drawing.PointF(pilot.X - Properties.Resources.Tree.Width / 2, pilot.Y - Properties.Resources.Tree.Height)));
+            objects = objects.ToArray().OrderBy(x => x.Point.Y).ThenBy(x => x.Point.X).ToList();
+            panel3.Invalidate();
+        }
+    }
+
+    private void button10_Click(object sender, EventArgs e)
+    {
+        if (richTextBox2.Text.Length > 0)
+        {
+            int key = Convert.ToInt32(numericUpDown9.Value);
+            byte[] text;
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0:
+                    text = Encoding.ASCII.GetBytes(richTextBox2.Text);
+                    break;
+                case 1:
+                    text = Encoding.Unicode.GetBytes(richTextBox2.Text);
+                    break;
+                case 2:
+                    text = Encoding.BigEndianUnicode.GetBytes(richTextBox2.Text);
+                    break;
+                case 3:
+                    text = Encoding.UTF7.GetBytes(richTextBox2.Text);
+                    break;
+                case 4:
+                    text = Encoding.UTF8.GetBytes(richTextBox2.Text);
+                    break;
+                case 5:
+                    text = Encoding.UTF32.GetBytes(richTextBox2.Text);
+                    break;
+                default:
+                    text = Encoding.Default.GetBytes(richTextBox2.Text);
+                    break;
+            }
+            byte[] text2 = new byte[text.Length];
+            for (int i = 0; i < text2.Length; i++)
+            {
+                text2[i] = (byte)(text[i] ^ key);
+            }
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0:
+                    richTextBox3.Text = Encoding.ASCII.GetString(text2);
+                    break;
+                case 1:
+                    richTextBox3.Text = Encoding.Unicode.GetString(text2);
+                    break;
+                case 2:
+                    richTextBox3.Text = Encoding.BigEndianUnicode.GetString(text2);
+                    break;
+                case 3:
+                    richTextBox3.Text = Encoding.UTF7.GetString(text2);
+                    break;
+                case 4:
+                    richTextBox3.Text = Encoding.UTF8.GetString(text2);
+                    break;
+                case 5:
+                    richTextBox3.Text = Encoding.UTF32.GetString(text2);
+                    break;
+                default:
+                    richTextBox3.Text = Encoding.Default.GetString(text2);
+                    break;
+            }
+        }
+    }
 }
+}
+

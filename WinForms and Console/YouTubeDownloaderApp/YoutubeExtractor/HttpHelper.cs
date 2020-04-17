@@ -25,7 +25,7 @@ namespace YoutubeExtractor
 #else
             using (var client = new WebClient())
             {
-                client.Encoding = System.Text.Encoding.UTF8;
+                client.Encoding = Encoding.UTF8;
                 return client.DownloadString(url);
             }
 #endif
