@@ -14,22 +14,16 @@ namespace Algorithms
 
         private int oldValue;
         private int oldValueCount;
-        private Graph graph;
+        private readonly Graph graph;
         private DataGridCell cell;
         private bool semaphore;
         private int[] path;
         private delegate T[] Sort<T>(T[] massiv, bool revers) where T : IComparable<T>;
-        private List<Drawing.Point> points;
+        private readonly List<Drawing.Point> points;
         private bool drawPolygon;
-        private Drawing.Bitmap bitmap;
-        private Drawing.Graphics graphics;
-        private Drawing.Graphics graphics2;
-        private Drawing.Graphics graphics3;
-        private Cell[,] map;
-        private Cell[,] map1;
-        private Cell startPosition;
-        private Cell finishPosition;
-        private Romb[,] rombMesh;
+        private readonly Drawing.Bitmap bitmap;
+        private readonly Drawing.Graphics graphics;
+        private readonly Romb[,] rombMesh;
         private List<Sprait> objects;
         #endregion
 
@@ -55,194 +49,7 @@ namespace Algorithms
             rombMesh = Romb.CreateRombMesh(0, 200, 20, 10, 10, 2.5);
             objects = new List<Sprait>();
             comboBox1.SelectedIndex = 0;
-        }
-
-        /// <summary>
-        /// Генератор лабиринта
-        /// </summary>
-        /// <param name="width">Ширина лабиринта</param>
-        /// <param name="height">Высота лабиринта</param>
-        /// <returns>Карта лабиринта</returns>
-        private Cell[,] GenerateLabirint(int width, int height)
-        {
-            if (width % 2 == 0)
-            {
-                width++;
-            }
-            if (height % 2 == 0)
-            {
-                height++;
-            }
-            Cell[,] map = new Cell[width, height];
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    if (i % 2 != 0 && j % 2 != 0)
-                        map[i, j] = new Cell(i, j, -1);
-                    else
-                        map[i, j] = new Cell(i, j, -4);
-                }
-            }
-
-            Random random = new Random();
-            Stack<Cell> path = new Stack<Cell>();
-            map[1, 1].Visited = true;
-            path.Push(map[1, 1]);
-            while (path.Count > 0)
-            {
-                Cell cell = path.Peek();
-                List<Cell> nextStep = new List<Cell>();
-                if (cell.X > 1 && !map[cell.X - 2, cell.Y].Visited)
-                    nextStep.Add(map[cell.X - 2, cell.Y]);
-                if (cell.X < width - 2 && !map[cell.X + 2, cell.Y].Visited)
-                    nextStep.Add(map[cell.X + 2, cell.Y]);
-                if (cell.Y > 1 && !map[cell.X, cell.Y - 2].Visited)
-                    nextStep.Add(map[cell.X, cell.Y - 2]);
-                if (cell.Y < height - 2 && !map[cell.X, cell.Y + 2].Visited)
-                    nextStep.Add(map[cell.X, cell.Y + 2]);
-                if (nextStep.Count() > 0)
-                {
-                    Cell next = nextStep[random.Next(nextStep.Count())];
-                    if (next.X != cell.X)
-                    {
-                        if (cell.X > next.X)
-                        {
-                            map[next.X + 1, next.Y].Value = (int)CellValue.EmptySpace;
-                        }
-                        else
-                        {
-                            map[next.X - 1, next.Y].Value = (int)CellValue.EmptySpace;
-                        }
-                    }
-                    if (next.Y != cell.Y)
-                    {
-                        if (cell.Y > next.Y)
-                        {
-                            map[next.X, next.Y + 1].Value = (int)CellValue.EmptySpace;
-                        }
-                        else
-                        {
-                            map[next.X, next.Y - 1].Value = (int)CellValue.EmptySpace;
-                        }
-                    }
-                    next.Visited = true;
-                    path.Push(next);
-                }
-                else
-                {
-                    path.Pop();
-                }
-            }
-            return map;
-        }
-
-        /// <summary>
-        /// Волновой алгоритм
-        /// </summary>
-        /// <param name="map">Карта</param>
-        /// <param name="startPosition">Начальная позиция</param>
-        /// <param name="finishPosition">Целевая позиция</param>
-        /// <returns>Карта решения</returns>
-        private static Cell[,] WavePropagation(Cell[,] map, Cell startPosition, Cell finishPosition)
-        {
-            if (map == null || startPosition == null || finishPosition == null || (startPosition.X == finishPosition.X && startPosition.Y == finishPosition.Y))
-                return null;
-            map[startPosition.X, startPosition.Y].Value = (int)CellValue.StartPosition;
-            map[finishPosition.X, finishPosition.Y].Value = (int)CellValue.Destination;
-            int width = map.GetLength(0);
-            int heigth = map.GetLength(1);
-            int step = 0;
-            bool finished = false;
-            do
-            {
-                for (int i = 0; i < width; i++)
-                {
-                    for (int j = 0; j < heigth; j++)
-                    {
-                        if (map[i, j].Value == step)
-                        {
-                            if (i != width - 1)
-                                if (map[i + 1, j].Value == (int)CellValue.EmptySpace) map[i + 1, j].Value = step + 1;
-                            if (j != heigth - 1)
-                                if (map[i, j + 1].Value == (int)CellValue.EmptySpace) map[i, j + 1].Value = step + 1;
-                            if (i != 0)
-                                if (map[i - 1, j].Value == (int)CellValue.EmptySpace) map[i - 1, j].Value = step + 1;
-                            if (j != 0)
-                                if (map[i, j - 1].Value == (int)CellValue.EmptySpace) map[i, j - 1].Value = step + 1;
-                            if (i < width - 1)
-                                if (map[i + 1, j].Value == (int)CellValue.Destination)
-                                {
-                                    finishPosition.X = i + 1;
-                                    finishPosition.Y = j;
-                                    finished = true;
-                                }
-                            if (j < heigth - 1)
-                                if (map[i, j + 1].Value == (int)CellValue.Destination)
-                                {
-                                    finishPosition.X = i;
-                                    finishPosition.Y = j + 1;
-                                    finished = true;
-                                }
-                            if (i > 0)
-                                if (map[i - 1, j].Value == (int)CellValue.Destination)
-                                {
-                                    finishPosition.X = i - 1;
-                                    finishPosition.Y = j;
-                                    finished = true;
-                                }
-                            if (j > 0)
-                                if (map[i, j - 1].Value == (int)CellValue.Destination)
-                                {
-                                    finishPosition.X = i;
-                                    finishPosition.Y = j - 1;
-                                    finished = true;
-                                }
-                        }
-                    }
-                }
-                step++;
-            } while (!finished && step < width * heigth);
-            if (finished)
-            {
-                List<Tuple<int, int>> path = new List<Tuple<int, int>>();
-                path.Add(new Tuple<int, int>(finishPosition.X, finishPosition.Y));
-                do
-                {
-                    if (finishPosition.X < width - 1)
-                        if (map[finishPosition.X + 1, finishPosition.Y].Value == step - 1)
-                        {
-                            path.Add(new Tuple<int, int>(++finishPosition.X, finishPosition.Y));
-                        }
-                    if (finishPosition.Y < heigth - 1)
-                        if (map[finishPosition.X, finishPosition.Y + 1].Value == step - 1)
-                        {
-                            path.Add(new Tuple<int, int>(finishPosition.X, ++finishPosition.Y));
-                        }
-                    if (finishPosition.X > 0)
-                        if (map[finishPosition.X - 1, finishPosition.Y].Value == step - 1)
-                        {
-                            path.Add(new Tuple<int, int>(--finishPosition.X, finishPosition.Y));
-                        }
-                    if (finishPosition.Y > 0)
-                        if (map[finishPosition.X, finishPosition.Y - 1].Value == step - 1)
-                        {
-                            path.Add(new Tuple<int, int>(finishPosition.X, --finishPosition.Y));
-                        }
-                    step--;
-                } while (step != 0);
-                foreach (Tuple<int, int> item in path)
-                {
-                    if (item == path.Last())
-                        map[item.Item1, item.Item2].Value = (int)CellValue.StartPosition;
-                    else if (item == path.First())
-                        map[item.Item1, item.Item2].Value = (int)CellValue.Destination;
-                    else
-                        map[item.Item1, item.Item2].Value = (int)CellValue.Path;
-                }
-                return map;
-            }
-            return null;
+            numericUpDown8.Minimum = 2;
         }
 
         /// <summary>
@@ -513,6 +320,37 @@ namespace Algorithms
             return false;
         }
 
+        private T[] BinaryInsertionSort<T>(T[] massiv, bool revers) where T : IComparable<T>
+        {
+            for (int i = 1; i < massiv.Length; i++)
+            {
+                if ((revers && massiv[i - 1].CompareTo(massiv[i]) < 0) || (!revers && massiv[i - 1].CompareTo(massiv[i]) > 0))
+                {
+                    T x = massiv[i];
+                    int left = 0;
+                    int right = i - 1;
+                    do
+                    {
+                        int mid = (left + right) / 2;
+                        if ((revers && massiv[mid].CompareTo(x) > 0) || (!revers && massiv[mid].CompareTo(x) < 0))
+                        {
+                            left = mid + 1;
+                        }
+                        else
+                        {
+                            right = mid - 1;
+                        }
+                    } while (left <= right);
+                    for (int j = i - 1; j >= left; j--)
+                    {
+                        massiv[j + 1] = massiv[j];
+                    }
+                    massiv[left] = x;
+                }
+            }
+            return massiv;
+        }
+
         /// <summary>
         /// Сортировка вставками
         /// </summary>
@@ -607,7 +445,7 @@ namespace Algorithms
                 return i;
             if ((!revers && massiv[i].CompareTo(massiv[imax]) < 0) || (revers && massiv[i].CompareTo(massiv[imax]) > 0))
             {
-                massiv = Swap(massiv, i, imax);
+                _ = Swap(massiv, i, imax);
                 if (imax < N / 2)
                     i = imax;
             }
@@ -800,11 +638,15 @@ namespace Algorithms
         {
             for (int i = left + 1; i < right; i++)
             {
-                DataGridViewButtonCell buttonCell = new DataGridViewButtonCell();
-                buttonCell.Value = i;
+                DataGridViewButtonCell buttonCell = new DataGridViewButtonCell
+                {
+                    Value = i
+                };
                 dataGridView2[0, i] = buttonCell;
-                buttonCell = new DataGridViewButtonCell();
-                buttonCell.Value = i;
+                buttonCell = new DataGridViewButtonCell
+                {
+                    Value = i
+                };
                 dataGridView2[i, 0] = buttonCell;
                 dataGridView2[i, i].Value = 0;
                 dataGridView2[i, i].Style.BackColor = Drawing.Color.Yellow;
@@ -876,8 +718,10 @@ namespace Algorithms
 
         private void ShowGraph(Graph graph)
         {
-            GraphForm graphForm = new GraphForm(graph);
-            graphForm.ShowDialog();
+            using (GraphForm graphForm = new GraphForm(graph))
+            {
+                graphForm.ShowDialog();
+            }
         }
 
         private void UpdateLabel(int left, int right, double distance)
@@ -972,9 +816,8 @@ namespace Algorithms
             return index;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
-            int k = -1;
             if (richTextBox1.Text == string.Empty)
             {
                 label3.Text = "Ошибка: Исходный текст не задан.";
@@ -987,7 +830,7 @@ namespace Algorithms
             {
                 label3.Text = "Ошибка: Длина образа больше длины исходного текста.";
             }
-            else if ((radioButton1.Checked && AlgKMP(richTextBox1.Text, textBox2.Text, out k)) ||
+            else if ((radioButton1.Checked && AlgKMP(richTextBox1.Text, textBox2.Text, out int k)) ||
                      (radioButton2.Checked && AlgBM(richTextBox1.Text, textBox2.Text, out k)))
             {
                 label3.Text = "Вывод: Образ найден. Индекс первого вхождения: " + k.ToString() + ".";
@@ -998,12 +841,12 @@ namespace Algorithms
             }
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             dataGridView1.ColumnCount = Convert.ToInt32(numericUpDown1.Value);
         }
 
-        private void numericUpDown1_KeyPress(object sender, KeyPressEventArgs e)
+        private void NumericUpDown1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if ((e.KeyChar < 50 && e.KeyChar > 57) && e.KeyChar != 8)
             {
@@ -1011,7 +854,7 @@ namespace Algorithms
             }
         }
 
-        private void dataGridView1_CellBeginEdit(object sender, System.Windows.Forms.DataGridViewCellCancelEventArgs e)
+        private void DataGridView1_CellBeginEdit(object sender, System.Windows.Forms.DataGridViewCellCancelEventArgs e)
         {
             try
             {
@@ -1024,7 +867,7 @@ namespace Algorithms
             }
         }
 
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
@@ -1036,7 +879,7 @@ namespace Algorithms
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             int[] massiv = new int[dataGridView1.ColumnCount];
             Sort<int> sort;
@@ -1072,6 +915,10 @@ namespace Algorithms
             {
                 sort = ShakerSort;
             }
+            else if (radioButton13.Checked)
+            {
+                sort = BinaryInsertionSort;
+            }
             else
             {
                 sort = MergeSort;
@@ -1083,7 +930,7 @@ namespace Algorithms
             }
         }
 
-        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown2_ValueChanged(object sender, EventArgs e)
         {
             numericUpDown3.Maximum = numericUpDown2.Value;
             numericUpDown4.Maximum = numericUpDown2.Value;
@@ -1100,7 +947,7 @@ namespace Algorithms
             oldValueCount = dataGridView2.ColumnCount - 1;
         }
 
-        private void numericUpDown2_KeyPress(object sender, KeyPressEventArgs e)
+        private void NumericUpDown2_KeyPress(object sender, KeyPressEventArgs e)
         {
             if ((e.KeyChar < 51 && e.KeyChar > 57) && e.KeyChar != 8)
             {
@@ -1108,7 +955,7 @@ namespace Algorithms
             }
         }
 
-        private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
@@ -1131,7 +978,7 @@ namespace Algorithms
             }
         }
 
-        private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (!semaphore && cell.ColumnNumber != 0 && cell.RowNumber != 0)
             {
@@ -1201,13 +1048,13 @@ namespace Algorithms
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             CreateEdges();
             ShowGraph(graph);
         }
 
-        private void numericUpDown3_KeyPress(object sender, KeyPressEventArgs e)
+        private void NumericUpDown3_KeyPress(object sender, KeyPressEventArgs e)
         {
             if ((e.KeyChar < 49 && e.KeyChar > 57) && e.KeyChar != 8)
             {
@@ -1215,7 +1062,7 @@ namespace Algorithms
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             int left = Convert.ToInt32(numericUpDown3.Value);
             int right = Convert.ToInt32(numericUpDown4.Value);
@@ -1247,8 +1094,7 @@ namespace Algorithms
                 }
                 else
                 {
-                    int distance;
-                    int[,] pathFloyd = AlgorithmFloyd(massiv, left - 1, right - 1, out distance);
+                    int[,] pathFloyd = AlgorithmFloyd(massiv, left - 1, right - 1, out int distance);
                     if (distance != 0)
                     {
                         UpdateLabel(left, right, distance);
@@ -1285,325 +1131,304 @@ namespace Algorithms
             }
             return true;
         }
-    
-    private void button5_Click(object sender, EventArgs e)
-    {
-        CreateEdges();
-        SetEdgeColor(path, Color.Red);
-        ShowGraph(graph);
-        SetEdgeColor(path, Color.Black);
-    }
 
-    private void button6_Click(object sender, EventArgs e)
-    {
-        int[,] graph = AlgorithmFloyd(GetMassiv(dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1));
-        int[] maxDistances = new int[graph.GetLength(1)];
-        for (int i = 0; i < maxDistances.Length; i++)
+        private void Button5_Click(object sender, EventArgs e)
         {
-            maxDistances[i] = MaxInColumn(i, graph);
+            CreateEdges();
+            SetEdgeColor(path, Color.Red);
+            ShowGraph(graph);
+            SetEdgeColor(path, Color.Black);
         }
-        UpdateLabel(IndexMinInMassiv(maxDistances));
-    }
 
-    private void pictureBox1_Paint(object sender, PaintEventArgs e)
-    {
-        graphics.Clear(Drawing.Color.White);
-        if (drawPolygon)
+        private void Button6_Click(object sender, EventArgs e)
         {
-            graphics.FillPolygon(Drawing.Brushes.Red, points.ToArray());
-        }
-        for (int i = 0; i < points.Count && !drawPolygon; i++)
-        {
-            graphics.DrawEllipse(Drawing.Pens.Red, points[i].X, points[i].Y, 1, 1);
-            graphics.DrawString(i.ToString(), new Drawing.Font("Courier New", 10, Drawing.FontStyle.Italic), Drawing.Brushes.Black, points[i]);
-        }
-        pictureBox1.Image = bitmap;
-    }
-
-    private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-    {
-        if (e.Button == System.Windows.Forms.MouseButtons.Right)
-        {
-            if (points.Count > 2)
+            int[,] graph = AlgorithmFloyd(GetMassiv(dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1));
+            int[] maxDistances = new int[graph.GetLength(1)];
+            for (int i = 0; i < maxDistances.Length; i++)
             {
-                drawPolygon = true;
+                maxDistances[i] = MaxInColumn(i, graph);
             }
+            UpdateLabel(IndexMinInMassiv(maxDistances));
         }
-        else if (e.Button == System.Windows.Forms.MouseButtons.Left)
+
+        private void PictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            graphics.Clear(Drawing.Color.White);
             if (drawPolygon)
+            {
+                graphics.FillPolygon(Drawing.Brushes.Red, points.ToArray());
+            }
+            for (int i = 0; i < points.Count && !drawPolygon; i++)
+            {
+                graphics.DrawEllipse(Drawing.Pens.Red, points[i].X, points[i].Y, 1, 1);
+                graphics.DrawString(i.ToString(), new Drawing.Font("Courier New", 10, Drawing.FontStyle.Italic), Drawing.Brushes.Black, points[i]);
+            }
+            pictureBox1.Image = bitmap;
+        }
+
+        private void PictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                if (points.Count > 2)
+                {
+                    drawPolygon = true;
+                }
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                if (drawPolygon)
+                {
+                    points.Clear();
+                    drawPolygon = false;
+                    label13.Text = string.Empty;
+                }
+                points.Add(new Drawing.Point(e.X, e.Y));
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
             {
                 points.Clear();
                 drawPolygon = false;
                 label13.Text = string.Empty;
             }
-            points.Add(new Drawing.Point(e.X, e.Y));
+            pictureBox1.Invalidate();
         }
-        else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
-        {
-            points.Clear();
-            drawPolygon = false;
-            label13.Text = string.Empty;
-        }
-        pictureBox1.Invalidate();
-    }
 
-    private void button7_Click(object sender, EventArgs e)
-    {
-        if (drawPolygon)
+        private void Button7_Click(object sender, EventArgs e)
         {
-            int count = 0;
-            for (int i = 0; i < bitmap.Width; i++)
+            if (drawPolygon)
             {
-                for (int j = 0; j < bitmap.Height; j++)
+                int count = 0;
+                for (int i = 0; i < bitmap.Width; i++)
                 {
-                    Drawing.Color color = bitmap.GetPixel(i, j);
-                    if (color.R == 255 && color.G == 0 && color.B == 0)
+                    for (int j = 0; j < bitmap.Height; j++)
                     {
-                        count++;
+                        Drawing.Color color = bitmap.GetPixel(i, j);
+                        if (color.R == 255 && color.G == 0 && color.B == 0)
+                        {
+                            count++;
+                        }
                     }
                 }
+                double square = (double)numericUpDown5.Value * (double)numericUpDown6.Value * count / (bitmap.Width * bitmap.Height);
+                label13.Text = string.Format("{0:f2}", square);
             }
-            double square = (double)numericUpDown5.Value * (double)numericUpDown6.Value * count / (bitmap.Width * bitmap.Height);
-            label13.Text = string.Format("{0:f2}", square);
         }
-    }
 
-    private void button8_Click(object sender, EventArgs e)
-    {
-        startPosition = null;
-        finishPosition = null;
-        graphics3 = null;
-        map = GenerateLabirint((int)numericUpDown7.Value, (int)numericUpDown8.Value);
-        graphics2 = panel1.CreateGraphics();
-        panel1.Invalidate();
-        panel2.Invalidate();
-    }
-
-    private void panel1_Paint(object sender, PaintEventArgs e)
-    {
-        if (graphics2 != null)
+        private void Panel3_Paint(object sender, PaintEventArgs e)
         {
-            int width = map.GetLength(0);
-            int height = map.GetLength(1);
-            float widthBlock = (float)(panel1.Width * 1.0f / width);
-            float heightBlock = (float)(panel1.Height * 1.0f / height);
-            for (int i = 0; i < width; i++)
+            for (int i = 0; i < rombMesh.GetLength(0); i++)
             {
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < rombMesh.GetLength(1); j++)
                 {
-                    switch (map[i, j].Value)
-                    {
-                        case -1:
-                            graphics2.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                            break;
-                        default:
-                            graphics2.FillRectangle(Drawing.Brushes.Black, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                            break;
-                    }
+                    float d = (float)rombMesh[i, j].Radius * 2;
+                    e.Graphics.DrawEllipse(Drawing.Pens.Black, (float)(rombMesh[i, j].CenterPoint.X - rombMesh[i, j].Radius), (float)(rombMesh[i, j].CenterPoint.Y - rombMesh[i, j].Radius), d, d);
+                    e.Graphics.DrawPolygon(Drawing.Pens.Black, rombMesh[i, j].Points);
                 }
             }
-            if (startPosition != null)
+            foreach (Sprait item in objects)
             {
-                graphics2.FillRectangle(Drawing.Brushes.Yellow, new Drawing.RectangleF(startPosition.X * widthBlock, startPosition.Y * heightBlock, widthBlock, heightBlock));
-            }
-            if (finishPosition != null)
-            {
-                graphics2.FillRectangle(Drawing.Brushes.Red, new Drawing.RectangleF(finishPosition.X * widthBlock, finishPosition.Y * heightBlock, widthBlock, heightBlock));
+                e.Graphics.DrawImage(item.Image, item.Point);
             }
         }
-    }
 
-    private void panel2_Paint(object sender, PaintEventArgs e)
-    {
-        if (graphics3 != null)
+        private void Panel3_MouseMove(object sender, MouseEventArgs e)
         {
-            int width = map1.GetLength(0);
-            int height = map1.GetLength(1);
-            float widthBlock = (float)(panel1.Width * 1.0f / width);
-            float heightBlock = (float)(panel1.Height * 1.0f / height);
-            for (int i = 0; i < width; i++)
+            label16.Text = e.Location.ToString();
+            Drawing.Point point = Romb.Check(rombMesh, e.Location);
+            if (point.X != -1)
             {
-                for (int j = 0; j < height; j++)
+                label17.Text = point.ToString();
+            }
+            else label17.Text = string.Empty;
+        }
+
+        private void Panel3_MouseLeave(object sender, EventArgs e)
+        {
+            label17.Text = string.Empty;
+            label16.Text = string.Empty;
+        }
+
+        private void Panel3_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Drawing.Point coordinate = Romb.Check(rombMesh, e.Location);
+            if (coordinate.X != -1)
+            {
+                Drawing.PointF pilot = rombMesh[coordinate.X, coordinate.Y].CenterPoint;
+                objects.Add(new Sprait(Properties.Resources.Tree, new Drawing.PointF(pilot.X - Properties.Resources.Tree.Width / 2, pilot.Y - Properties.Resources.Tree.Height)));
+                objects = objects.ToArray().OrderBy(x => x.Point.Y).ThenBy(x => x.Point.X).ToList();
+                panel3.Invalidate();
+            }
+        }
+
+        private void Button10_Click(object sender, EventArgs e)
+        {
+            if (richTextBox2.Text.Length > 0)
+            {
+                int key = Convert.ToInt32(numericUpDown9.Value);
+                byte[] text;
+                switch (comboBox1.SelectedIndex)
                 {
-                    switch (map1[i, j].Value)
-                    {
-                        case 0:
-                            graphics3.FillRectangle(Drawing.Brushes.Yellow, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                            break;
-                        case -1:
-                            graphics3.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                            break;
-                        case -2:
-                            graphics3.FillRectangle(Drawing.Brushes.Red, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                            break;
-                        case -3:
-                            graphics3.FillRectangle(Drawing.Brushes.Blue, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                            break;
-                        case -4:
-                            graphics3.FillRectangle(Drawing.Brushes.Black, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                            break;
-                        default:
-                            graphics3.FillRectangle(Drawing.Brushes.White, new Drawing.RectangleF(i * widthBlock, j * heightBlock, widthBlock, heightBlock));
-                            break;
-                    }
+                    case 0:
+                        text = Encoding.ASCII.GetBytes(richTextBox2.Text);
+                        break;
+                    case 1:
+                        text = Encoding.Unicode.GetBytes(richTextBox2.Text);
+                        break;
+                    case 2:
+                        text = Encoding.BigEndianUnicode.GetBytes(richTextBox2.Text);
+                        break;
+                    case 3:
+                        text = Encoding.UTF7.GetBytes(richTextBox2.Text);
+                        break;
+                    case 4:
+                        text = Encoding.UTF8.GetBytes(richTextBox2.Text);
+                        break;
+                    case 5:
+                        text = Encoding.UTF32.GetBytes(richTextBox2.Text);
+                        break;
+                    default:
+                        text = Encoding.Default.GetBytes(richTextBox2.Text);
+                        break;
                 }
-            }
-        }
-    }
-
-    private void panel1_MouseClick(object sender, MouseEventArgs e)
-    {
-        if (graphics2 != null)
-        {
-            if (e.Button == System.Windows.Forms.MouseButtons.Middle)
-            {
-                startPosition = null;
-                finishPosition = null;
-                panel1.Invalidate();
-            }
-            else
-            {
-                int width = map.GetLength(0);
-                int height = map.GetLength(1);
-                double widthBlock = (double)(panel2.Width * 1.0f / width);
-                double heightBlock = (double)(panel2.Height * 1.0f / height);
-                int x = (int)Math.Truncate((double)e.X / widthBlock);
-                int y = (int)Math.Truncate((double)e.Y / heightBlock);
-                if (map[x, y].Value != -4)
+                byte[] text2 = new byte[text.Length];
+                for (int i = 0; i < text2.Length; i++)
                 {
-                    if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                    {
-                        startPosition = new Cell(x, y);
-                    }
-                    else if (e.Button == System.Windows.Forms.MouseButtons.Right)
-                    {
-                        finishPosition = new Cell(x, y);
-                    }
-                    panel1.Invalidate();
+                    text2[i] = (byte)(text[i] ^ key);
+                }
+                switch (comboBox1.SelectedIndex)
+                {
+                    case 0:
+                        richTextBox3.Text = Encoding.ASCII.GetString(text2);
+                        break;
+                    case 1:
+                        richTextBox3.Text = Encoding.Unicode.GetString(text2);
+                        break;
+                    case 2:
+                        richTextBox3.Text = Encoding.BigEndianUnicode.GetString(text2);
+                        break;
+                    case 3:
+                        richTextBox3.Text = Encoding.UTF7.GetString(text2);
+                        break;
+                    case 4:
+                        richTextBox3.Text = Encoding.UTF8.GetString(text2);
+                        break;
+                    case 5:
+                        richTextBox3.Text = Encoding.UTF32.GetString(text2);
+                        break;
+                    default:
+                        richTextBox3.Text = Encoding.Default.GetString(text2);
+                        break;
                 }
             }
         }
-    }
 
-    private void button9_Click(object sender, EventArgs e)
-    {
-        graphics3 = null;
-        map1 = WavePropagation(Cell.CopyMatrix(map), new Cell(startPosition), new Cell(finishPosition));
-        if (map1 != null)
+        private void Button8_Click(object sender, EventArgs e)
         {
-            graphics3 = panel2.CreateGraphics();
-        }
-        panel2.Invalidate();
-    }
-
-    private void panel3_Paint(object sender, PaintEventArgs e)
-    {
-        for (int i = 0; i < rombMesh.GetLength(0); i++)
-        {
-            for (int j = 0; j < rombMesh.GetLength(1); j++)
+            double[] x = new double[dataGridView3.RowCount];
+            double[] y = new double[dataGridView3.RowCount];
+            for (int i = 0; i < dataGridView3.RowCount; i++)
             {
-                float d = (float)rombMesh[i, j].Radius * 2;
-                e.Graphics.DrawEllipse(Drawing.Pens.Black, (float)(rombMesh[i, j].CenterPoint.X - rombMesh[i, j].Radius), (float)(rombMesh[i, j].CenterPoint.Y - rombMesh[i, j].Radius), d, d);
-                e.Graphics.DrawPolygon(Drawing.Pens.Black, rombMesh[i, j].Points);
+                try
+                {
+                    x[i] = Convert.ToDouble(dataGridView3[0, i].Value);
+                }
+                catch { }
+                try
+                {
+                    y[i] = Convert.ToDouble(dataGridView3[1, i].Value);
+                }
+                catch { }
+            }
+            int n = Convert.ToInt32(numericUpDown7.Value);
+            double[] a = MethodMinSquares(x, y, n);
+            listBox1.Items.Clear();
+            foreach (double item in a)
+            {
+                listBox1.Items.Add(item);
             }
         }
-        foreach (Sprait item in objects)
-        {
-            e.Graphics.DrawImage(item.Image, item.Point);
-        }
-    }
 
-    private void panel3_MouseMove(object sender, MouseEventArgs e)
-    {
-        label16.Text = e.Location.ToString();
-        Drawing.Point point = Romb.Check(rombMesh, e.Location);
-        if (point.X != -1)
+        /// <summary>
+        /// Метод минимальных квадратов
+        /// </summary>
+        /// <param name="x">Координаты X</param>
+        /// <param name="y">Координаты Y</param>
+        /// <param name="n">Степень полинома</param>
+        /// <returns>Коэффициенты полинома</returns>
+        private double[] MethodMinSquares(double[] x, double[] y, int n)
         {
-            label17.Text = point.ToString();
-        }
-        else label17.Text = string.Empty;
-    }
-
-    private void panel3_MouseLeave(object sender, EventArgs e)
-    {
-        label17.Text = string.Empty;
-        label16.Text = string.Empty;
-    }
-
-    private void panel3_MouseDoubleClick(object sender, MouseEventArgs e)
-    {
-        Drawing.Point coordinate = Romb.Check(rombMesh, e.Location);
-        if (coordinate.X != -1)
-        {
-            Drawing.PointF pilot = rombMesh[coordinate.X, coordinate.Y].CenterPoint;
-            objects.Add(new Sprait(Properties.Resources.Tree, new Drawing.PointF(pilot.X - Properties.Resources.Tree.Width / 2, pilot.Y - Properties.Resources.Tree.Height)));
-            objects = objects.ToArray().OrderBy(x => x.Point.Y).ThenBy(x => x.Point.X).ToList();
-            panel3.Invalidate();
-        }
-    }
-
-    private void button10_Click(object sender, EventArgs e)
-    {
-        if (richTextBox2.Text.Length > 0)
-        {
-            int key = Convert.ToInt32(numericUpDown9.Value);
-            byte[] text;
-            switch (comboBox1.SelectedIndex)
+            int m = n + 1;
+            double[,] matrix = new double[m, m];
+            double[] b = new double[m];
+            double[] a = new double[m];
+            for (int i = 0; i < x.Length; i++)
             {
-                case 0:
-                    text = Encoding.ASCII.GetBytes(richTextBox2.Text);
-                    break;
-                case 1:
-                    text = Encoding.Unicode.GetBytes(richTextBox2.Text);
-                    break;
-                case 2:
-                    text = Encoding.BigEndianUnicode.GetBytes(richTextBox2.Text);
-                    break;
-                case 3:
-                    text = Encoding.UTF7.GetBytes(richTextBox2.Text);
-                    break;
-                case 4:
-                    text = Encoding.UTF8.GetBytes(richTextBox2.Text);
-                    break;
-                case 5:
-                    text = Encoding.UTF32.GetBytes(richTextBox2.Text);
-                    break;
-                default:
-                    text = Encoding.Default.GetBytes(richTextBox2.Text);
-                    break;
+                for (int j = i; j >= 1; j--)
+                {
+                    if (x[j] < x[j - 1])
+                    {
+                        double t = x[j - 1];
+                        x[j - 1] = x[j];
+                        x[j] = t;
+                        t = y[j - 1];
+                        y[j - 1] = y[j];
+                        y[j] = t;
+                    }
+                }
             }
-            byte[] text2 = new byte[text.Length];
-            for (int i = 0; i < text2.Length; i++)
+            for (int i = 0; i < m; i++)
             {
-                text2[i] = (byte)(text[i] ^ key);
+                for (int j = 0; j < m; j++)
+                {
+                    for (int k = 0; k < x.Length; k++)
+                    {
+                        matrix[i, j] += Math.Pow(x[k], i + j);
+                    }
+                }
             }
-            switch (comboBox1.SelectedIndex)
+            for (int i = 0; i < m; i++)
             {
-                case 0:
-                    richTextBox3.Text = Encoding.ASCII.GetString(text2);
-                    break;
-                case 1:
-                    richTextBox3.Text = Encoding.Unicode.GetString(text2);
-                    break;
-                case 2:
-                    richTextBox3.Text = Encoding.BigEndianUnicode.GetString(text2);
-                    break;
-                case 3:
-                    richTextBox3.Text = Encoding.UTF7.GetString(text2);
-                    break;
-                case 4:
-                    richTextBox3.Text = Encoding.UTF8.GetString(text2);
-                    break;
-                case 5:
-                    richTextBox3.Text = Encoding.UTF32.GetString(text2);
-                    break;
-                default:
-                    richTextBox3.Text = Encoding.Default.GetString(text2);
-                    break;
+                for (int k = 0; k < x.Length; k++)
+                {
+                    b[i] += Math.Pow(x[k], i) * y[k];
+                }
             }
+            for (int k = 0; k < m; k++)
+            {
+                for (int i = k + 1; i < m; i++)
+                {
+                    double tmp = matrix[i, k] / matrix[k, k];
+                    for (int j = k; j < m; j++)
+                    {
+                        matrix[i, j] -= tmp * matrix[k, j];
+                    }
+                    b[i] -= tmp * b[k];
+                }
+            }
+            for (int i = n; i >= 0; i--)
+            {
+                double tmp = 0;
+                for (int j = i; j < m; j++)
+                {
+                    tmp += matrix[i, j] * a[j];
+                }
+                a[i] = (b[i] - tmp) / matrix[i, i];
+            }
+            return a;
+        }
+
+        private void NumericUpDown8_ValueChanged(object sender, EventArgs e)
+        {
+            while (dataGridView3.Rows.Count < numericUpDown8.Value)
+            {
+                dataGridView3.Rows.Add();
+            }
+            while (dataGridView3.Rows.Count > numericUpDown8.Value)
+            {
+                dataGridView3.Rows.RemoveAt(dataGridView3.Rows.Count - 1);
+            }
+            numericUpDown7.Maximum = numericUpDown8.Value - 1;
         }
     }
 }
-}
-
