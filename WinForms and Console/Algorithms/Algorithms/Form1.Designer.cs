@@ -54,6 +54,7 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.radioButton14 = new System.Windows.Forms.RadioButton();
             this.button6 = new System.Windows.Forms.Button();
             this.radioButton8 = new System.Windows.Forms.RadioButton();
             this.radioButton7 = new System.Windows.Forms.RadioButton();
@@ -421,6 +422,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.radioButton14);
             this.tabPage3.Controls.Add(this.button6);
             this.tabPage3.Controls.Add(this.radioButton8);
             this.tabPage3.Controls.Add(this.radioButton7);
@@ -441,6 +443,16 @@
             this.tabPage3.Size = new System.Drawing.Size(616, 416);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Граф";
+            // 
+            // radioButton14
+            // 
+            this.radioButton14.AutoSize = true;
+            this.radioButton14.Location = new System.Drawing.Point(11, 385);
+            this.radioButton14.Name = "radioButton14";
+            this.radioButton14.Size = new System.Drawing.Size(166, 17);
+            this.radioButton14.TabIndex = 16;
+            this.radioButton14.Text = "Алгоритм Форда-Беллмана";
+            this.radioButton14.UseVisualStyleBackColor = true;
             // 
             // button6
             // 
@@ -476,7 +488,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(11, 385);
+            this.button5.Location = new System.Drawing.Point(508, 388);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(100, 23);
             this.button5.TabIndex = 12;
@@ -1151,6 +1163,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown8;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.RadioButton radioButton13;
+        private System.Windows.Forms.RadioButton radioButton14;
     }
 }
 

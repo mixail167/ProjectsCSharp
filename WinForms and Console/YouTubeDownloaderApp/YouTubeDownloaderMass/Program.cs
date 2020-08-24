@@ -88,12 +88,13 @@ namespace YouTubeDownloaderMass
                                         {
                                             string url = item.Substring(0, item.IndexOf("=") + 35);
                                             HttpRequest request = new HttpRequest();
+                                            request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36");
                                             string response = request.Get(url).ToString();
                                             if (response != null && response != string.Empty)
                                             {
                                                 HtmlDocument document = new HtmlDocument();
                                                 document.LoadHtml(response);
-                                                IEnumerable<HtmlNode> htmlNodes = document.DocumentNode.QuerySelectorAll("a.pl-video-title-link.yt-uix-tile-link.yt-uix-sessionlink.spf-link");
+                                                IEnumerable<HtmlNode> htmlNodes = document.DocumentNode.QuerySelectorAll("pl-video-title-link.yt-uix-tile-link.yt-uix-sessionlink.spf-link");
                                                 if (htmlNodes != null && htmlNodes.Count() > 0)
                                                 {
                                                     foreach (HtmlNode itemNode in htmlNodes)
@@ -107,7 +108,7 @@ namespace YouTubeDownloaderMass
                                                 }
                                                 else
                                                 {
-                                                    Message(string.Format("Видео в плейлисте {0} не найдено.", item), true);
+                                                    Message(string.Format("Видео в плейлисте {0} не найдено.", url), true);
                                                 }
                                             }
                                             else

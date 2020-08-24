@@ -1092,6 +1092,22 @@ namespace Algorithms
                         ButtonVisible(false);
                     }
                 }
+                else if (radioButton14.Checked)
+                {
+                    Tuple<int, int, int>[] edges = GetEdges(massiv);
+                    int[] pathFordBellman = AlgorithmFordBellman(edges, left - 1, right - 1, massiv.GetLength(0), out int distance);
+                    if (distance != int.MaxValue)
+                    {
+                        UpdateLabel(left, right, distance);
+                        path = GetPathFordBellman(pathFordBellman, right - 1);
+                        ButtonVisible(true);
+                    }
+                    else
+                    {
+                        UpdateLabel(left, right, double.PositiveInfinity);
+                        ButtonVisible(false);
+                    }
+                }
                 else
                 {
                     int[,] pathFloyd = AlgorithmFloyd(massiv, left - 1, right - 1, out int distance);
@@ -1113,6 +1129,77 @@ namespace Algorithms
                 UpdateLabel("Ошибка: Начальный и конечный узлы равны.");
                 ButtonVisible(false);
             }
+        }
+
+        private int[] GetPathFordBellman(int[] pathFordBellman, int right)
+        {
+            List<int> path = new List<int>();
+            for (int i = right; i != -1; i = pathFordBellman[i])
+            {
+                path.Add(i + 1);
+            }
+            path.Reverse();
+            return path.ToArray();
+        }
+
+        /// <summary>
+        /// Алгоритм Форда-Беллмана 
+        /// </summary>
+        /// <param name="edges">Массив расстояний между узлами</param>
+        /// <param name="left">Начальный узел</param>
+        /// <param name="right">Конечный узел</param>
+        /// <param name="distance">Минимальное расстояние от начального до конечного узла</param>
+        /// <returns></returns>
+        private int[] AlgorithmFordBellman(Tuple<int, int, int>[] edges, int left, int right, int n, out int distance)
+        {
+            int[] d = new int[n];
+            int[] p = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                d[i] = int.MaxValue;
+                p[i] = -1;
+            }
+            d[left] = 0;
+            while (true)
+            {
+                bool any = false;
+                for (int j = 0; j < edges.Length; ++j)
+                {
+                    if (d[edges[j].Item1] < int.MaxValue)
+                    {
+                        if (d[edges[j].Item2] > d[edges[j].Item1] + edges[j].Item3)
+                        {
+                            d[edges[j].Item2] = d[edges[j].Item1] + edges[j].Item3;
+                            p[edges[j].Item2] = edges[j].Item1;
+                            any = true;
+                        }
+                    }
+                }
+                if (!any)
+                {
+                    break;
+                }
+            }
+            distance = d[right];
+            return p;
+        }
+
+        private Tuple<int, int, int>[] GetEdges(int[,] massiv)
+        {
+            List<Tuple<int, int, int>> edges = new List<Tuple<int, int, int>>();
+            int width = massiv.GetLength(0);
+            int height = massiv.GetLength(1);
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (massiv[i, j] > 0)
+                    {
+                        edges.Add(new Tuple<int, int, int>(i, j, massiv[i, j]));
+                    }
+                }
+            }
+            return edges.ToArray();
         }
 
         private bool CheckGraph()
