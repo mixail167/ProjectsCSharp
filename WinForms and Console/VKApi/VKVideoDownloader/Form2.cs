@@ -21,7 +21,7 @@ namespace VKVideoDownloader
         public Form2(string access_token, string id)
         {
             InitializeComponent();
-            this.StyleManager = metroStyleManager1;
+            StyleManager = metroStyleManager1;
             this.id = 0;  
             list = elementHost1.Child as ListViewWPF;
             list.CountChanged += List_CountChanged;
@@ -202,20 +202,20 @@ namespace VKVideoDownloader
         {
             if (list.ItemsSource != null && list.ItemsSource.Count != 0)
             {
-                List<Video> videos = list.ItemsSource as List<Video>;
-                if (pictureBox.Tag as Nullable<bool> == true)
+                List<Video> videos = list.ItemsSource;
+                if (pictureBox.Tag as bool? == true)
                 {
                     SetImage(pictureBox, Resources.strelka2);
                     switch (index)
                     {
                         case 0:
-                            list.ItemsSource = videos.OrderByDescending(x => x.Title).ToList<Video>();
+                            list.ItemsSource = videos.OrderByDescending(x => x.Title).ToList();
                             break;
                         case 1:
-                            list.ItemsSource = videos.OrderByDescending(x => x.DateForSort).ToList<Video>();
+                            list.ItemsSource = videos.OrderByDescending(x => x.DateForSort).ToList();
                             break;
                         case 2:
-                            list.ItemsSource = videos.OrderByDescending(x => x.DurationForSort).ToList<Video>();
+                            list.ItemsSource = videos.OrderByDescending(x => x.DurationForSort).ToList();
                             break;
                     }
                 }
@@ -225,13 +225,13 @@ namespace VKVideoDownloader
                     switch (index)
                     {
                         case 0:
-                            list.ItemsSource = videos.OrderBy(x => x.Title).ToList<Video>();
+                            list.ItemsSource = videos.OrderBy(x => x.Title).ToList();
                             break;
                         case 1:
-                            list.ItemsSource = videos.OrderBy(x => x.DateForSort).ToList<Video>();
+                            list.ItemsSource = videos.OrderBy(x => x.DateForSort).ToList();
                             break;
                         case 2:
-                            list.ItemsSource = videos.OrderBy(x => x.DurationForSort).ToList<Video>();
+                            list.ItemsSource = videos.OrderBy(x => x.DurationForSort).ToList();
                             break;
                     }
                 }
@@ -262,7 +262,7 @@ namespace VKVideoDownloader
                 pictureBox2.Tag = null;
             }
             pictureBox.Image = image;
-            if (pictureBox.Tag as Nullable<bool> == true)
+            if (pictureBox.Tag as bool? == true)
             {
                 pictureBox.Tag = false;
             }
@@ -299,7 +299,7 @@ namespace VKVideoDownloader
             }
             else if (list.Source != null)
             {
-                List<Video> videos = list.Source.Where<Video>(x => x.Title.IndexOf(metroTextBoxPlaceHolder4.Text, StringComparison.CurrentCultureIgnoreCase) != -1).ToList<Video>();
+                List<Video> videos = list.Source.Where(x => x.Title.IndexOf(metroTextBoxPlaceHolder4.Text, StringComparison.CurrentCultureIgnoreCase) != -1).ToList();
                 SetSort(videos);
                 metroLabel8.ForeColor = Color.White;
                 foreach (object item in list.listView.Items)
@@ -345,31 +345,31 @@ namespace VKVideoDownloader
 
         private void SetSort(List<Video> videos)
         {
-            switch (pictureBox2.Tag as Nullable<bool>)
+            switch (pictureBox2.Tag as bool?)
             {
                 case true:
-                    list.ItemsSource = videos.OrderBy(x => x.Title).ToList<Video>();
+                    list.ItemsSource = videos.OrderBy(x => x.Title).ToList();
                     return;
                 case false:
-                    list.ItemsSource = videos.OrderByDescending(x => x.Title).ToList<Video>();
+                    list.ItemsSource = videos.OrderByDescending(x => x.Title).ToList();
                     return;
             }
-            switch (pictureBox3.Tag as Nullable<bool>)
+            switch (pictureBox3.Tag as bool?)
             {
                 case true:
-                    list.ItemsSource = videos.OrderBy(x => x.DateForSort).ToList<Video>();
+                    list.ItemsSource = videos.OrderBy(x => x.DateForSort).ToList();
                     return;
                 case false:
-                    list.ItemsSource = videos.OrderByDescending(x => x.DateForSort).ToList<Video>();
+                    list.ItemsSource = videos.OrderByDescending(x => x.DateForSort).ToList();
                     return;
             }
-            switch (pictureBox4.Tag as Nullable<bool>)
+            switch (pictureBox4.Tag as bool?)
             {
                 case true:
-                    list.ItemsSource = videos.OrderBy(x => x.DurationForSort).ToList<Video>();
+                    list.ItemsSource = videos.OrderBy(x => x.DurationForSort).ToList();
                     return;
                 case false:
-                    list.ItemsSource = videos.OrderByDescending(x => x.DurationForSort).ToList<Video>();
+                    list.ItemsSource = videos.OrderByDescending(x => x.DurationForSort).ToList();
                     return;
             }
             list.SetSource(videos);
@@ -413,7 +413,7 @@ namespace VKVideoDownloader
         {
             if (list.Source != null)
             {
-                List<Video> videos = list.Source.Where<Video>(x => x.IsChecked).ToList<Video>();
+                List<Video> videos = list.Source.Where(x => x.IsChecked).ToList();
                 SetSort(videos);
             }
         }
@@ -423,7 +423,7 @@ namespace VKVideoDownloader
             List<Video> videos = list.Source;
             if (videos != null && videos.Count > 0)
             {
-                videos = videos.Where<Video>(x => x.IsChecked == true).ToList<Video>();
+                videos = videos.Where(x => x.IsChecked == true).ToList();
                 if (videos != null && videos.Count > 0)
                 {
                     Form5 form5 = new Form5(videos);

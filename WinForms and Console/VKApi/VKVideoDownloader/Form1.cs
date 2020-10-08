@@ -17,7 +17,7 @@ namespace VKVideoDownloader
         public Form1(bool firstForm)
         {
             InitializeComponent();
-            this.StyleManager = metroStyleManager1;
+            StyleManager = metroStyleManager1;
             metroCheckBox1.Checked = Settings.Default.Remember;
             if (metroCheckBox1.Checked)
             {
@@ -30,7 +30,7 @@ namespace VKVideoDownloader
         {
             metroProgressSpinner1.Visible = true;
             metroButton1.Enabled = false;
-            this.Refresh();
+            Refresh();
             if (InterNet.IsConnected)
             {
                 if (Functions.CheckValid(metroTextBoxPlaceHolder1.Text, "^[0-9]{12}$") && Functions.CheckValid(metroTextBoxPlaceHolder2.Text, "^[0-9a-zA-Z]{3,20}$"))
@@ -51,7 +51,7 @@ namespace VKVideoDownloader
                             }
                             Settings.Default.Remember = metroCheckBox1.Checked;
                             Settings.Default.Save(); 
-                            this.DialogResult = DialogResult.OK;
+                            DialogResult = DialogResult.OK;
                             Close();
                         }
                     }
@@ -61,7 +61,7 @@ namespace VKVideoDownloader
                         {
                             switch ((exception.Response as HttpWebResponse).StatusCode)
                             {
-                                case System.Net.HttpStatusCode.Unauthorized:
+                                case HttpStatusCode.Unauthorized:
                                     Error("Неверный логин и/или пароль!");
                                     break;
                                 default:
@@ -100,14 +100,14 @@ namespace VKVideoDownloader
             metroLabel3.Text = text;
             metroProgressSpinner1.Visible = false;
             metroButton1.Enabled = true;
-            this.Refresh();
+            Refresh();
         }
 
-        private void Form1_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.DialogResult == DialogResult.OK && firstForm)
+            if (DialogResult == DialogResult.OK && firstForm)
             {
-                this.Hide();
+                Hide();
                 (new Form2(access_token, id)).ShowDialog();
             }
         }

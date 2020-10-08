@@ -34,6 +34,10 @@
             this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.metroLabel12 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel11 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel10 = new MetroFramework.Controls.MetroLabel();
+            this.metroTextBoxPlaceHolder5 = new VKVideoDownloader.MetroTextBoxPlaceHolder();
             this.metroProgressBar2 = new MetroFramework.Controls.MetroProgressBar();
             this.metroProgressBar1 = new MetroFramework.Controls.MetroProgressBar();
             this.metroButton7 = new MetroFramework.Controls.MetroButton();
@@ -41,14 +45,10 @@
             this.metroButton6 = new MetroFramework.Controls.MetroButton();
             this.metroLabel9 = new MetroFramework.Controls.MetroLabel();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.metroLabel10 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel11 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel12 = new MetroFramework.Controls.MetroLabel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.очиститьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.metroTextBoxPlaceHolder5 = new VKVideoDownloader.MetroTextBoxPlaceHolder();
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -109,6 +109,60 @@
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Загрузка";
+            // 
+            // metroLabel12
+            // 
+            this.metroLabel12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.metroLabel12.CustomForeColor = true;
+            this.metroLabel12.ForeColor = System.Drawing.Color.White;
+            this.metroLabel12.Location = new System.Drawing.Point(6, 155);
+            this.metroLabel12.Name = "metroLabel12";
+            this.metroLabel12.Size = new System.Drawing.Size(588, 19);
+            this.metroLabel12.Style = MetroFramework.MetroColorStyle.Red;
+            this.metroLabel12.TabIndex = 21;
+            this.metroLabel12.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
+            // metroLabel11
+            // 
+            this.metroLabel11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.metroLabel11.CustomForeColor = true;
+            this.metroLabel11.ForeColor = System.Drawing.Color.White;
+            this.metroLabel11.Location = new System.Drawing.Point(6, 136);
+            this.metroLabel11.Name = "metroLabel11";
+            this.metroLabel11.Size = new System.Drawing.Size(588, 19);
+            this.metroLabel11.Style = MetroFramework.MetroColorStyle.Red;
+            this.metroLabel11.TabIndex = 20;
+            this.metroLabel11.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
+            // metroLabel10
+            // 
+            this.metroLabel10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.metroLabel10.CustomForeColor = true;
+            this.metroLabel10.ForeColor = System.Drawing.Color.White;
+            this.metroLabel10.Location = new System.Drawing.Point(6, 117);
+            this.metroLabel10.Name = "metroLabel10";
+            this.metroLabel10.Size = new System.Drawing.Size(588, 19);
+            this.metroLabel10.Style = MetroFramework.MetroColorStyle.Red;
+            this.metroLabel10.TabIndex = 19;
+            this.metroLabel10.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
+            // metroTextBoxPlaceHolder5
+            // 
+            this.metroTextBoxPlaceHolder5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.metroTextBoxPlaceHolder5.ForeColor = System.Drawing.Color.Gray;
+            this.metroTextBoxPlaceHolder5.Location = new System.Drawing.Point(117, 16);
+            this.metroTextBoxPlaceHolder5.Name = "metroTextBoxPlaceHolder5";
+            this.metroTextBoxPlaceHolder5.PlaceHolder = "Папка загрузки...";
+            this.metroTextBoxPlaceHolder5.Size = new System.Drawing.Size(400, 23);
+            this.metroTextBoxPlaceHolder5.Style = MetroFramework.MetroColorStyle.Red;
+            this.metroTextBoxPlaceHolder5.TabIndex = 18;
+            this.metroTextBoxPlaceHolder5.Text = "Папка загрузки...";
+            this.metroTextBoxPlaceHolder5.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.metroTextBoxPlaceHolder5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MetroTextBoxPlaceHolder3_KeyDown);
             // 
             // metroProgressBar2
             // 
@@ -195,45 +249,6 @@
             this.metroLabel9.Text = "Папка загрузки:";
             this.metroLabel9.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
-            // metroLabel10
-            // 
-            this.metroLabel10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroLabel10.CustomForeColor = true;
-            this.metroLabel10.ForeColor = System.Drawing.Color.White;
-            this.metroLabel10.Location = new System.Drawing.Point(6, 117);
-            this.metroLabel10.Name = "metroLabel10";
-            this.metroLabel10.Size = new System.Drawing.Size(588, 19);
-            this.metroLabel10.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroLabel10.TabIndex = 19;
-            this.metroLabel10.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
-            // metroLabel11
-            // 
-            this.metroLabel11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroLabel11.CustomForeColor = true;
-            this.metroLabel11.ForeColor = System.Drawing.Color.White;
-            this.metroLabel11.Location = new System.Drawing.Point(6, 136);
-            this.metroLabel11.Name = "metroLabel11";
-            this.metroLabel11.Size = new System.Drawing.Size(588, 19);
-            this.metroLabel11.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroLabel11.TabIndex = 20;
-            this.metroLabel11.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
-            // metroLabel12
-            // 
-            this.metroLabel12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroLabel12.CustomForeColor = true;
-            this.metroLabel12.ForeColor = System.Drawing.Color.White;
-            this.metroLabel12.Location = new System.Drawing.Point(6, 155);
-            this.metroLabel12.Name = "metroLabel12";
-            this.metroLabel12.Size = new System.Drawing.Size(588, 19);
-            this.metroLabel12.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroLabel12.TabIndex = 21;
-            this.metroLabel12.Theme = MetroFramework.MetroThemeStyle.Dark;
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.richTextBox1);
@@ -274,21 +289,6 @@
             this.очиститьToolStripMenuItem.Text = "Очистить";
             this.очиститьToolStripMenuItem.ToolTipText = "Очистить журнал";
             // 
-            // metroTextBoxPlaceHolder5
-            // 
-            this.metroTextBoxPlaceHolder5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroTextBoxPlaceHolder5.ForeColor = System.Drawing.Color.Gray;
-            this.metroTextBoxPlaceHolder5.Location = new System.Drawing.Point(117, 16);
-            this.metroTextBoxPlaceHolder5.Name = "metroTextBoxPlaceHolder5";
-            this.metroTextBoxPlaceHolder5.PlaceHolder = "Папка загрузки...";
-            this.metroTextBoxPlaceHolder5.Size = new System.Drawing.Size(400, 23);
-            this.metroTextBoxPlaceHolder5.Style = MetroFramework.MetroColorStyle.Red;
-            this.metroTextBoxPlaceHolder5.TabIndex = 18;
-            this.metroTextBoxPlaceHolder5.Text = "Папка загрузки...";
-            this.metroTextBoxPlaceHolder5.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroTextBoxPlaceHolder5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MetroTextBoxPlaceHolder3_KeyDown);
-            // 
             // Form5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -298,6 +298,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.metroLabel4);
             this.Controls.Add(this.pictureBox1);
+            this.MaximizeBox = false;
             this.Name = "Form5";
             this.Resizable = false;
             this.Style = MetroFramework.MetroColorStyle.Red;

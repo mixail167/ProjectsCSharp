@@ -116,16 +116,5 @@ namespace YoutubeExtractor
             return System.Web.HttpUtility.UrlEncode(url);
 #endif
         }
-
-        private static string ReadStreamFromResponse(WebResponse response)
-        {
-            using (Stream responseStream = response.GetResponseStream())
-            {
-                using (var sr = new StreamReader(responseStream))
-                {
-                    return sr.ReadToEnd();
-                }
-            }
-        }
     }
 }

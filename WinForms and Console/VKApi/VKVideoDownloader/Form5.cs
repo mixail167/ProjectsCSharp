@@ -19,7 +19,7 @@ namespace VKVideoDownloader
         public Form5(List<Video> list)
         {
             InitializeComponent();
-            this.StyleManager = metroStyleManager1;
+            StyleManager = metroStyleManager1;
             metroCheckBox1.Checked = Settings.Default.Remember1;
             if (metroCheckBox1.Checked)
             {

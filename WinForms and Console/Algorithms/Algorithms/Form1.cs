@@ -71,11 +71,10 @@ namespace Algorithms
                     for (int j = 0; j < n; j++)
                     {
                         int temp = graph[i, k] + graph[k, j];
-                        if (graph[i, k] != 0 && graph[k, j] != 0 && temp < graph[i, j])
+                        if (i != j && graph[i, k] != 0 && graph[k, j] != 0 && (temp < graph[i, j] || graph[i, j] == 0))
                         {
                             graph[i, j] = temp;
                             path[i, j] = k + 1;
-
                         }
                     }
                 }
@@ -428,28 +427,27 @@ namespace Algorithms
             return massiv;
         }
 
-        int Sift<T>(T[] massiv, int i, int N, bool revers) where T : IComparable<T>
+        T[] Sift<T>(T[] massiv, int n, int i, bool revers) where T : IComparable<T>
         {
-            int imax;
-            if (2 * i + 2 < N)
+            int largest = i;
+            int l = 2 * i + 1;
+            int r = 2 * i + 2;
+            if (l < n && ((revers && massiv[l].CompareTo(massiv[largest]) < 0) ||
+                        (!revers && massiv[l].CompareTo(massiv[largest]) > 0)))
             {
-                if ((!revers && massiv[2 * i + 1].CompareTo(massiv[2 * i + 2]) < 0) ||
-                    revers && massiv[2 * i + 1].CompareTo(massiv[2 * i + 2]) > 0)
-                    imax = 2 * i + 2;
-                else
-                    imax = 2 * i + 1;
+                largest = l;
             }
-            else
-                imax = 2 * i + 1;
-            if (imax >= N)
-                return i;
-            if ((!revers && massiv[i].CompareTo(massiv[imax]) < 0) || (revers && massiv[i].CompareTo(massiv[imax]) > 0))
+            if (r < n && ((revers && massiv[r].CompareTo(massiv[largest]) < 0) ||
+                        (!revers && massiv[r].CompareTo(massiv[largest]) > 0)))
             {
-                _ = Swap(massiv, i, imax);
-                if (imax < N / 2)
-                    i = imax;
+                largest = r;
             }
-            return i;
+            if (largest != i)
+            {
+                massiv = Swap(massiv, i, largest);
+                massiv = Sift(massiv, n, largest, revers);
+            }
+            return massiv;
         }
 
         /// <summary>
@@ -460,21 +458,14 @@ namespace Algorithms
         /// <returns>Отсортированный массив элементов</returns>
         public T[] HeapSort<T>(T[] massiv, bool revers) where T : IComparable<T>
         {
-            for (int i = massiv.Length / 2 - 1; i >= 0; --i)
+            for (int i = massiv.Length / 2 - 1; i >= 0; i--)
             {
-                int prev_i = i;
-                i = Sift(massiv, i, massiv.Length, revers);
-                if (prev_i != i) ++i;
+                massiv = Sift(massiv, massiv.Length, i, revers);
             }
-            for (int k = massiv.Length - 1; k > 0; --k)
+            for (int i = massiv.Length - 1; i >= 0; i--)
             {
-                massiv = Swap(massiv, 0, k);
-                int i = 0, prev_i = -1;
-                while (i != prev_i)
-                {
-                    prev_i = i;
-                    i = Sift(massiv, i, k, revers);
-                }
+                massiv = Swap(massiv, 0, i);
+                massiv = Sift(massiv, i, 0, revers);
             }
             return massiv;
         }

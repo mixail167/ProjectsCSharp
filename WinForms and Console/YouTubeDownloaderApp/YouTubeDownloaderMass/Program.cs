@@ -1,5 +1,6 @@
-﻿using Fizzler.Systems.HtmlAgilityPack;
-using HtmlAgilityPack;
+﻿using Google.Apis.Services;
+using Google.Apis.YouTube.v3;
+using Google.Apis.YouTube.v3.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,6 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Timers;
-using xNet;
 using YoutubeExtractor;
 
 namespace YouTubeDownloaderMass
@@ -30,8 +30,7 @@ namespace YouTubeDownloaderMass
             Console.Title = "YouTubeDownloader. Массовая загрузка видео";
             if (args.Length > 0)
             {
-                int description;
-                if (InternetGetConnectedState(out description, 0))
+                if (InternetGetConnectedState(out int description, 0))
                 {
                     if ((new Ping()).Send("www.youtube.com").Status == IPStatus.Success)
                     {
@@ -83,37 +82,34 @@ namespace YouTubeDownloaderMass
                                     }
                                     else
                                     {
-                                        char driverName;
-                                        if (CheckDrive(item, out driverName))
+                                        if (CheckDrive(item, out char driverName))
                                         {
-                                            string url = item.Substring(0, item.IndexOf("=") + 35);
-                                            HttpRequest request = new HttpRequest();
-                                            request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36");
-                                            string response = request.Get(url).ToString();
-                                            if (response != null && response != string.Empty)
+                                            string playlistId = item.Substring(item.IndexOf("list=") + 5, 34);
+                                            try
                                             {
-                                                HtmlDocument document = new HtmlDocument();
-                                                document.LoadHtml(response);
-                                                IEnumerable<HtmlNode> htmlNodes = document.DocumentNode.QuerySelectorAll("pl-video-title-link.yt-uix-tile-link.yt-uix-sessionlink.spf-link");
-                                                if (htmlNodes != null && htmlNodes.Count() > 0)
+                                                YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer()
                                                 {
-                                                    foreach (HtmlNode itemNode in htmlNodes)
+                                                    ApiKey = "AIzaSyDUYvMgMMv-FCdRdD426c4bcJKZ4WtZpn0",
+                                                    ApplicationName = "YoutubeProject"
+                                                });
+                                                string nextPageToken = string.Empty;
+                                                while (nextPageToken != null)
+                                                {
+                                                    PlaylistItemsResource.ListRequest playlistItemsListRequest = youtubeService.PlaylistItems.List("snippet");
+                                                    playlistItemsListRequest.PlaylistId = playlistId;
+                                                    playlistItemsListRequest.MaxResults = 50;
+                                                    playlistItemsListRequest.PageToken = nextPageToken;
+                                                    PlaylistItemListResponse playlistItemsListResponse = playlistItemsListRequest.Execute();
+                                                    foreach (PlaylistItem playlistItem in playlistItemsListResponse.Items)
                                                     {
-                                                        string href = itemNode.GetAttributeValue("href", null).Replace("amp;", "");
-                                                        if (href != null && href != string.Empty)
-                                                        {
-                                                            list2.Add(string.Concat("https://www.youtube.com", href.Substring(0, href.IndexOf("&")), item.Substring(item.IndexOf("|"))));
-                                                        }
+                                                        list2.Add(string.Concat("https://www.youtube.com/watch?v=", playlistItem.Snippet.ResourceId.VideoId));
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    Message(string.Format("Видео в плейлисте {0} не найдено.", url), true);
+                                                    nextPageToken = playlistItemsListResponse.NextPageToken;
                                                 }
                                             }
-                                            else
+                                            catch (Exception ex)
                                             {
-                                                Message(string.Format("Ответ от {0} не был получен.", url), true);
+                                                Message(string.Format("Плейлист {0}: {1}", playlistId, ex.Message), true);
                                             }
                                         }
                                         else
@@ -130,8 +126,7 @@ namespace YouTubeDownloaderMass
                             list.Clear();
                             foreach (string item in list2)
                             {
-                                char driverName;
-                                if (CheckDrive(item, out driverName))
+                                if (CheckDrive(item, out char driverName))
                                 {
                                     list.Add(item);
                                 }
@@ -201,7 +196,7 @@ namespace YouTubeDownloaderMass
                                 if (videoList.Count != 0)
                                 {
                                     timer = new Timer(1000);
-                                    timer.Elapsed += timer_Elapsed;
+                                    timer.Elapsed += Timer_Elapsed;
                                     char[] invalidChars = Path.GetInvalidFileNameChars();
                                     for (int i = 0; i < videoList.Count; i++)
                                     {
@@ -221,9 +216,9 @@ namespace YouTubeDownloaderMass
                                                 title = title1 + string.Format(" ({0})", j);
                                             }
                                             VideoDownloader downloader = new VideoDownloader(videoList[i].Item1, Path.Combine(videoList[i].Item2, title + videoList[i].Item1.VideoExtension));
-                                            downloader.DownloadStarted += downloader_DownloadStarted;
-                                            downloader.DownloadFinished += downloader_DownloadFinished;
-                                            downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
+                                            downloader.DownloadStarted += Downloader_DownloadStarted;
+                                            downloader.DownloadFinished += Downloader_DownloadFinished;
+                                            downloader.DownloadProgressChanged += Downloader_DownloadProgressChanged;
                                             if (!Directory.Exists(videoList[i].Item2))
                                             {
                                                 Directory.CreateDirectory(videoList[i].Item2);
@@ -292,7 +287,7 @@ namespace YouTubeDownloaderMass
             Console.ReadKey();
         }
 
-        private static void timer_Elapsed(object sender, ElapsedEventArgs e)
+        private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (first)
             {
@@ -306,13 +301,13 @@ namespace YouTubeDownloaderMass
             bytesCount = 0;
         }
 
-        static void downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
+        static void Downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
         {
             bytesCount += e.BytesReceived;
             percent = e.ProgressPercentage;
         }
 
-        private static void downloader_DownloadStarted(object sender, EventArgs e)
+        private static void Downloader_DownloadStarted(object sender, EventArgs e)
         {
             bytesCount = 0;
             percent = 0;
@@ -322,7 +317,7 @@ namespace YouTubeDownloaderMass
             Message(string.Format("Загрузка видео {0}.", downloader.Video.Title));
         }
 
-        static void downloader_DownloadFinished(object sender, EventArgs e)
+        static void Downloader_DownloadFinished(object sender, EventArgs e)
         {
             timer.Stop();
             VideoDownloader downloader = sender as VideoDownloader;

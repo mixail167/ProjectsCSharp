@@ -8,9 +8,9 @@ namespace TaskQueueTest
 {
     public class TaskQueue
     {
-        private SemaphoreSlim semaphore;
-        private SemaphoreSlim semaphore2;
-        private List<Tuple<int, Func<int, Task>>> funcs;
+        private readonly SemaphoreSlim semaphore;
+        private readonly SemaphoreSlim semaphore2;
+        private readonly List<Tuple<int, Func<int, Task>>> funcs;
 
         public TaskQueue()
         {

@@ -21,7 +21,7 @@ namespace VKVideoDownloader
         public Form4(string access_token, long id, string url)
         {
             InitializeComponent();
-            this.StyleManager = metroStyleManager1;
+            StyleManager = metroStyleManager1;
             this.url = url;
             this.id = id;
             this.access_token = access_token;
@@ -91,7 +91,7 @@ namespace VKVideoDownloader
 
         private void SetSort(List<Album> albums)
         {
-            switch (pictureBox2.Tag as Nullable<bool>)
+            switch (pictureBox2.Tag as bool?)
             {
                 case true:
                     list.ItemsSource = albums.OrderBy(x => x.Title).ToList<Album>();
@@ -108,8 +108,10 @@ namespace VKVideoDownloader
             for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(obj); i++)
             {
                 DependencyObject child = System.Windows.Media.VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is ChildItem)
-                    return (ChildItem)child;
+                if (child != null && child is ChildItem item)
+                {
+                    return item;
+                }
                 else
                 {
                     ChildItem childOfChild = FindVisualChild<ChildItem>(child);
@@ -119,8 +121,6 @@ namespace VKVideoDownloader
             }
             return null;
         }
-
-
 
         private void Filter()
         {
@@ -187,8 +187,8 @@ namespace VKVideoDownloader
         {
             if (list.ItemsSource != null && list.ItemsSource.Count != 0)
             {
-                List<Album> albums = list.ItemsSource as List<Album>;
-                if (pictureBox2.Tag as Nullable<bool> == true)
+                List<Album> albums = list.ItemsSource;
+                if (pictureBox2.Tag as bool? == true)
                 {
                     pictureBox2.Image = Resources.strelka2;
                     list.ItemsSource = albums.OrderByDescending(x => x.Title).ToList<Album>();

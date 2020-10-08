@@ -11,6 +11,7 @@ namespace Algorithms
             InitializeComponent();
             graph.Attr.LayerDirection = LayerDirection.None;
             gViewer1.Graph = graph;
+            gViewer1.ToolBarIsVisible = false;
         }
     }
 }

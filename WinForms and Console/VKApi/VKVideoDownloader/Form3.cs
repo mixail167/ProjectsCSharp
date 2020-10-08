@@ -31,7 +31,7 @@ namespace VKVideoDownloader
         public Form3(string access_token, long id, long album, string url, int countThreads, int count)
         {
             InitializeComponent();
-            this.StyleManager = metroStyleManager1;
+            StyleManager = metroStyleManager1;
             this.id = id;
             this.access_token = access_token;
             this.url = url;
@@ -48,7 +48,7 @@ namespace VKVideoDownloader
         public Form3(string access_token, long id, string url)
         {
             InitializeComponent();
-            this.StyleManager = metroStyleManager1;
+            StyleManager = metroStyleManager1;
             this.access_token = access_token;
             this.id = id;
             this.url = url;
@@ -229,11 +229,11 @@ namespace VKVideoDownloader
                     else if (count < 0)
                     {
                         lastError = error;
-                        this.DialogResult = DialogResult.Abort;
+                        DialogResult = DialogResult.Abort;
                     }
                     else
                     {
-                        this.DialogResult = DialogResult.No;
+                        DialogResult = DialogResult.No;
                     }
                     break;
                 case Search.User:
@@ -245,7 +245,7 @@ namespace VKVideoDownloader
 
         public DialogResult GetDialogResult()
         {
-            return this.DialogResult;
+            return DialogResult;
         }
 
         public List<Video> GetVideos()
@@ -257,7 +257,6 @@ namespace VKVideoDownloader
         {
             return albums;
         }
-
 
         public string GetLastError()
         {

@@ -21,17 +21,17 @@ namespace VKVideoDownloader
                 if (value != string.Empty)
                 {
                     placeHolder = value;
-                    bool useSystemPasswordChar = this.UseSystemPasswordChar;
-                    char passwordChar = this.PasswordChar;
-                    this.ForeColor = Color.Gray;
-                    this.SetText(string.Empty, placeHolder, false, '\0', Color.Gray);
-                    this.Enter += (s, e) =>
+                    bool useSystemPasswordChar = UseSystemPasswordChar;
+                    char passwordChar = PasswordChar;
+                    ForeColor = Color.Gray;
+                    SetText(string.Empty, placeHolder, false, '\0', Color.Gray);
+                    Enter += (s, e) =>
                     {
-                        this.SetText(placeHolder, string.Empty, useSystemPasswordChar, passwordChar, Color.Black);
+                        SetText(placeHolder, string.Empty, useSystemPasswordChar, passwordChar, Color.Black);
                     };
-                    this.Leave += (s, e) =>
+                    Leave += (s, e) =>
                     {
-                        this.SetText(string.Empty, placeHolder, false, '\0', Color.Gray);
+                        SetText(string.Empty, placeHolder, false, '\0', Color.Gray);
                     };
                 }
             }
@@ -39,17 +39,17 @@ namespace VKVideoDownloader
 
         public bool IsPlaceHolder()
         {
-            return (this.Text == this.placeHolder) ? true : false;
+            return Text == placeHolder;
         }
 
         private void SetText(string value1, string value2, bool useSystemPasswordChar, char passwordChar, Color foreColor)
         {
-            if (this.Text == value1)
+            if (Text == value1)
             {
-                this.Text = value2;
-                this.UseSystemPasswordChar = useSystemPasswordChar;
-                this.PasswordChar = passwordChar;
-                this.ForeColor = foreColor;
+                Text = value2;
+                UseSystemPasswordChar = useSystemPasswordChar;
+                PasswordChar = passwordChar;
+                ForeColor = foreColor;
             }
         }
     }

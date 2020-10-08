@@ -94,7 +94,7 @@ namespace VKVideoDownloader
         public void SetCurrentFileFromFiles(int quality)
         {
             Tuple<int, string> file = files.OrderByDescending(p => p.Item1).FirstOrDefault(p => p.Item1 <= quality);
-            currentFile = (file != null) ? file : files[0];
+            currentFile = file ?? files[0];
         }
     }
 }

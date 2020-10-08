@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -8,7 +7,7 @@ namespace TaskQueueTest
 {
     public partial class Form1 : Form
     {
-        TaskQueue taskQueue;
+        readonly TaskQueue taskQueue;
         int i;
 
         public Form1()
