@@ -102,7 +102,7 @@ namespace YouTubeDownloaderMass
                                                     PlaylistItemListResponse playlistItemsListResponse = playlistItemsListRequest.Execute();
                                                     foreach (PlaylistItem playlistItem in playlistItemsListResponse.Items)
                                                     {
-                                                        list2.Add(string.Concat("https://www.youtube.com/watch?v=", playlistItem.Snippet.ResourceId.VideoId));
+                                                        list2.Add(string.Concat("https://www.youtube.com/watch?v=", playlistItem.Snippet.ResourceId.VideoId, item.Substring(item.IndexOf('|'))));
                                                     }
                                                     nextPageToken = playlistItemsListResponse.NextPageToken;
                                                 }
@@ -120,26 +120,21 @@ namespace YouTubeDownloaderMass
                                 }
                                 else
                                 {
-                                    list2.Add(item);
+                                    if (CheckDrive(item, out char driverName))
+                                    {
+                                        list2.Add(item);
+                                    }
+                                    else
+                                    {
+                                        Message(string.Format("Строка {0}: Диск {1} не существует.", item, driverName), true);
+                                    }
                                 }
                             }
                             list.Clear();
-                            foreach (string item in list2)
-                            {
-                                if (CheckDrive(item, out char driverName))
-                                {
-                                    list.Add(item);
-                                }
-                                else
-                                {
-                                    Message(string.Format("Строка {0}: Диск {1} не существует.", item, driverName), true);
-                                }
-                            }
-                            list2.Clear();
-                            if (list.Count != 0)
+                            if (list2.Count != 0)
                             {
                                 List<Tuple<VideoInfo, string>> videoList = new List<Tuple<VideoInfo, string>>();
-                                foreach (string item in list)
+                                foreach (string item in list2)
                                 {
                                     string[] parts = item.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                                     parts[0] = parts[0].Substring(parts[0].IndexOf('=') + 1, 11);
@@ -150,8 +145,8 @@ namespace YouTubeDownloaderMass
                                     {
                                         try
                                         {
-                                            VideoInfo video = DownloadUrlResolver.GetDownloadUrls(url)
-                                                .OrderByDescending(p => p.Resolution)
+                                            IEnumerable<VideoInfo> videos = DownloadUrlResolver.GetDownloadUrls(url);
+                                            VideoInfo video = videos.OrderByDescending(p => p.Resolution)
                                                 .FirstOrDefault(p => p.VideoType == VideoType.Mp4 && p.Resolution <= resolution &&
                                                                      p.Resolution > 0 && p.AudioType != AudioType.Unknown);
                                             if (video != null)
@@ -192,7 +187,7 @@ namespace YouTubeDownloaderMass
                                         }
                                     }
                                 }
-                                list.Clear();
+                                list2.Clear();
                                 if (videoList.Count != 0)
                                 {
                                     timer = new Timer(1000);
@@ -341,17 +336,17 @@ namespace YouTubeDownloaderMass
             if (speed >= 1073741824)
             {
                 speed /= 1073741824;
-                si = "Гб";
+                si = "ГБ";
             }
             else if (speed >= 1048576)
             {
                 speed /= 1048576;
-                si = "Мб";
+                si = "МБ";
             }
             else if (speed >= 1024)
             {
                 speed /= 1024;
-                si = "Кб";
+                si = "КБ";
             }
             else
             {
