@@ -16,15 +16,16 @@ namespace YoutubeExtractor
         /// <exception cref="ArgumentNullException"><paramref name="video"/> or <paramref name="savePath"/> is <c>null</c>.</exception>
         protected Downloader(VideoInfo video, string savePath, int? bytesToDownload = null)
         {
-            if (video == null)
-                throw new ArgumentNullException("video");
-
-            if (savePath == null)
+            if (savePath != null)
+            {
+                Video = video ?? throw new ArgumentNullException("video");
+                SavePath = savePath;
+                BytesToDownload = bytesToDownload;
+            }
+            else
+            {
                 throw new ArgumentNullException("savePath");
-
-            this.Video = video;
-            this.SavePath = savePath;
-            this.BytesToDownload = bytesToDownload;
+            }
         }
 
         /// <summary>
@@ -59,18 +60,12 @@ namespace YoutubeExtractor
 
         protected void OnDownloadFinished(EventArgs e)
         {
-            if (this.DownloadFinished != null)
-            {
-                this.DownloadFinished(this, e);
-            }
+            DownloadFinished?.Invoke(this, e);
         }
 
         protected void OnDownloadStarted(EventArgs e)
         {
-            if (this.DownloadStarted != null)
-            {
-                this.DownloadStarted(this, e);
-            }
+            DownloadStarted?.Invoke(this, e);
         }
     }
 }

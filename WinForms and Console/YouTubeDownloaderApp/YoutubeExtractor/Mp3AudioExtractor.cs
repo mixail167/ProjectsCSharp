@@ -43,47 +43,47 @@ namespace YoutubeExtractor
 
         public Mp3AudioExtractor(string path)
         {
-            this.VideoPath = path;
-            this.fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 64 * 1024);
-            this.warnings = new List<string>();
-            this.chunkBuffer = new List<byte[]>();
-            this.frameOffsets = new List<uint>();
-            this.delayWrite = true;
+            VideoPath = path;
+            fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 64 * 1024);
+            warnings = new List<string>();
+            chunkBuffer = new List<byte[]>();
+            frameOffsets = new List<uint>();
+            delayWrite = true;
         }
 
         public string VideoPath { get; private set; }
 
         public IEnumerable<string> Warnings
         {
-            get { return this.warnings; }
+            get { return warnings; }
         }
 
         public void Dispose()
         {
-            this.Flush();
+            Flush();
 
-            if (this.writeVbrHeader)
+            if (writeVbrHeader)
             {
-                this.fileStream.Seek(0, SeekOrigin.Begin);
-                this.WriteVbrHeader(false);
+                fileStream.Seek(0, SeekOrigin.Begin);
+                WriteVbrHeader(false);
             }
 
-            this.fileStream.Dispose();
+            fileStream.Dispose();
         }
 
         public void WriteChunk(byte[] chunk, uint timeStamp)
         {
-            this.chunkBuffer.Add(chunk);
-            this.ParseMp3Frames(chunk);
+            chunkBuffer.Add(chunk);
+            ParseMp3Frames(chunk);
 
-            if (this.delayWrite && this.totalFrameLength >= 65536)
+            if (delayWrite && totalFrameLength >= 65536)
             {
-                this.delayWrite = false;
+                delayWrite = false;
             }
 
-            if (!this.delayWrite)
+            if (!delayWrite)
             {
-                this.Flush();
+                Flush();
             }
         }
 
@@ -103,10 +103,10 @@ namespace YoutubeExtractor
         {
             foreach (byte[] chunk in chunkBuffer)
             {
-                this.fileStream.Write(chunk, 0, chunk.Length);
+                fileStream.Write(chunk, 0, chunk.Length);
             }
 
-            this.chunkBuffer.Clear();
+            chunkBuffer.Clear();
         }
 
         private void ParseMp3Frames(byte[] buffer)
@@ -180,60 +180,60 @@ namespace YoutubeExtractor
                     {
                         // "Xing"
                         isVbrHeaderFrame = true;
-                        this.delayWrite = false;
-                        this.hasVbrHeader = true;
+                        delayWrite = false;
+                        hasVbrHeader = true;
                     }
                 }
 
                 if (!isVbrHeaderFrame)
                 {
-                    if (this.firstBitRate == 0)
+                    if (firstBitRate == 0)
                     {
-                        this.firstBitRate = bitRate;
+                        firstBitRate = bitRate;
                         this.mpegVersion = mpegVersion;
                         this.sampleRate = sampleRate;
                         this.channelMode = channelMode;
-                        this.firstFrameHeader = BigEndianBitConverter.ToUInt32(buffer, offset);
+                        firstFrameHeader = BigEndianBitConverter.ToUInt32(buffer, offset);
                     }
 
-                    else if (!this.isVbr && bitRate != this.firstBitRate)
+                    else if (!isVbr && bitRate != firstBitRate)
                     {
-                        this.isVbr = true;
+                        isVbr = true;
 
-                        if (!this.hasVbrHeader)
+                        if (!hasVbrHeader)
                         {
-                            if (this.delayWrite)
+                            if (delayWrite)
                             {
-                                this.WriteVbrHeader(true);
-                                this.writeVbrHeader = true;
-                                this.delayWrite = false;
+                                WriteVbrHeader(true);
+                                writeVbrHeader = true;
+                                delayWrite = false;
                             }
 
                             else
                             {
-                                this.warnings.Add("Detected VBR too late, cannot add VBR header.");
+                                warnings.Add("Detected VBR too late, cannot add VBR header.");
                             }
                         }
                     }
                 }
 
-                this.frameOffsets.Add(this.totalFrameLength + (uint)offset);
+                frameOffsets.Add(totalFrameLength + (uint)offset);
 
                 offset += frameLenght;
                 length -= frameLenght;
             }
 
-            this.totalFrameLength += (uint)buffer.Length;
+            totalFrameLength += (uint)buffer.Length;
         }
 
         private void WriteVbrHeader(bool isPlaceholder)
         {
-            var buffer = new byte[GetFrameLength(this.mpegVersion, 64000, this.sampleRate, 0)];
+            var buffer = new byte[GetFrameLength(mpegVersion, 64000, sampleRate, 0)];
 
             if (!isPlaceholder)
             {
-                uint header = this.firstFrameHeader;
-                int dataOffset = GetFrameDataOffset(this.mpegVersion, this.channelMode);
+                uint header = firstFrameHeader;
+                int dataOffset = GetFrameDataOffset(mpegVersion, channelMode);
                 header &= 0xFFFE0DFF; // Clear CRC, bitrate, and padding fields
                 header |= (uint)(mpegVersion == 3 ? 5 : 8) << 12; // 64 kbit/sec
                 BitHelper.CopyBytes(buffer, 0, BigEndianBitConverter.GetBytes(header));
@@ -244,13 +244,13 @@ namespace YoutubeExtractor
 
                 for (int i = 0; i < 100; i++)
                 {
-                    int frameIndex = (int)((i / 100.0) * this.frameOffsets.Count);
+                    int frameIndex = (int)((i / 100.0) * frameOffsets.Count);
 
-                    buffer[dataOffset + 16 + i] = (byte)(this.frameOffsets[frameIndex] / (double)this.totalFrameLength * 256.0);
+                    buffer[dataOffset + 16 + i] = (byte)(frameOffsets[frameIndex] / (double)totalFrameLength * 256.0);
                 }
             }
 
-            this.fileStream.Write(buffer, 0, buffer.Length);
+            fileStream.Write(buffer, 0, buffer.Length);
         }
     }
 }

@@ -68,13 +68,13 @@ namespace YoutubeExtractor
 
         private VideoInfo(int formatCode, VideoType videoType, int resolution, bool is3D, AudioType audioType, int audioBitrate, AdaptiveType adaptiveType)
         {
-            this.FormatCode = formatCode;
-            this.VideoType = videoType;
-            this.Resolution = resolution;
-            this.Is3D = is3D;
-            this.AudioType = audioType;
-            this.AudioBitrate = audioBitrate;
-            this.AdaptiveType = adaptiveType;
+            FormatCode = formatCode;
+            VideoType = videoType;
+            Resolution = resolution;
+            Is3D = is3D;
+            AudioType = audioType;
+            AudioBitrate = audioBitrate;
+            AdaptiveType = adaptiveType;
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace YoutubeExtractor
 
         public override string ToString()
         {
-            return string.Format("Full Title: {0}, Type: {1}, Resolution: {2}p", this.Title + this.VideoExtension, this.VideoType, this.Resolution);
+            return string.Format("Full Title: {0}, Type: {1}, Resolution: {2}p", Title + VideoExtension, VideoType, Resolution);
         }
     }
 }

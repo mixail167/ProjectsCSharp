@@ -32,7 +32,7 @@ namespace YoutubeExtractor
 
         public AacAudioExtractor(string path)
         {
-            this.VideoPath = path;
+            VideoPath = path;
             fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 64 * 1024);
         }
 
@@ -40,7 +40,7 @@ namespace YoutubeExtractor
 
         public void Dispose()
         {
-            this.fileStream.Dispose();
+            fileStream.Dispose();
         }
 
         public void WriteChunk(byte[] chunk, uint timeStamp)

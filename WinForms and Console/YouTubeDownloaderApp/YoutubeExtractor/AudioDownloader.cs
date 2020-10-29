@@ -67,27 +67,27 @@ namespace YoutubeExtractor
         {
             string tempPath = Path.GetTempFileName();
 
-            this.DownloadVideo(tempPath);
+            DownloadVideo(tempPath);
 
-            if (!this.isCanceled)
+            if (!isCanceled)
             {
-                this.ExtractAudio(tempPath);
+                ExtractAudio(tempPath);
             }
 
-            this.OnDownloadFinished(EventArgs.Empty);
+            OnDownloadFinished(EventArgs.Empty);
         }
 
         private void DownloadVideo(string path)
         {
-            var videoDownloader = new VideoDownloader(this.Video, path, this.BytesToDownload);
+            var videoDownloader = new VideoDownloader(Video, path, BytesToDownload);
 
             videoDownloader.DownloadProgressChanged += (sender, args) =>
             {
-                if (this.DownloadProgressChanged != null)
+                if (DownloadProgressChanged != null)
                 {
-                    this.DownloadProgressChanged(this, args);
+                    DownloadProgressChanged(this, args);
 
-                    this.isCanceled = args.Cancel;
+                    isCanceled = args.Cancel;
                 }
             };
 
@@ -96,7 +96,7 @@ namespace YoutubeExtractor
 
         private void ExtractAudio(string path)
         {
-            using (var flvFile = new FlvFile(path, this.SavePath))
+            using (var flvFile = new FlvFile(path, SavePath))
             {
                 flvFile.ConversionProgressChanged += (sender, args) =>
                 {

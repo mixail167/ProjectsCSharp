@@ -32,13 +32,13 @@ namespace YoutubeExtractor
         /// <exception cref="WebException">An error occured while downloading the video.</exception>
         public override void Execute()
         {
-            this.OnDownloadStarted(EventArgs.Empty);
+            OnDownloadStarted(EventArgs.Empty);
 
-            var request = (HttpWebRequest)WebRequest.Create(this.Video.DownloadUrl);
+            var request = (HttpWebRequest)WebRequest.Create(Video.DownloadUrl);
 
-            if (this.BytesToDownload.HasValue)
+            if (BytesToDownload.HasValue)
             {
-                request.AddRange(0, this.BytesToDownload.Value - 1);
+                request.AddRange(0, BytesToDownload.Value - 1);
             }
 
             // the following code is alternative, you may implement the function after your needs
@@ -46,7 +46,7 @@ namespace YoutubeExtractor
             {
                 using (Stream source = response.GetResponseStream())
                 {
-                    using (FileStream target = File.Open(this.SavePath, FileMode.Create, FileAccess.Write))
+                    using (FileStream target = File.Open(SavePath, FileMode.Create, FileAccess.Write))
                     {
                         var buffer = new byte[1024];
                         bool cancel = false;
@@ -61,9 +61,9 @@ namespace YoutubeExtractor
 
                             var eventArgs = new ProgressEventArgs((copiedBytes * 1.0 / response.ContentLength) * 100, bytes);
 
-                            if (this.DownloadProgressChanged != null)
+                            if (DownloadProgressChanged != null)
                             {
-                                this.DownloadProgressChanged(this, eventArgs);
+                                DownloadProgressChanged(this, eventArgs);
 
                                 if (eventArgs.Cancel)
                                 {
@@ -75,7 +75,7 @@ namespace YoutubeExtractor
                 }
             }
 
-            this.OnDownloadFinished(EventArgs.Empty);
+            OnDownloadFinished(EventArgs.Empty);
         }
     }
 }

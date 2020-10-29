@@ -35,14 +35,13 @@ namespace YouTubeDownloaderApp
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (thread == null)
             {
                 if (Regex.IsMatch(textBox1.Text, "^([-_0-9a-zA-Z]){11}"))
                 {
-                    int description;
-                    if (InternetGetConnectedState(out description, 0))
+                    if (InternetGetConnectedState(out int description, 0))
                     {
                         if ((new Ping()).Send("www.youtube.com").Status == IPStatus.Success)
                         {
@@ -68,8 +67,8 @@ namespace YouTubeDownloaderApp
                                             Properties.Settings.Default.initialDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
                                             Properties.Settings.Default.Save();
                                             downloader = new VideoDownloader(video, saveFileDialog1.FileName);
-                                            downloader.DownloadProgressChanged += downloader_DownloadProgressChanged;
-                                            downloader.DownloadFinished += downloader_DownloadFinished;
+                                            downloader.DownloadProgressChanged += Downloader_DownloadProgressChanged;
+                                            downloader.DownloadFinished += Downloader_DownloadFinished;
                                             thread = new Thread(() => { downloader.Execute(); })
                                             {
                                                 IsBackground = true
@@ -111,7 +110,7 @@ namespace YouTubeDownloaderApp
                                         }
                                     }
                                 }
-                                catch(VideoNotAvailableException)
+                                catch (VideoNotAvailableException)
                                 {
                                     MessageBox.Show("Not Autorized");
                                     break;
@@ -145,8 +144,8 @@ namespace YouTubeDownloaderApp
                 {
 
                 }
-                downloader.DownloadProgressChanged -= downloader_DownloadProgressChanged;
-                downloader.DownloadFinished -= downloader_DownloadFinished;
+                downloader.DownloadProgressChanged -= Downloader_DownloadProgressChanged;
+                downloader.DownloadFinished -= Downloader_DownloadFinished;
                 ResetForm();
                 try
                 {
@@ -159,7 +158,7 @@ namespace YouTubeDownloaderApp
             }
         }
 
-        void downloader_DownloadFinished(object sender, EventArgs e)
+        void Downloader_DownloadFinished(object sender, EventArgs e)
         {
             Invoke(new MethodInvoker(delegate()
                 {
@@ -172,7 +171,7 @@ namespace YouTubeDownloaderApp
                 ));
         }
 
-        private void downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
+        private void Downloader_DownloadProgressChanged(object sender, ProgressEventArgs e)
         {
             Invoke(new MethodInvoker(delegate()
                 {
