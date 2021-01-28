@@ -32,6 +32,7 @@ namespace BitrateChanger
 
         private static void Main(string[] args)
         {
+            Random rnd = new Random();
             if (args.Length >= 3)
             {
                 if (Directory.Exists(args[0]))
@@ -77,9 +78,10 @@ namespace BitrateChanger
                                 if (next)
                                 {
                                     string name = fileInfo.Name;
-                                    if (random && !Regex.IsMatch(name, "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).*$"))
+                                    if (random /*&& !Regex.IsMatch(name, "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).*$")*/)
                                     {
-                                        name = Guid.NewGuid() + "_" + name;
+                                        //name = Guid.NewGuid() + "_" + name;
+                                        name = rnd.Next(int.MaxValue) + name;
                                     }
                                     path = Path.Combine(path, name);
                                     using (MediaFoundationReader reader = new MediaFoundationReader(item))
