@@ -27,7 +27,10 @@ namespace YouTubeDownloaderMass
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Message(string.Format("\rПрогресс загрузки: {0:P2}", percent));
+            if (!first)
+            {
+                Message(string.Format("\rПрогресс загрузки: {0:P2}", percent));
+            }
         }
 
         public void Dispose()

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using System.Windows.Forms;
 
 namespace Algorithms
@@ -9,9 +10,14 @@ namespace Algorithms
         public GraphForm(Graph graph)
         {
             InitializeComponent();
+            GViewer gViewer = new GViewer();
             graph.Attr.LayerDirection = LayerDirection.None;
-            gViewer1.Graph = graph;
-            gViewer1.ToolBarIsVisible = false;
+            gViewer.Graph = graph;
+            gViewer.ToolBarIsVisible = false;
+            gViewer.Dock = DockStyle.Fill;
+            gViewer.Enabled = false;
+            Controls.Add(gViewer);
+            ResumeLayout();
         }
     }
 }
