@@ -42,10 +42,8 @@ namespace YouTubeDownloaderMass
                                     Message(string.Format("Чтение файла {0}.\n", fileName));
                                     try
                                     {
-                                        using (StreamReader streamReader = new StreamReader(fileName))
-                                        {
-                                            list.Add(streamReader.ReadToEnd());
-                                        }
+                                        using StreamReader streamReader = new StreamReader(fileName);
+                                        list.Add(streamReader.ReadToEnd());
                                     }
                                     catch (Exception exception)
                                     {
@@ -89,8 +87,8 @@ namespace YouTubeDownloaderMass
                                                 Playlist playlist = await youtube.Playlists.GetAsync(playlistId);
                                                 if (playlist != null)
                                                 {
-                                                    IEnumerable<Video> videos = await youtube.Playlists.GetVideosAsync(playlist.Id);
-                                                    foreach (Video video in videos)
+                                                    IAsyncEnumerable<PlaylistVideo> videos = youtube.Playlists.GetVideosAsync(playlist.Id);
+                                                    await foreach (PlaylistVideo video in videos)
                                                     {
                                                         list2.Add(string.Concat("https://www.youtube.com/watch?v=", video.Id, item.Substring(item.IndexOf('|'))));
                                                     }
@@ -153,7 +151,7 @@ namespace YouTubeDownloaderMass
                                     {
                                         Video videoInfo = await youtube.Videos.GetAsync(parts[0]);
                                         StreamManifest streamManifest = await youtube.Videos.Streams.GetManifestAsync(parts[0]);
-                                        IVideoStreamInfo videoStreamInfo = streamManifest.GetMuxed().Where(p => p.Container == Container.Mp4 && Convert.ToInt32(p.VideoQualityLabel.Substring(0, p.VideoQualityLabel.Length - 1)) <= resolution).OrderByDescending(p => p.VideoQualityLabel).WithHighestVideoQuality();
+                                        IVideoStreamInfo videoStreamInfo = streamManifest.GetMuxedStreams().Where(p => p.Container == Container.Mp4 && Convert.ToInt32(p.VideoQuality.Label.Substring(0, p.VideoQuality.Label.Length - 1)) <= resolution).OrderByDescending(p => p.VideoQuality.Label).GetWithHighestVideoQuality();
                                         if (videoStreamInfo != null)
                                         {
                                             videoList.Add(new Tuple<Video, IVideoStreamInfo, string>(videoInfo, videoStreamInfo, parts[2]));
@@ -200,11 +198,9 @@ namespace YouTubeDownloaderMass
                                             {
                                                 Directory.CreateDirectory(item.Item3);
                                             }
-                                            using (Progress progress = new Progress(fileName, filePath))
-                                            {
-                                                progress.Message += Progress_Message;
-                                                await youtube.Videos.Streams.DownloadAsync(item.Item2, filePath, progress);
-                                            }
+                                            using Progress progress = new Progress(fileName, filePath);
+                                            progress.Message += Progress_Message;
+                                            await youtube.Videos.Streams.DownloadAsync(item.Item2, filePath, progress);
                                         }
                                         //catch (WebException exception)
                                         //{
