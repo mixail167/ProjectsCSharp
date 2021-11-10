@@ -96,7 +96,7 @@
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(422, 404);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Списоквершин";
+            this.tabPage3.Text = "Список вершин";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // tabPage4

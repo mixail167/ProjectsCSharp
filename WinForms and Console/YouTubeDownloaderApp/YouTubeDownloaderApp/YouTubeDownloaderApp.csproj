@@ -85,12 +85,6 @@
   <ItemGroup>
     <Content Include="187210.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\YoutubeExtractor\YoutubeExtractor.csproj">
-      <Project>{47b9760f-25ca-4c0b-9a41-61e083a66efa}</Project>
-      <Name>YoutubeExtractor</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

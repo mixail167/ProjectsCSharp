@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using WPF = System.Windows.Input;
 
@@ -21,10 +20,10 @@ namespace ChatClient
         private TcpClient client;
         private NetworkStream networkStream;
         private Thread receiveThread;
-        private string user;
-        private SoundPlayer soundPlayer;
-        private List<User> users;
-        private TextBoxSpellCheck textBoxSpellCheck;
+        private readonly string user;
+        private readonly SoundPlayer soundPlayer;
+        private readonly List<User> users;
+        private readonly TextBoxSpellCheck textBoxSpellCheck;
         private bool close;
 
         [DllImport("user32.dll")]
@@ -50,11 +49,11 @@ namespace ChatClient
             pictureBox1.Image = (Properties.Settings.Default.Sound) ? null : Properties.Resources.cancel2;
             users = new List<User>();
             textBoxSpellCheck = new TextBoxSpellCheck();
-            textBoxSpellCheck.textBox2.KeyUp += textBox2_KeyUp;
+            textBoxSpellCheck.textBox2.KeyUp += TextBox2_KeyUp;
             elementHost1.Child = textBoxSpellCheck;
         }
 
-        private void textBox2_KeyUp(object sender, WPF.KeyEventArgs e)
+        private void TextBox2_KeyUp(object sender, WPF.KeyEventArgs e)
         {
             if (run && e.Key == WPF.Key.Enter && e.KeyboardDevice.Modifiers == WPF.ModifierKeys.Control)
             {
@@ -65,7 +64,7 @@ namespace ChatClient
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (run)
             {
@@ -77,14 +76,14 @@ namespace ChatClient
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             SendMessage(textBoxSpellCheck.textBox2.Text);
             textBoxSpellCheck.textBox2.Text = string.Empty;
             textBoxSpellCheck.textBox2.Focus();
         }
 
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!run && e.KeyChar == 13)
             {
@@ -221,11 +220,13 @@ namespace ChatClient
 
             }
             IntPtr handle = GetForegroundWindow();
-            Form2 form2 = new Form2(text, this);
-            form2.Visible = true;
-            if (this.Handle == handle && !this.Focused)
+            Form2 form2 = new Form2(text, this)
             {
-                this.Focus();
+                Visible = true
+            };
+            if (Handle == handle && !Focused)
+            {
+                Focus();
                 if (!string.IsNullOrEmpty(textBoxSpellCheck.textBox2.Text))
                     textBoxSpellCheck.textBox2.CaretIndex = textBoxSpellCheck.textBox2.Text.Length;
             }
@@ -233,9 +234,9 @@ namespace ChatClient
 
         private void EnableComponents(bool flag, string text)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new Action<bool, string>(EnableComponents), new object[] { flag, text });
+                Invoke(new Action<bool, string>(EnableComponents), new object[] { flag, text });
             }
             else
             {
@@ -356,7 +357,7 @@ namespace ChatClient
                 client.Close();
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ModifyStateForm(true);
         }
@@ -368,7 +369,7 @@ namespace ChatClient
             this.ShowInTaskbar = value;
         }
 
-        private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void ContextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Equals(contextMenuStrip1.Items[0]))
             {
@@ -399,7 +400,7 @@ namespace ChatClient
             }
         }
 
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        private void PictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (Properties.Settings.Default.Sound)
             {

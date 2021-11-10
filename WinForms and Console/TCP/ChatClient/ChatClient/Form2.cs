@@ -6,7 +6,7 @@ namespace ChatClient
 {
     public partial class Form2 : Form
     {
-        Form1 link;
+        readonly Form1 link;
 
         public Form2(string text, Form1 link)
         {
@@ -17,12 +17,12 @@ namespace ChatClient
             this.link = link;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1_Tick(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             Close();
         }

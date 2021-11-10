@@ -6,7 +6,6 @@ namespace Algorithms
 {
     public partial class GraphForm : Form
     {
-
         public GraphForm(Graph graph)
         {
             InitializeComponent();

@@ -1,7 +1,4 @@
-﻿//using Google.Apis.Services;
-//using Google.Apis.YouTube.v3;
-//using Google.Apis.YouTube.v3.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -93,25 +90,6 @@ namespace YouTubeDownloaderMass
                                                         list2.Add(string.Concat("https://www.youtube.com/watch?v=", video.Id, item.Substring(item.IndexOf('|'))));
                                                     }
                                                 }
-                                                //YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer()
-                                                //{
-                                                //    ApiKey = "AIzaSyDUYvMgMMv-FCdRdD426c4bcJKZ4WtZpn0",
-                                                //    ApplicationName = "YoutubeProject"
-                                                //});
-                                                //string nextPageToken = string.Empty;
-                                                //while (nextPageToken != null)
-                                                //{
-                                                //    PlaylistItemsResource.ListRequest playlistItemsListRequest = youtubeService.PlaylistItems.List("snippet");
-                                                //    playlistItemsListRequest.PlaylistId = playlistId;
-                                                //    playlistItemsListRequest.MaxResults = 50;
-                                                //    playlistItemsListRequest.PageToken = nextPageToken;
-                                                //    PlaylistItemListResponse playlistItemsListResponse = playlistItemsListRequest.Execute();
-                                                //    foreach (PlaylistItem playlistItem in playlistItemsListResponse.Items)
-                                                //    {
-                                                //        list2.Add(string.Concat("https://www.youtube.com/watch?v=", playlistItem.Snippet.ResourceId.VideoId, item.Substring(item.IndexOf('|'))));
-                                                //    }
-                                                //    nextPageToken = playlistItemsListResponse.NextPageToken;
-                                                //}
                                             }
                                             catch (Exception ex)
                                             {
@@ -198,9 +176,10 @@ namespace YouTubeDownloaderMass
                                             {
                                                 Directory.CreateDirectory(item.Item3);
                                             }
-                                            using Progress progress = new Progress(fileName, filePath);
+                                            using Progress progress = new Progress(fileName, filePath, item.Item2.Size.Bytes);
                                             progress.Message += Progress_Message;
                                             await youtube.Videos.Streams.DownloadAsync(item.Item2, filePath, progress);
+
                                         }
                                         //catch (WebException exception)
                                         //{

@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloaderApp", "YouTubeDownloaderApp\YouTubeDownloaderApp.csproj", "{365FD0BF-66B2-4907-A99C-31E801FD277C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeExtractor", "YoutubeExtractor\YoutubeExtractor.csproj", "{47B9760F-25CA-4C0B-9A41-61E083A66EFA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloaderMass", "YouTubeDownloaderMass\YouTubeDownloaderMass.csproj", "{57191187-729E-4972-9E8C-AE977FA98DAA}"
 EndProject
 Global
@@ -17,22 +13,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Debug|x86.Build.0 = Debug|Any CPU
-		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Release|x86.ActiveCfg = Release|Any CPU
-		{365FD0BF-66B2-4907-A99C-31E801FD277C}.Release|x86.Build.0 = Release|Any CPU
-		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Debug|x86.Build.0 = Debug|Any CPU
-		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Release|x86.ActiveCfg = Release|Any CPU
-		{47B9760F-25CA-4C0B-9A41-61E083A66EFA}.Release|x86.Build.0 = Release|Any CPU
 		{57191187-729E-4972-9E8C-AE977FA98DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{57191187-729E-4972-9E8C-AE977FA98DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57191187-729E-4972-9E8C-AE977FA98DAA}.Debug|x86.ActiveCfg = Debug|Any CPU
