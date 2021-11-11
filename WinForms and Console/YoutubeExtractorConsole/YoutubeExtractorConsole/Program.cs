@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Google.Apis.Services;
+using Google.Apis.YouTube.v3;
+using Google.Apis.YouTube.v3.Data;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +25,7 @@ namespace YoutubeExtractorConsole
 
         static void Main(string[] args)
         {
-            Console.Title = "YouTubeDownloader. Массовая загрузка видео";
+            Console.Title = "YouTubeExtractorConsole. Массовая загрузка видео";
             if (args.Length > 0)
             {
                 if (InternetGetConnectedState(out int description, 0))
@@ -39,8 +42,10 @@ namespace YoutubeExtractorConsole
                                     Message(string.Format("Чтение файла {0}.\n", fileName));
                                     try
                                     {
-                                        using StreamReader streamReader = new StreamReader(fileName);
-                                        texts.Add(streamReader.ReadToEnd());
+                                        using (StreamReader streamReader = new StreamReader(fileName))
+                                        {
+                                            texts.Add(streamReader.ReadToEnd());
+                                        }
                                     }
                                     catch (Exception exception)
                                     {
@@ -77,23 +82,33 @@ namespace YoutubeExtractorConsole
                                     {
                                         if (CheckDrive(row, out char driverName))
                                         {
-                                            /*string playlistId = item.Substring(item.IndexOf("list=") + 5, 34);
+                                            string playlistId = row.Substring(row.IndexOf("list=") + 5, 34);
                                             try
                                             {
-                                                Playlist playlist = await youtube.Playlists.GetAsync(playlistId);
-                                                if (playlist != null)
+                                                YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer()
                                                 {
-                                                    IAsyncEnumerable<PlaylistVideo> videos = youtube.Playlists.GetVideosAsync(playlist.Id);
-                                                    await foreach (PlaylistVideo video in videos)
+                                                    ApiKey = "AIzaSyDUYvMgMMv-FCdRdD426c4bcJKZ4WtZpn0",
+                                                    ApplicationName = "YoutubeProject"
+                                                });
+                                                string nextPageToken = string.Empty;
+                                                while (nextPageToken != null)
+                                                {
+                                                    PlaylistItemsResource.ListRequest request = youtubeService.PlaylistItems.List("snippet");
+                                                    request.PlaylistId = playlistId;
+                                                    request.MaxResults = 50;
+                                                    request.PageToken = nextPageToken;
+                                                    PlaylistItemListResponse response = request.Execute();
+                                                    foreach (PlaylistItem playlistItem in response.Items)
                                                     {
-                                                        list2.Add(string.Concat("https://www.youtube.com/watch?v=", video.Id, item.Substring(item.IndexOf('|'))));
+                                                        rows.Add(string.Concat("https://www.youtube.com/watch?v=", playlistItem.Snippet.ResourceId.VideoId, row.Substring(row.IndexOf('|'))));
                                                     }
+                                                    nextPageToken = response.NextPageToken;
                                                 }
                                             }
                                             catch (Exception ex)
                                             {
                                                 Message(string.Format("Плейлист {0}: {1}\n", playlistId, ex.Message), true);
-                                            }*/
+                                            }
                                         }
                                         else
                                         {
