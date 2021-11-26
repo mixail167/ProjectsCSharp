@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace YoutubeExtractor
 {
-    public class VideoInfo
+    public class VideoInfo : ICloneable
     {
         /// <summary>
         /// Update from Youtube-dl
@@ -263,6 +264,23 @@ namespace YoutubeExtractor
         public int Width { get; set; }
 
         public float AverageBitrate { get; set; }
+
+        public object Clone()
+        {
+            return new VideoInfo(this)
+            {
+                AverageBitrate = AverageBitrate,
+                DownloadUrl = DownloadUrl,
+                FileSize = FileSize,
+                FormatNote = FormatNote,
+                FPS = FPS,
+                Height = Height,
+                HtmlPlayerVersion = HtmlPlayerVersion,
+                RequiresDecryption = RequiresDecryption,
+                Title = Title,
+                Width = Width
+            };
+        }
 
         public override string ToString()
         {

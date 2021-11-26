@@ -16,12 +16,12 @@ namespace YoutubeExtractorConsole
     class Program
     {
         [DllImport("wininet.dll")]
-        private extern static bool InternetGetConnectedState(out int description, int reservedValue);
+        extern static bool InternetGetConnectedState(out int description, int reservedValue);
 
-        private static bool errorIndicator = false;
-        private static Timer timer;
-        private static double percent;
-        private static bool firstInfo;
+        static bool errorIndicator = false;
+        static Timer timer;
+        static double percent;
+        static bool firstInfo;
 
         static void Main(string[] args)
         {
@@ -131,14 +131,15 @@ namespace YoutubeExtractorConsole
                             texts.Clear();
                             if (rows.Count != 0)
                             {
-                                List<Tuple<VideoInfo, string>> listVideos = new List<Tuple<VideoInfo, string>>();
+                                List<VideoInfoExt> listVideos = new List<VideoInfoExt>();
                                 foreach (string row in rows)
                                 {
-                                    string[] parts = row.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                                    parts[0] = parts[0].Substring(parts[0].IndexOf('=') + 1, 11);
-                                    string url = string.Concat("https://www.youtube.com/watch?v=", parts[0]);
+                                    string[] partsRow = row.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                                    string id = partsRow[0].Substring(partsRow[0].IndexOf('=') + 1, 11);
+                                    string url = string.Concat("https://www.youtube.com/watch?v=", id);
+                                    string path = partsRow[2];
+                                    int resolution = Convert.ToInt32(partsRow[1]);
                                     Message(string.Format("Поиск видео по URL {0}.\n", url));
-                                    int resolution = Convert.ToInt32(parts[1]);
                                     try
                                     {
                                         VideoInfo videoInfo = DownloadUrlResolver.GetDownloadUrls(url).OrderByDescending(x => x.Resolution).FirstOrDefault(x => x.VideoType == VideoType.Mp4 && x.Resolution <= resolution && x.AudioType != AudioType.Unknown);
@@ -148,7 +149,7 @@ namespace YoutubeExtractorConsole
                                             {
                                                 DownloadUrlResolver.DecryptDownloadUrl(videoInfo);
                                             }
-                                            listVideos.Add(new Tuple<VideoInfo, string>(videoInfo, parts[2]));
+                                            listVideos.Add(new VideoInfoExt(videoInfo, path));
                                         }
                                         else
                                         {
@@ -168,26 +169,26 @@ namespace YoutubeExtractorConsole
                                     char[] invalidNameChars = Path.GetInvalidFileNameChars();
                                     timer = new Timer(1000);
                                     timer.Elapsed += Timer_Elapsed;
-                                    foreach (Tuple<VideoInfo, string> video in listVideos)
+                                    foreach (VideoInfoExt video in listVideos)
                                     {
                                         try
                                         {
-                                            string titleReplaced = ReplaceChars(invalidNameChars, video.Item1.Title);
+                                            string titleReplaced = ReplaceChars(invalidNameChars, video.Title);
                                             string title = titleReplaced;
-                                            string filePathReplaced = ReplaceChars(invalidPathChars, video.Item2);
+                                            string filePathReplaced = ReplaceChars(invalidPathChars, video.Path);
                                             string filePath;
                                             int j = 1;
                                             do
                                             {
-                                                filePath = Path.Combine(filePathReplaced, string.Format("{0}{1}", title, video.Item1.VideoExtension));
+                                                filePath = Path.Combine(filePathReplaced, string.Format("{0}{1}", title, video.VideoExtension));
                                                 title = titleReplaced + string.Format(" ({0})", j);
                                                 j++;
                                             } while (File.Exists(filePath));
-                                            if (!Directory.Exists(video.Item2))
+                                            if (!Directory.Exists(video.Path))
                                             {
-                                                Directory.CreateDirectory(video.Item2);
+                                                Directory.CreateDirectory(video.Path);
                                             }
-                                            VideoDownloader videoDownloader = new VideoDownloader(video.Item1, filePath);
+                                            VideoDownloader videoDownloader = new VideoDownloader(video.VideoInfo, filePath);
                                             videoDownloader.DownloadStarted += VideoDownloader_DownloadStarted;
                                             videoDownloader.DownloadProgressChanged += VideoDownloader_DownloadProgressChanged;
                                             videoDownloader.DownloadFinished += VideoDownloader_DownloadFinished;
@@ -196,7 +197,7 @@ namespace YoutubeExtractorConsole
                                         }
                                         catch (Exception exception)
                                         {
-                                            Message(string.Format("Видео {0}: {1}\n", video.Item1.Title, exception.Message), true);
+                                            Message(string.Format("Видео {0}: {1}\n", video.Title, exception.Message), true);
                                         }
                                     }
                                     listVideos.Clear();
