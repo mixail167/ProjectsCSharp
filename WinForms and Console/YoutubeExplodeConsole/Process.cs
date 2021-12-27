@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Timers;
 
-namespace YouTubeDownloaderMass
+namespace YoutubeExplodeConsole
 {
     class Progress : IProgress<double>, IDisposable
     {
@@ -12,6 +12,7 @@ namespace YouTubeDownloaderMass
         private double bytesCount;
         private bool first;
         private readonly Timer timer;
+        private int messageLength;
 
         public delegate void MessageHandler(string message);
         public event MessageHandler Message;
@@ -20,6 +21,7 @@ namespace YouTubeDownloaderMass
         {
             percent = 0;
             bytesCount = 0;
+            messageLength = 0;
             first = true;
             this.title = title;
             this.filePath = filePath;
@@ -36,14 +38,30 @@ namespace YouTubeDownloaderMass
                 double bytesCount = percent * size;
                 double speed = bytesCount - this.bytesCount;
                 this.bytesCount = bytesCount;
-                Message(string.Format("\rПрогресс загрузки: {0:P2}. Скорость: {1}.", percent, SpeedToString(speed)));
+                string message = string.Format("\rПрогресс загрузки: {0:P2}. Скорость: {1}.", percent, SpeedToString(speed));
+                SendMessage(message);
+                messageLength = message.Length;
+            }
+        }
+
+        private void SendMessage(string message)
+        {
+            if (messageLength == 0 || messageLength <= message.Length)
+            {
+                Message(message);
+            }
+            else
+            {
+                Message(string.Format("{0, -" + messageLength + "}", message));
             }
         }
 
         public void Dispose()
         {
             timer.Stop();
-            Message(string.Format("\rВидео загружено в {0}.\n", filePath));
+            string message = string.Format("\rВидео загружено в {0}.\n", filePath);
+            SendMessage(message);
+            messageLength = 0;
         }
 
         public void Report(double value)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -9,9 +10,10 @@ using System.Threading.Tasks;
 using YoutubeExplode;
 using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
+using YoutubeExplode.Videos.ClosedCaptions;
 using YoutubeExplode.Videos.Streams;
 
-namespace YouTubeDownloaderMass
+namespace YoutubeExplodeConsole
 {
     class Program
     {
@@ -117,82 +119,81 @@ namespace YouTubeDownloaderMass
                             texts.Clear();
                             if (rows.Count != 0)
                             {
-                                List<Tuple<Video, IVideoStreamInfo, string>> videoList = new List<Tuple<Video, IVideoStreamInfo, string>>();
+                                List<VideoData> videoList = new List<VideoData>();
                                 foreach (string row in rows)
                                 {
                                     string[] partsRow = row.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                                     string id = partsRow[0].Substring(partsRow[0].IndexOf('=') + 1, 11);
-                                    string url = string.Concat("https://www.youtube.com/watch?v=", id);
-                                    string path = partsRow[2];
-                                    Message(string.Format("Поиск видео по URL {0}.\n", url));
                                     int resolution = Convert.ToInt32(partsRow[1]);
+                                    string path = partsRow[2];
+                                    Message(string.Format("Поиск видео по URL https://www.youtube.com/watch?v={0}.\n", id));
                                     try
                                     {
-                                        Video videoInfo = await youtube.Videos.GetAsync(id);
                                         StreamManifest streamManifest = await youtube.Videos.Streams.GetManifestAsync(id);
-                                        IVideoStreamInfo videoStreamInfo = streamManifest.GetMuxedStreams().Where(p => p.Container == Container.Mp4 && Convert.ToInt32(p.VideoQuality.Label.Substring(0, p.VideoQuality.Label.Length - 1)) <= resolution).OrderByDescending(p => p.VideoQuality.Label).GetWithHighestVideoQuality();
-                                        if (videoStreamInfo != null)
+                                        if (streamManifest != null)
                                         {
-                                            videoList.Add(new Tuple<Video, IVideoStreamInfo, string>(videoInfo, videoStreamInfo, path));
+                                            IVideoStreamInfo videoStreamInfo = streamManifest.GetMuxedStreams().Where(p => p.Container == Container.Mp4 && Convert.ToInt32(p.VideoQuality.Label.Substring(0, p.VideoQuality.Label.Length - 1)) <= resolution).OrderByDescending(p => p.VideoQuality.Label).GetWithHighestVideoQuality();
+                                            if (videoStreamInfo != null)
+                                            {
+                                                Video videoInfo = await youtube.Videos.GetAsync(id);
+                                                string title = string.Empty;
+                                                if (videoInfo != null)
+                                                {
+                                                    title = videoInfo.Title;
+                                                }
+                                                ClosedCaptionManifest trackManifest = await youtube.Videos.ClosedCaptions.GetManifestAsync(id);
+                                                ClosedCaptionTrackInfo trackInfo = null;
+                                                if (trackManifest != null)
+                                                {
+                                                    trackInfo = trackManifest.GetByLanguage("ru");
+                                                }
+                                                videoList.Add(new VideoData(title, videoStreamInfo, trackInfo, path));
+                                            }
+                                            else
+                                            {
+                                                Message(string.Format("Видео по URL https://www.youtube.com/watch?v={0} не найдено.\n", id), true);
+                                            }
                                         }
                                         else
                                         {
-                                            Message(string.Format("Видео по URL {0} не найдено.\n", url), true);
+                                            Message(string.Format("Видео по URL https://www.youtube.com/watch?v={0} не найдено.\n", id), true);
                                         }
+
                                     }
                                     catch (Exception exception)
                                     {
-                                        Message(string.Format("URL: {0}: {1}\n", url, exception.Message), true);
+                                        Message(string.Format("URL: https://www.youtube.com/watch?v={0}: {1}\n", id, exception.Message), true);
                                         break;
                                     }
                                 }
                                 rows.Clear();
                                 if (videoList.Count != 0)
                                 {
-                                    char[] invalidPathChars = Path.GetInvalidPathChars();
-                                    char[] invalidNameChars = Path.GetInvalidFileNameChars();
-                                    foreach (Tuple<Video, IVideoStreamInfo, string> video in videoList)
+                                    foreach (VideoData video in videoList)
                                     {
                                         try
                                         {
-                                            string titleReplaced = ReplaceChars(invalidNameChars, video.Item1.Title);
-                                            string title = titleReplaced;
-                                            string filePathReplaced = ReplaceChars(invalidPathChars, video.Item3);
-                                            string filePath;
-                                            int j = 1;
-                                            do
+                                            string videoPath = GetFilePath(video.SavePath, video.TitleReplaced, video.Extension);
+                                            string trackPath = string.Empty;
+                                            if (video.TrackInfo != null)
                                             {
-                                                filePath = Path.Combine(video.Item3, string.Format("{0}.{1}", title, video.Item2.Container.Name));
-                                                title = titleReplaced + string.Format(" ({0})", j);
-                                                j++;
-                                            } while (File.Exists(filePath));
-                                            if (!Directory.Exists(video.Item3))
-                                            {
-                                                Directory.CreateDirectory(video.Item3);
+                                                trackPath = GetFilePath(video.SavePath, video.TitleReplaced, "srt");
                                             }
-                                            using Progress progress = new Progress(video.Item1.Title, filePath, video.Item2.Size.Bytes);
+                                            if (!Directory.Exists(video.SavePath))
+                                            {
+                                                Directory.CreateDirectory(video.SavePath);
+                                            }
+                                            using Progress progress = new Progress(video.Title, videoPath, video.Size);
                                             progress.Message += Progress_Message;
-                                            await youtube.Videos.Streams.DownloadAsync(video.Item2, filePath, progress);
-
+                                            await youtube.Videos.Streams.DownloadAsync(video.StreamInfo, videoPath, progress);
+                                            if (video.TrackInfo != null)
+                                            {
+                                                await youtube.Videos.ClosedCaptions.DownloadAsync(video.TrackInfo, trackPath);
+                                            }
                                         }
-                                        //catch (WebException exception)
-                                        //{
-                                        //    if (exception.Status == WebExceptionStatus.ProtocolError)
-                                        //    {
-                                        //        switch ((exception.Response as HttpWebResponse).StatusCode)
-                                        //        {
-                                        //            case System.Net.HttpStatusCode.Forbidden:
-                                        //                Message(string.Format("Видео {0}: Доступ запрещен.", videoList[i].Item1.Title), true);
-                                        //                break;
-                                        //            default:
-                                        //                Message(string.Format("Видео {0}: Неизвестная ошибка.", videoList[i].Item1.Title), true);
-                                        //                break;
-                                        //        }
-                                        //    }
-                                        //}
                                         catch (Exception exception)
                                         {
-                                            Message(string.Format("Видео {0}: {1}\n", video.Item1.Title, exception.Message), true);
+                                            Message(string.Format("Видео {0}: {1}\n", video.Title, exception.Message), true);
                                         }
                                     }
                                     videoList.Clear();
@@ -237,6 +238,20 @@ namespace YouTubeDownloaderMass
             Console.ReadKey();
         }
 
+        private static string GetFilePath(string filePath, string title, string extension)
+        {
+            string title_temp = title;
+            string filePath_temp;
+            int i = 1;
+            do
+            {
+                filePath_temp = Path.Combine(filePath, string.Format("{0}.{1}", title_temp, extension));
+                title_temp = string.Format("{0} ({1})", title, i);
+                i++;
+            } while (File.Exists(filePath_temp));
+            return filePath_temp;
+        }
+
         private static void Progress_Message(string message)
         {
             Message(message);
@@ -255,23 +270,11 @@ namespace YouTubeDownloaderMass
         {
             char driverName = searchString[searchString.LastIndexOf('|') + 1];
             driveNameOut = driverName;
-            if (DriveInfo.GetDrives().FirstOrDefault(p => p.Name.StartsWith(driverName.ToString(), true, null)) == null)
+            if (DriveInfo.GetDrives().FirstOrDefault(p => p.Name.StartsWith(driverName.ToString(), true, CultureInfo.InvariantCulture)) == null)
             {
                 return false;
             }
             return true;
-        }
-
-        private static string ReplaceChars(char[] chars, string title)
-        {
-            foreach (char item in chars)
-            {
-                if (title.IndexOf(item) != -1)
-                {
-                    title = title.Replace(item, '_');
-                }
-            }
-            return title;
         }
     }
 }
