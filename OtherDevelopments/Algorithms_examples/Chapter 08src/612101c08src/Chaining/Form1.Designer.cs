@@ -159,7 +159,7 @@
             this.removeButton.TabIndex = 7;
             this.removeButton.Text = "Remove";
             this.removeButton.UseVisualStyleBackColor = true;
-            this.removeButton.Click += new System.EventHandler(this.removeButton_Click);
+            this.removeButton.Click += new System.EventHandler(this.RemoveButton_Click);
             // 
             // insertButton
             // 
@@ -169,7 +169,7 @@
             this.insertButton.TabIndex = 1;
             this.insertButton.Text = "Insert";
             this.insertButton.UseVisualStyleBackColor = true;
-            this.insertButton.Click += new System.EventHandler(this.insertButton_Click);
+            this.insertButton.Click += new System.EventHandler(this.InsertButton_Click);
             // 
             // label3
             // 
@@ -197,7 +197,7 @@
             this.findButton.TabIndex = 2;
             this.findButton.Text = "Find";
             this.findButton.UseVisualStyleBackColor = true;
-            this.findButton.Click += new System.EventHandler(this.findButton_Click);
+            this.findButton.Click += new System.EventHandler(this.FindButton_Click);
             // 
             // loadTableGroupBox
             // 
@@ -278,7 +278,7 @@
             this.makeItemsButton.TabIndex = 3;
             this.makeItemsButton.Text = "Make Items";
             this.makeItemsButton.UseVisualStyleBackColor = true;
-            this.makeItemsButton.Click += new System.EventHandler(this.makeItemsButton_Click);
+            this.makeItemsButton.Click += new System.EventHandler(this.MakeItemsButton_Click);
             // 
             // tableTextBox
             // 
@@ -316,7 +316,7 @@
             this.createButton.TabIndex = 1;
             this.createButton.Text = "Create";
             this.createButton.UseVisualStyleBackColor = true;
-            this.createButton.Click += new System.EventHandler(this.createButton_Click);
+            this.createButton.Click += new System.EventHandler(this.CreateButton_Click);
             // 
             // sizeTextBox
             // 

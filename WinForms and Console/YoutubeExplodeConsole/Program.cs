@@ -145,7 +145,11 @@ namespace YoutubeExplodeConsole
                                                 ClosedCaptionTrackInfo trackInfo = null;
                                                 if (trackManifest != null)
                                                 {
-                                                    trackInfo = trackManifest.GetByLanguage("ru");
+                                                    try
+                                                    {
+                                                        trackInfo = trackManifest.GetByLanguage("ru");
+                                                    }
+                                                    catch { }
                                                 }
                                                 videoList.Add(new VideoData(title, videoStreamInfo, trackInfo, path));
                                             }

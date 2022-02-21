@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Chaining
@@ -18,7 +11,7 @@ namespace Chaining
         }
 
         // Used to make random values.
-        Random Rand = new Random(1111);
+        readonly Random Rand = new Random(1111);
 
         // The hash table.
         private Cell[] HashTable;
@@ -28,7 +21,7 @@ namespace Chaining
         private int NumUsed = 0;
 
         // Make the hash table.
-        private void createButton_Click(object sender, EventArgs e)
+        private void CreateButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -52,7 +45,7 @@ namespace Chaining
         }
 
         // Make some items.
-        private void makeItemsButton_Click(object sender, EventArgs e)
+        private void MakeItemsButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -60,12 +53,11 @@ namespace Chaining
                 MinValue = int.Parse(minTextBox.Text);
                 MaxValue = int.Parse(maxTextBox.Text);
                 int itemsAdded = 0;
-                int index;
                 while (itemsAdded < numItems)
                 {
                     try
                     {
-                        AddItem(Rand.Next(MinValue, MaxValue + 1), out index);
+                        AddItem(Rand.Next(MinValue, MaxValue + 1), out int index);
                         itemsAdded++;
                     }
                     catch (ArgumentException)
@@ -82,14 +74,13 @@ namespace Chaining
             ShowStatistics();
         }
 
-        private void insertButton_Click(object sender, EventArgs e)
+        private void InsertButton_Click(object sender, EventArgs e)
         {
             int probes;
             try
             {
                 int key = int.Parse(itemTextBox.Text);
-                int index;
-                probes = AddItem(key, out index);
+                probes = AddItem(key, out int index);
                 MessageBox.Show("Item added. Index: " + index +
                     ", Probes: " + probes);
 
@@ -102,13 +93,12 @@ namespace Chaining
         }
 
         // Find the indicated item.
-        private void findButton_Click(object sender, EventArgs e)
+        private void FindButton_Click(object sender, EventArgs e)
         {
             try
             {
                 int key = int.Parse(itemTextBox.Text);
-                Cell cell;
-                int probes = FindItem(key, out cell);
+                int probes = FindItem(key, out Cell cell);
                 if (cell == null)
                     MessageBox.Show("Item not found. Probes: " + probes);
                 else
@@ -121,7 +111,7 @@ namespace Chaining
         }
 
         // Remove an item.
-        private void removeButton_Click(object sender, EventArgs e)
+        private void RemoveButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -159,11 +149,10 @@ namespace Chaining
 
             // Check probe sequences.
             int total = 0;
-            Cell itemCell;
             int maxProbes = 0;
             for (int i = MinValue; i <= MaxValue; i++)
             {
-                int probes = FindItem(i, out itemCell);
+                int probes = FindItem(i, out _);
                 total += probes;
                 if (maxProbes < probes) maxProbes = probes;
             }
@@ -242,7 +231,7 @@ namespace Chaining
                 probes++;
                 if (cell.Next.Value == key)
                 {
-                    cell = cell.Next;
+                    _ = cell.Next;
                     NumUsed--;
                     return probes;
                 }
