@@ -1167,6 +1167,16 @@
             Can be used as file extension.
             </summary>
         </member>
+        <member name="P:YoutubeExplode.Videos.Streams.Container.IsAudioOnly">
+            <summary>
+            Whether this container is a known audio-only container.
+            </summary>
+            <remarks>
+            This property only refers to the container's capabilities and not its actual contents.
+            If the container IS audio-only, it DOES NOT contain any video streams.
+            If the container IS NOT audio-only, it MAY contain video streams, but is not required to.
+            </remarks>
+        </member>
         <member name="M:YoutubeExplode.Videos.Streams.Container.#ctor(System.String)">
             <summary>
             Initializes an instance of <see cref="T:YoutubeExplode.Videos.Streams.Container"/>.
@@ -1174,6 +1184,11 @@
         </member>
         <member name="M:YoutubeExplode.Videos.Streams.Container.ToString">
             <inheritdoc />
+        </member>
+        <member name="P:YoutubeExplode.Videos.Streams.Container.Mp3">
+            <summary>
+            MPEG-2 Audio Layer III (mp3).
+            </summary>
         </member>
         <member name="P:YoutubeExplode.Videos.Streams.Container.Mp4">
             <summary>
