@@ -81,7 +81,7 @@ namespace BitrateChanger
                                     if (random /*&& !Regex.IsMatch(name, "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).*$")*/)
                                     {
                                         //name = Guid.NewGuid() + "_" + name;
-                                        name = rnd.Next(int.MaxValue) + name;
+                                        name = rnd.Next(1000000000, int.MaxValue) + name;
                                     }
                                     path = Path.Combine(path, name);
                                     using (MediaFoundationReader reader = new MediaFoundationReader(item))
