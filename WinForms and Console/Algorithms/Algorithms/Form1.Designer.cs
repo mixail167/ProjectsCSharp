@@ -104,6 +104,7 @@
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
+            this.radioButton15 = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -422,6 +423,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.radioButton15);
             this.tabPage3.Controls.Add(this.radioButton14);
             this.tabPage3.Controls.Add(this.button6);
             this.tabPage3.Controls.Add(this.radioButton8);
@@ -1041,6 +1043,16 @@
             this.label14.TabIndex = 0;
             this.label14.Text = "Степень полинома:";
             // 
+            // radioButton15
+            // 
+            this.radioButton15.AutoSize = true;
+            this.radioButton15.Location = new System.Drawing.Point(183, 385);
+            this.radioButton15.Name = "radioButton15";
+            this.radioButton15.Size = new System.Drawing.Size(108, 17);
+            this.radioButton15.TabIndex = 17;
+            this.radioButton15.Text = "Поиск в глубину";
+            this.radioButton15.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1164,6 +1176,7 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.RadioButton radioButton13;
         private System.Windows.Forms.RadioButton radioButton14;
+        private System.Windows.Forms.RadioButton radioButton15;
     }
 }
 

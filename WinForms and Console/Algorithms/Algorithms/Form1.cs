@@ -53,6 +53,61 @@ namespace Algorithms
         }
 
         /// <summary>
+        /// Алгоритм нахождения пути в графе поиском в глубину
+        /// </summary>
+        /// <param name="graph">Граф</param>
+        /// <param name="left">Начальный узел</param>
+        /// <param name="right">Конечный узел</param>
+        /// <param name="found">Индикатор нахождения пути</param>
+        /// <returns></returns>
+        private int[] AlgorithmDFS(int[,] graph, int left, int right, out bool found)
+        {
+            int n = graph.GetLength(0);
+            int[] nodes = new int[n];
+            Stack<int> stack = new Stack<int>();
+            Stack<Tuple<int, int>> edges = new Stack<Tuple<int, int>>();
+            stack.Push(left);
+            while (stack.Count > 0)
+            {
+                int node = stack.Pop();
+                if (nodes[node] != 2)
+                {
+                    nodes[node] = 2;
+                    for (int i = n - 1; i >= 0; i--)
+                    {
+                        if (graph[node, i] != 0 && nodes[i] != 2)
+                        {
+                            stack.Push(i);
+                            nodes[i] = 1;
+                            Tuple<int, int> edge = new Tuple<int, int>(node, i);
+                            edges.Push(edge);
+                            if (node == right)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            List<int> list = new List<int>
+                {
+                    right + 1
+                };
+            found = false;
+            while (edges.Count > 0)
+            {
+                Tuple<int, int> edge = edges.Pop();
+                if (edge.Item2 == right)
+                {
+                    right = edge.Item1;
+                    list.Add(right + 1);
+                    found = right == left;
+                }
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>
         /// Алгоритм Флойда
         /// </summary>
         /// <param name="graph">Массив расстояний между узлами</param>
@@ -685,7 +740,7 @@ namespace Algorithms
                     }
                     int value1 = Convert.ToInt32(dataGridView2[j, i].Value);
                     int value2 = Convert.ToInt32(dataGridView2[i, j].Value);
-                    if (value1 != 0)
+                    if (value1 != 0 && value2 != 0)
                     {
                         Edge edge = graph.AddEdge(i.ToString(), value1.ToString(), j.ToString());
                         if (value1 == value2)
@@ -695,12 +750,22 @@ namespace Algorithms
                         else
                         {
                             edge.Attr.ArrowheadAtTarget = ArrowStyle.Normal;
-                            if (value2 != 0)
-                            {
-                                edge = graph.AddEdge(j.ToString(), value2.ToString(), i.ToString());
-                                edge.Attr.ArrowheadAtTarget = ArrowStyle.Normal;
-                            }
+                            edge = graph.AddEdge(j.ToString(), value2.ToString(), i.ToString());
+                            edge.Attr.ArrowheadAtTarget = ArrowStyle.Normal;
                         }
+                    }
+                    else if (value1 != 0 || value2 != 0)
+                    {
+                        Edge edge;
+                        if (value1 != 0)
+                        {
+                            edge = graph.AddEdge(i.ToString(), value1.ToString(), j.ToString());
+                        }
+                        else
+                        {
+                            edge = graph.AddEdge(j.ToString(), value2.ToString(), i.ToString());
+                        }
+                        edge.Attr.ArrowheadAtTarget = ArrowStyle.Normal;
                     }
                 }
             }
@@ -718,6 +783,11 @@ namespace Algorithms
         private void UpdateLabel(int left, int right, double distance)
         {
             label8.Text = string.Format("Минимальное расстояние из узла {0} в узел {1} равно {2}.", left, right, distance);
+        }
+
+        private void UpdateLabel(int left, int right, bool found)
+        {
+            label8.Text = string.Format("Путь из узла {0} в узел {1} {2}найден.", left, right, (found) ? string.Empty : "не ");
         }
 
         private void UpdateLabel(double index)
@@ -1099,6 +1169,12 @@ namespace Algorithms
                         ButtonVisible(false);
                     }
                 }
+                else if (radioButton15.Checked)
+                {
+                    path = AlgorithmDFS(massiv, left - 1, right - 1, out bool found);
+                    UpdateLabel(left, right, found);
+                    ButtonVisible(found);
+                }
                 else
                 {
                     int[,] pathFloyd = AlgorithmFloyd(massiv, left - 1, right - 1, out int distance);
@@ -1129,7 +1205,6 @@ namespace Algorithms
             {
                 path.Add(i + 1);
             }
-            path.Reverse();
             return path.ToArray();
         }
 
