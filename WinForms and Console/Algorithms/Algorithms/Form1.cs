@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using Microsoft.Msagl.Drawing;
+﻿using Microsoft.Msagl.Drawing;
+using System;
 using System.Collections.Generic;
-using Drawing = System.Drawing;
+using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using Drawing = System.Drawing;
 
 namespace Algorithms
 {
@@ -178,83 +178,84 @@ namespace Algorithms
             return GetPathFloyd(pathFloyd, k - 1, right, list);
         }
 
+        private Dictionary<int, Tuple<int, int>[]> InitAdjacencyListFromAdjacencyMatrix(int[,] adjacencyMatrix)
+        {
+            Dictionary<int, Tuple<int, int>[]> adjacencyList = new Dictionary<int, Tuple<int, int>[]>();
+            int length = adjacencyMatrix.GetLength(0);
+            for (int i = 0; i < length; i++)
+            {
+                List<Tuple<int, int>> list = new List<Tuple<int, int>>();
+                for (int j = 0; j < length; j++)
+                {
+                    if (adjacencyMatrix[i, j] != 0)
+                    {
+                        list.Add(new Tuple<int, int>(j, adjacencyMatrix[i, j]));
+                    }
+                }
+                adjacencyList.Add(i, list.ToArray());
+
+            }
+            return adjacencyList;
+        }
+
+
         /// <summary>
         /// Алгоритм Дейкстры
         /// </summary>
         /// <param name="start">Начальный узел</param>
-        /// <param name="graph">Массив расстояний между узлами</param>
-        /// <returns>Массив минимальных расстояний</returns>
-        int[] AlgorithmDijkstra(int start, int[,] graph)
+        /// <param name="finish">Конечный узел</param>
+        /// <param name="adjacencyList">Список ребер с весами</param>
+        /// <param name="distance">Минимальное расстояние между вершинами</param>
+        /// <returns>Путь между вершинами</returns>
+        private int[] AlgorithmDijkstra(int start, int finish, int count, Dictionary<int, Tuple<int, int>[]> adjacencyList, out int distance)
         {
-            bool[] visited = new bool[graph.GetLength(1)];
-            int[] distance = new int[graph.GetLength(1)];
-            for (int i = 0; i < distance.Length; i++)
+            bool[] visited = new bool[count];
+            int[] distanceArray = new int[count];
+            int[] pathArray = new int[count];
+            for (int i = 0; i < count; i++)
             {
-                distance[i] = int.MaxValue;
+                distanceArray[i] = int.MaxValue;
+                pathArray[i] = int.MaxValue;
                 visited[i] = false;
             }
-            distance[start] = 0;
-            int minindex, min, temp;
-            // Шаг алгоритма
+            distanceArray[start] = 0;
+            int minindex, min;
             do
             {
-                minindex = graph.GetLength(0);
+                minindex = count;
                 min = int.MaxValue;
-                for (int i = 0; i < distance.Length; i++)
-                { // Если вершину ещё не обошли и вес меньше min
-                    if (visited[i] == false && distance[i] < min)
-                    { // Переприсваиваем значения
-                        min = distance[i];
+                for (int i = 0; i < count; i++)
+                {
+                    if (visited[i] == false && distanceArray[i] < min)
+                    {
+                        min = distanceArray[i];
                         minindex = i;
                     }
                 }
-                // Добавляем найденный минимальный вес
-                // к текущему весу вершины
-                // и сравниваем с текущим минимальным весом вершины
-                if (minindex != graph.GetLength(0))
+                if (minindex != count)
                 {
-                    for (int i = 0; i < distance.Length; i++)
+                    for (int i = 0; i < adjacencyList[minindex].Length; i++)
                     {
-                        if (graph[minindex, i] > 0)
+                        int to = adjacencyList[minindex][i].Item1;
+                        int len = adjacencyList[minindex][i].Item2;
+                        int temp = distanceArray[minindex] + len;
+                        if (temp < distanceArray[to])
                         {
-                            temp = min + graph[minindex, i];
-                            if (temp < distance[i])
-                            {
-                                distance[i] = temp;
-                            }
+                            distanceArray[to] = temp;
+                            pathArray[to] = minindex;
                         }
                     }
                     visited[minindex] = true;
                 }
-            } while (minindex < graph.GetLength(0));
-            return distance;
-        }
-
-        private int[] GetPathDijkstra(int[] distance, int[,] graph, int right)
-        {
-            int[] path = new int[distance.Length];
-            path[0] = right + 1;
-            int k = 1; // индекс предыдущей вершины
-            int weight = distance[right]; // вес конечной вершины
-            while (right > 0) // пока не дошли до начальной вершины
+            } while (minindex < count);
+            distance = distanceArray[finish];
+            List<int> path = new List<int>();
+            for (int i = finish; i != start && pathArray[i] != int.MaxValue; i = pathArray[i])
             {
-                for (int i = 0; i < path.Length; i++)
-                {
-                    // просматриваем все вершины
-                    if (graph[right, i] != 0)   // если связь есть
-                    {
-                        int temp = weight - graph[right, i]; // определяем вес пути из предыдущей вершины
-                        if (temp == distance[i]) // если вес совпал с рассчитанным
-                        {                 // значит из этой вершины и был переход
-                            weight = temp; // сохраняем новый вес
-                            right = i;       // сохраняем предыдущую вершину
-                            path[k] = i + 1; // и записываем ее в массив
-                            k++;
-                        }
-                    }
-                }
+                path.Add(i + 1);
             }
-            return path;
+            path.Add(start + 1);
+            return path.ToArray();
         }
 
         /// <summary>
@@ -1132,24 +1133,16 @@ namespace Algorithms
                 int[,] massiv = GetMassiv(dataGridView2.RowCount - 1, dataGridView2.ColumnCount - 1);
                 if (radioButton7.Checked)
                 {
-                    if (CheckGraph())
+                    Dictionary<int, Tuple<int, int>[]> adjacencyList = InitAdjacencyListFromAdjacencyMatrix(massiv);
+                    path = AlgorithmDijkstra(left - 1, right - 1, massiv.GetLength(0), adjacencyList, out int distance);
+                    if (distance != int.MaxValue)
                     {
-                        int[] distance = AlgorithmDijkstra(left - 1, massiv);
-                        if (distance[right - 1] != int.MaxValue)
-                        {
-                            UpdateLabel(left, right, distance[right - 1]);
-                            path = GetPathDijkstra(distance, massiv, right - 1);
-                            ButtonVisible(true);
-                        }
-                        else
-                        {
-                            UpdateLabel(left, right, double.PositiveInfinity);
-                            ButtonVisible(false);
-                        }
+                        UpdateLabel(left, right, distance);
+                        ButtonVisible(true);
                     }
                     else
                     {
-                        UpdateLabel("Ошибка: Граф является ориентированным.");
+                        UpdateLabel(left, right, double.PositiveInfinity);
                         ButtonVisible(false);
                     }
                 }
@@ -1266,23 +1259,6 @@ namespace Algorithms
                 }
             }
             return edges.ToArray();
-        }
-
-        private bool CheckGraph()
-        {
-            for (int i = 1; i < dataGridView2.RowCount - 1; i++)
-            {
-                for (int j = i + 1; j < dataGridView2.ColumnCount; j++)
-                {
-                    int value1 = Convert.ToInt32(dataGridView2[j, i].Value);
-                    int value2 = Convert.ToInt32(dataGridView2[i, j].Value);
-                    if (value1 != value2)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
         }
 
         private void Button5_Click(object sender, EventArgs e)
