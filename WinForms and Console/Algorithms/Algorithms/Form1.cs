@@ -53,6 +53,42 @@ namespace Algorithms
         }
 
         /// <summary>
+        /// Алгоритм нахождения максимального потока
+        /// </summary>
+        /// <param name="graph">Граф</param>
+        /// <param name="left">Начальный узел</param>
+        /// <param name="right">Конечный узел</param>
+        /// <param name="found">Индикатор нахождения потока</param>
+        /// <returns></returns>
+        private int AlgorithmMaxStream(int[,] graph, int left, int right)
+        {
+            int max = 0;
+            bool path_found;
+            do
+            {
+                path = AlgorithmDFS(graph, left, right, out path_found);
+                if (path_found)
+                {
+                    int min = graph[path[path.Length - 1] - 1, path[path.Length - 2] - 1];
+                    for (int i = path.Length - 2; i > 0; i--)
+                    {
+                        if (graph[path[i] - 1, path[i - 1] - 1] < min)
+                        {
+                            min = graph[path[i] - 1, path[i - 1] - 1];
+                        }
+                    }
+                    max += min;
+                    for (int i = 0; i < path.Length - 1; i++)
+                    {
+                        graph[path[i] - 1, path[i + 1] - 1] += min;
+                        graph[path[path.Length - i - 1] - 1, path[path.Length - i - 2] - 1] -= min;
+                    }
+                }
+            } while (path_found);
+            return max;
+        }
+
+        /// <summary>
         /// Алгоритм нахождения пути в графе поиском в глубину
         /// </summary>
         /// <param name="graph">Граф</param>
@@ -799,6 +835,7 @@ namespace Algorithms
             }
             else label8.Text = "Невозможно определить центр графа.";
         }
+
         private void UpdateLabel(string text)
         {
             label8.Text = text;
@@ -1167,6 +1204,11 @@ namespace Algorithms
                     path = AlgorithmDFS(massiv, left - 1, right - 1, out bool found);
                     UpdateLabel(left, right, found);
                     ButtonVisible(found);
+                }
+                else if (radioButton16.Checked)
+                {
+                    int max = AlgorithmMaxStream(massiv, left - 1, right - 1);
+                    label8.Text = string.Format("Максимальный поток равен {0}.", max);
                 }
                 else
                 {
@@ -1558,6 +1600,66 @@ namespace Algorithms
                 dataGridView3.Rows.RemoveAt(dataGridView3.Rows.Count - 1);
             }
             numericUpDown7.Maximum = numericUpDown8.Value - 1;
+        }
+
+        private void NumericUpDown10_ValueChanged(object sender, EventArgs e)
+        {
+            while (dataGridView4.Rows.Count < numericUpDown10.Value)
+            {
+                dataGridView4.Rows.Add();
+            }
+            while (dataGridView4.Rows.Count > numericUpDown10.Value)
+            {
+                dataGridView4.Rows.RemoveAt(dataGridView4.Rows.Count - 1);
+            }
+        }
+
+        private void Button9_Click(object sender, EventArgs e)
+        {
+            double[] x = new double[dataGridView4.RowCount];
+            double[] y = new double[dataGridView4.RowCount];
+            for (int i = 0; i < dataGridView4.RowCount; i++)
+            {
+                try
+                {
+                    x[i] = Convert.ToDouble(dataGridView4[0, i].Value);
+                }
+                catch { }
+                try
+                {
+                    y[i] = Convert.ToDouble(dataGridView4[1, i].Value);
+                }
+                catch { }
+            }
+            double value = Convert.ToDouble(numericUpDown11.Value);
+            double l = PolynomialLagrange(x, y, value);
+            label24.Text = l.ToString();
+        }
+
+        /// <summary>
+        /// Интерполяционный полином Лагранжа
+        /// </summary>
+        /// <param name="x">Координаты X</param>
+        /// <param name="y">Координаты Y</param>
+        /// <param name="value">Искомая точка</param>
+        /// <returns>Искомое значение</returns>
+        private double PolynomialLagrange(double[] x, double[] y, double value)
+        {
+            double s = 0;
+            int n = x.Length;
+            for (int i = 0; i < n; i++)
+            {
+                double p = 1.0;
+                for (int j = 0; j < n; j++)
+                {
+                    if (i != j)
+                    {
+                        p *= (value - x[j]) / (x[i] - x[j]);
+                    }
+                }
+                s += y[i] * p;
+            }
+            return s;
         }
     }
 }
