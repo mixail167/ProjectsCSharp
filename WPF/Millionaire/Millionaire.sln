@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transfer", "Transfer\Transfer.csproj", "{DCC45E5A-130B-4CB9-8C4A-BB11787E3C18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Millionaire", "Millionaire\Millionaire.csproj", "{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "MillionaireSetup", "MillionaireSetup\MillionaireSetup.wixproj", "{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,38 +89,11 @@ Global
 		{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}.SingleImage|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}.SingleImage|Mixed Platforms.Build.0 = Debug|Any CPU
 		{F70E2156-80BB-4EAF-80C8-5AB90E9BE00B}.SingleImage|x86.ActiveCfg = Debug|Any CPU
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.All|Any CPU.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.All|Mixed Platforms.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.All|Mixed Platforms.Build.0 = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.All|x86.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.All|x86.Build.0 = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.CD_ROM|Any CPU.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.CD_ROM|Mixed Platforms.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.CD_ROM|Mixed Platforms.Build.0 = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.CD_ROM|x86.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.CD_ROM|x86.Build.0 = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Debug|x86.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Debug|x86.Build.0 = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.DVD-5|Any CPU.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.DVD-5|Mixed Platforms.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.DVD-5|Mixed Platforms.Build.0 = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.DVD-5|x86.ActiveCfg = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.DVD-5|x86.Build.0 = Debug|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Release|Any CPU.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Release|Mixed Platforms.Build.0 = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Release|x86.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.Release|x86.Build.0 = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.SingleImage|Any CPU.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.SingleImage|Mixed Platforms.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.SingleImage|Mixed Platforms.Build.0 = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.SingleImage|x86.ActiveCfg = Release|x86
-		{B5330A74-8DD7-45AE-AEC6-29A7B3876FE1}.SingleImage|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE921CF3-6488-4BCA-9424-C68481B77E55}
 	EndGlobalSection
 EndGlobal

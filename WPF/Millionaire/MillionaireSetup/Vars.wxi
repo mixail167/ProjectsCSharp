@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-	<?define ProductName="Millionaire"?>
-  <?define ProductVersion="1.0.0.0"?>
-  <?define ProductCode="6318C7A5-65E3-4014-84B1-EA3E8BAE3318"?>
-  <?define UpgradeCode="E854098F-C767-4AB6-86E7-106FD9F20266"?>
-  <?define Manufacturer="SuperGame"?>
-</Include>
