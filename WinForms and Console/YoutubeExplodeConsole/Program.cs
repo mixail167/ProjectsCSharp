@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using YoutubeExplode;
+using YoutubeExplode.Converter;
 using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.ClosedCaptions;
@@ -126,26 +127,27 @@ namespace YoutubeExplodeConsole
                                     string id = partsRow[0].Substring(partsRow[0].IndexOf('=') + 1, 11);
                                     int resolution = Convert.ToInt32(partsRow[1]);
                                     string path = partsRow[2];
-                                    Message(string.Format("Поиск видео по URL https://www.youtube.com/watch?v={0}.\n", id));
+                                    Message(string.Format("Поиск данных по URL https://www.youtube.com/watch?v={0}.\n", id));
                                     try
                                     {
                                         StreamManifest streamManifest = await youtube.Videos.Streams.GetManifestAsync(id);
                                         if (streamManifest != null)
                                         {
-                                            IEnumerable<MuxedStreamInfo> muxedStreams = streamManifest.GetMuxedStreams();
-                                            if (muxedStreams.Count() > 0)
+                                            List<IStreamInfo> streams = new List<IStreamInfo>();
+                                            ClosedCaptionTrackInfo trackInfo = null;
+                                            string title = string.Empty;
+                                            IEnumerable<VideoOnlyStreamInfo> videoOnlyStreams = streamManifest.GetVideoOnlyStreams();
+                                            if (videoOnlyStreams.Count() > 0)
                                             {
-                                                IVideoStreamInfo videoStreamInfo = muxedStreams.Where(p => p.Container == Container.Mp4 && p.VideoQuality.MaxHeight <= resolution).GetWithHighestVideoQuality();
+                                                IStreamInfo videoStreamInfo = videoOnlyStreams.Where(p => p.Container == Container.Mp4 && p.VideoQuality.MaxHeight <= resolution).GetWithHighestVideoQuality();
                                                 if (videoStreamInfo != null)
                                                 {
                                                     Video videoInfo = await youtube.Videos.GetAsync(id);
-                                                    string title = string.Empty;
                                                     if (videoInfo != null)
                                                     {
                                                         title = videoInfo.Title;
                                                     }
                                                     ClosedCaptionManifest trackManifest = await youtube.Videos.ClosedCaptions.GetManifestAsync(id);
-                                                    ClosedCaptionTrackInfo trackInfo = null;
                                                     if (trackManifest != null)
                                                     {
                                                         try
@@ -158,7 +160,7 @@ namespace YoutubeExplodeConsole
                                                         }
                                                         catch { }
                                                     }
-                                                    videoList.Add(new VideoData(title, videoStreamInfo, trackInfo, path));
+                                                    streams.Add(videoStreamInfo);
                                                 }
                                                 else
                                                 {
@@ -169,10 +171,31 @@ namespace YoutubeExplodeConsole
                                             {
                                                 Message(string.Format("Видео по URL https://www.youtube.com/watch?v={0} не найдено.\n", id), true);
                                             }
+                                            IEnumerable<AudioOnlyStreamInfo> audioOnlyStreams = streamManifest.GetAudioOnlyStreams();
+                                            if (audioOnlyStreams.Count() > 0)
+                                            {
+                                                IStreamInfo audioStreamInfo = audioOnlyStreams.Where(p => p.Container == Container.Mp4 || p.Container == Container.Mp3).GetWithHighestBitrate();
+                                                if (audioStreamInfo != null)
+                                                {
+                                                    streams.Add(audioStreamInfo);
+                                                }
+                                                else
+                                                {
+                                                    Message(string.Format("Аудио по URL https://www.youtube.com/watch?v={0} не найдено.\n", id), true);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Message(string.Format("Аудио по URL https://www.youtube.com/watch?v={0} не найдено.\n", id), true);
+                                            }
+                                            if (streams.Count > 0)
+                                            {
+                                                videoList.Add(new VideoData(title, streams, trackInfo, path));
+                                            }
                                         }
                                         else
                                         {
-                                            Message(string.Format("Видео по URL https://www.youtube.com/watch?v={0} не найдено.\n", id), true);
+                                            Message(string.Format("Данных по URL https://www.youtube.com/watch?v={0} не найдено.\n", id), true);
                                         }
 
                                     }
@@ -200,15 +223,18 @@ namespace YoutubeExplodeConsole
                                             }
                                             using Progress progress = new Progress(video.Title, videoPath, video.Size);
                                             progress.Message += Progress_Message;
-                                            await youtube.Videos.Streams.DownloadAsync(video.StreamInfo, videoPath, progress);
                                             if (video.TrackInfo != null)
                                             {
-                                                await youtube.Videos.ClosedCaptions.DownloadAsync(video.TrackInfo, trackPath);
+                                                await youtube.Videos.DownloadAsync(video.Streams, new List<ClosedCaptionTrackInfo>() { video.TrackInfo }, new ConversionRequestBuilder(videoPath).Build(), progress);
+                                            }
+                                            else
+                                            {
+                                                await youtube.Videos.DownloadAsync(video.Streams, new ConversionRequestBuilder(videoPath).Build(), progress);
                                             }
                                         }
                                         catch (Exception exception)
                                         {
-                                            Message(string.Format("Видео {0}: {1}\n", video.Title, exception.Message), true);
+                                            Message(string.Format("Видео/Аудио {0}: {1}\n", video.Title, exception.Message), true);
                                         }
                                     }
                                     videoList.Clear();
@@ -220,7 +246,7 @@ namespace YoutubeExplodeConsole
                             }
                             else
                             {
-                                Message("Нет данных для поиска видео.\n", true);
+                                Message("Нет данных для поиска.\n", true);
                             }
                         }
                         else
