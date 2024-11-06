@@ -16,35 +16,36 @@ namespace YoutubeExplodeTest
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
-            webView21.EnsureCoreWebView2Async();
+            await webView21.EnsureCoreWebView2Async();
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            webView21.CoreWebView2.Navigate("https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com");
+            webView21.CoreWebView2.Navigate(@"https://accounts.google.com/ServiceLogin?continue=http://www.youtube.com");
         }
 
         private async void Button2_Click(object sender, EventArgs e)
         {
-            await Qwerty();
-        }
-
-        private async Task Qwerty()
-        {
-            List<CoreWebView2Cookie> coreWebView2Cookies = await webView21.CoreWebView2.CookieManager.GetCookiesAsync("");
-            List<Cookie> cookies = new List<Cookie>();
-            foreach (CoreWebView2Cookie item in coreWebView2Cookies)
+            try
             {
-                cookies.Add(new Cookie(item.Name, item.Value, item.Path, item.Domain));
+                List<CoreWebView2Cookie> coreWebView2Cookies = await webView21.CoreWebView2.CookieManager.GetCookiesAsync("");
+                List<Cookie> cookies = new List<Cookie>();
+                foreach (CoreWebView2Cookie item in coreWebView2Cookies)
+                {
+                    cookies.Add(item.ToSystemNetCookie());
+                }
+                YoutubeClient youtube = new YoutubeClient(cookies);
+                string videoUrl = "https://www.youtube.com/watch?v=c9DIoSNoQNs";
+                StreamManifest streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
+                IStreamInfo streamInfo = streamManifest.GetVideoOnlyStreams().GetWithHighestVideoQuality();
+                await youtube.Videos.Streams.DownloadAsync(streamInfo, $"video.{streamInfo.Container}");
             }
-            YoutubeClient youtube = new YoutubeClient();
-            string videoUrl = "https://www.youtube.com/watch?v=c9DIoSNoQNs";
-            StreamManifest streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
-            IStreamInfo streamInfo = streamManifest.GetVideoOnlyStreams().GetWithHighestVideoQuality();
-            await youtube.Videos.Streams.DownloadAsync(streamInfo, $"video.{streamInfo.Container}");
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-
     }
 }
