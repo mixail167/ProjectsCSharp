@@ -170,7 +170,7 @@ namespace YoutubeExplodeConsole
                                             IEnumerable<AudioOnlyStreamInfo> audioOnlyStreams = streamManifest.GetAudioOnlyStreams();
                                             if (audioOnlyStreams.Count() > 0)
                                             {
-                                                IStreamInfo audioStreamInfo = audioOnlyStreams.Where(p => p.Container == Container.Mp4 || p.Container == Container.Mp3).GetWithHighestBitrate();
+                                                IStreamInfo audioStreamInfo = audioOnlyStreams.Where(p => (p.IsAudioLanguageDefault == null || p.IsAudioLanguageDefault.Value) && (p.Container == Container.Mp4 || p.Container == Container.Mp3)).GetWithHighestBitrate();
                                                 if (audioStreamInfo != null)
                                                 {
                                                     streams.Add(audioStreamInfo);
