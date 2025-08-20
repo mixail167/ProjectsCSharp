@@ -40,6 +40,8 @@
             this.incidenceMatrixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjacencyListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.edgesListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.алгоритмыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.гамильтоновЦиклToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -112,7 +114,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.инициализацияToolStripMenuItem});
+            this.инициализацияToolStripMenuItem,
+            this.алгоритмыToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(784, 24);
@@ -142,21 +145,36 @@
             this.incidenceMatrixToolStripMenuItem.Name = "incidenceMatrixToolStripMenuItem";
             this.incidenceMatrixToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.incidenceMatrixToolStripMenuItem.Text = "Матрица инцидентности";
-            this.incidenceMatrixToolStripMenuItem.Click += new System.EventHandler(this.incidenceMatrixToolStripMenuItem_Click);
+            this.incidenceMatrixToolStripMenuItem.Click += new System.EventHandler(this.IncidenceMatrixToolStripMenuItem_Click);
             // 
             // adjacencyListToolStripMenuItem
             // 
             this.adjacencyListToolStripMenuItem.Name = "adjacencyListToolStripMenuItem";
             this.adjacencyListToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.adjacencyListToolStripMenuItem.Text = "Список смежности";
-            this.adjacencyListToolStripMenuItem.Click += new System.EventHandler(this.adjacencyListToolStripMenuItem_Click);
+            this.adjacencyListToolStripMenuItem.Click += new System.EventHandler(this.AdjacencyListToolStripMenuItem_Click);
             // 
             // edgesListToolStripMenuItem
             // 
             this.edgesListToolStripMenuItem.Name = "edgesListToolStripMenuItem";
             this.edgesListToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.edgesListToolStripMenuItem.Text = "Список ребер";
-            this.edgesListToolStripMenuItem.Click += new System.EventHandler(this.edgesListToolStripMenuItem_Click);
+            this.edgesListToolStripMenuItem.Click += new System.EventHandler(this.EdgesListToolStripMenuItem_Click);
+            // 
+            // алгоритмыToolStripMenuItem
+            // 
+            this.алгоритмыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.гамильтоновЦиклToolStripMenuItem});
+            this.алгоритмыToolStripMenuItem.Name = "алгоритмыToolStripMenuItem";
+            this.алгоритмыToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.алгоритмыToolStripMenuItem.Text = "Алгоритмы";
+            // 
+            // гамильтоновЦиклToolStripMenuItem
+            // 
+            this.гамильтоновЦиклToolStripMenuItem.Name = "гамильтоновЦиклToolStripMenuItem";
+            this.гамильтоновЦиклToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.гамильтоновЦиклToolStripMenuItem.Text = "Гамильтонов цикл";
+            this.гамильтоновЦиклToolStripMenuItem.Click += new System.EventHandler(this.ГамильтоновЦиклToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -198,6 +216,8 @@
         private System.Windows.Forms.ToolStripMenuItem adjacencyListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem edgesListToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem алгоритмыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem гамильтоновЦиклToolStripMenuItem;
     }
 }
 

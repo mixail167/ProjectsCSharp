@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Graph.Algorithms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -323,6 +324,16 @@ namespace Graph
                 }
             }
             return adjacencyMatrix;
+        }
+
+        public int[] HamiltonianCycle(int v0)
+        {
+            HamiltonianCycle hamiltonianCycle = new HamiltonianCycle(v0, adjacencyMatrix);
+            if (hamiltonianCycle.Solve())
+            {
+                return hamiltonianCycle.GetPath();
+            }
+            return null;
         }
     }
 }

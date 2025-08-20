@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -46,7 +47,7 @@ namespace Graph
             return null;
         }
 
-        private void incidenceMatrixToolStripMenuItem_Click(object sender, EventArgs e)
+        private void IncidenceMatrixToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string input;
             if ((input = ReadFile()) != null)
@@ -65,7 +66,7 @@ namespace Graph
             }
         }
 
-        private void adjacencyListToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AdjacencyListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string input;
             if ((input = ReadFile()) != null)
@@ -80,7 +81,7 @@ namespace Graph
             }
         }
 
-        private void edgesListToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EdgesListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string input;
             if ((input = ReadFile()) != null)
@@ -92,6 +93,25 @@ namespace Graph
                 {
                     graphClass = GraphClass.NewInstanceByListEdges(listEdges);
                 }
+            }
+        }
+
+        private void ГамильтоновЦиклToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (graphClass != null)
+            {
+                string text;
+                int[] path = graphClass.HamiltonianCycle(3);
+                if (path == null)
+                {
+                    text = "Решение не найдено";
+                }
+                else
+                {
+                    text = string.Join("->", path);
+                    
+                }
+                MessageBox.Show(text, "Ответ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }
