@@ -29,7 +29,6 @@ namespace Graph.Algorithms
             {
                 v0_index = v0 - 1;
             }
-            
         }
 
         public bool Solve()
@@ -50,7 +49,7 @@ namespace Graph.Algorithms
             int[] output = new int[length + 1];
             for (int i = 0; i < length; i++)
             {
-                output[i] = path[i]+1;
+                output[i] = path[i] + 1;
             }
             output[length] = path[0] + 1;
             return output;

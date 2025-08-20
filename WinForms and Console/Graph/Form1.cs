@@ -109,7 +109,6 @@ namespace Graph
                 else
                 {
                     text = string.Join("->", path);
-                    
                 }
                 MessageBox.Show(text, "Ответ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
